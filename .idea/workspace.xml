@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="" />
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="primer commit">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,61 +54,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000000000000104" />
-      <entry key="S2" value="1.0003746270916503" />
-      <entry key="S5" value="1.0598058991113026" />
-      <entry key="S10" value="1.3492111494712198" />
-      <entry key="S30" value="2.391350036420005" />
-      <entry key="S60" value="3.227057234936565" />
-      <entry key="M2" value="3.934632690260348" />
-      <entry key="M5" value="4.5949945019502145" />
-      <entry key="M10" value="5.555546208630689" />
-      <entry key="M15" value="6.674371454434948" />
-      <entry key="M30" value="9.63181043712985" />
-      <entry key="H1" value="13.906020758710913" />
-      <entry key="H2" value="19.02325323549081" />
-      <entry key="H4" value="23.62666011268072" />
-      <entry key="D1" value="29.501348215204683" />
-      <entry key="W1" value="30.77793464903588" />
+      <entry key="MS100" value="1.1684041971082113" />
+      <entry key="MS500" value="1.7002781604436097" />
+      <entry key="S2" value="1.9151247760230183" />
+      <entry key="S5" value="2.022712091862663" />
+      <entry key="S10" value="2.325389270563889" />
+      <entry key="S30" value="3.3771923689694474" />
+      <entry key="S60" value="4.217490374119624" />
+      <entry key="M2" value="4.9287960997975775" />
+      <entry key="M5" value="5.592266822128778" />
+      <entry key="M10" value="6.553897022669375" />
+      <entry key="M15" value="7.673050513288427" />
+      <entry key="M30" value="10.630857262408922" />
+      <entry key="H1" value="14.905332664012217" />
+      <entry key="H2" value="20.02278257742618" />
+      <entry key="H4" value="24.626367834941302" />
+      <entry key="D1" value="30.501287389624807" />
+      <entry key="W1" value="31.777925583651754" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
       <entry key="MS500" value="0.0" />
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
-      <entry key="S10" value="7.501499179726628E-284" />
-      <entry key="S30" value="4.217444298266827E-95" />
-      <entry key="S60" value="6.494185320936586E-48" />
-      <entry key="M2" value="2.5483691492671533E-24" />
-      <entry key="M5" value="3.651782772976847E-10" />
-      <entry key="M10" value="1.9109638335083288E-5" />
-      <entry key="M15" value="7.147732844680148E-4" />
-      <entry key="M30" value="0.026735244238046827" />
-      <entry key="H1" value="0.16350915643488226" />
-      <entry key="H2" value="0.4043626545996579" />
-      <entry key="H4" value="0.6358951600693762" />
-      <entry key="D1" value="0.9273227616564834" />
-      <entry key="W1" value="0.9892788011189253" />
+      <entry key="S10" value="7.369051560128371E-284" />
+      <entry key="S30" value="4.192475484434997E-95" />
+      <entry key="S60" value="6.474932806164859E-48" />
+      <entry key="M2" value="2.5445889267551384E-24" />
+      <entry key="M5" value="3.6496150023347076E-10" />
+      <entry key="M10" value="1.9103965563030907E-5" />
+      <entry key="M15" value="7.14631821942542E-4" />
+      <entry key="M30" value="0.026732598488410052" />
+      <entry key="H1" value="0.16350106571031892" />
+      <entry key="H2" value="0.4043526501833751" />
+      <entry key="H4" value="0.63588729361686" />
+      <entry key="D1" value="0.9273208497118395" />
+      <entry key="W1" value="0.9892785097350998" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9460576467255959" />
-      <entry key="MS500" value="0.9889709163809418" />
-      <entry key="S2" value="0.9976043993793264" />
-      <entry key="S5" value="1.0586090410874205" />
-      <entry key="S10" value="1.3484058421760536" />
-      <entry key="S30" value="2.390766502065204" />
-      <entry key="S60" value="3.2265745234654815" />
-      <entry key="M2" value="3.934292764672009" />
-      <entry key="M5" value="4.5947207045329215" />
-      <entry key="M10" value="5.554929518152171" />
-      <entry key="M15" value="6.674186415493816" />
-      <entry key="M30" value="9.657431606501326" />
-      <entry key="H1" value="14.068514588258227" />
-      <entry key="H2" value="19.426867688493118" />
-      <entry key="H4" value="24.262085610606814" />
-      <entry key="D1" value="30.42857438394781" />
-      <entry key="W1" value="31.767199115489127" />
+      <entry key="MS100" value="0.32772427552311906" />
+      <entry key="MS500" value="1.392832894499072" />
+      <entry key="S2" value="1.8273726952464213" />
+      <entry key="S5" value="1.9865565576709416" />
+      <entry key="S10" value="2.3069420285843028" />
+      <entry key="S30" value="3.3706919233512505" />
+      <entry key="S60" value="4.214044516324403" />
+      <entry key="M2" value="4.926973289549949" />
+      <entry key="M5" value="5.5913995674203845" />
+      <entry key="M10" value="6.552983661285397" />
+      <entry key="M15" value="7.672667598527829" />
+      <entry key="M30" value="10.656376935163717" />
+      <entry key="H1" value="15.06776897129236" />
+      <entry key="H2" value="20.42636230332615" />
+      <entry key="H4" value="25.26177310154967" />
+      <entry key="D1" value="31.42850958483261" />
+      <entry key="W1" value="32.76718946418373" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -117,43 +120,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.requests | Crear usuario.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Eliminar usuario.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Obtener usuario por id.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Run&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.requests | Crear usuario.executor": "Run",
+    "HTTP Request.requests | Eliminar usuario.executor": "Run",
+    "HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor": "Run",
+    "HTTP Request.requests | Obtener usuario por id.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.DemoApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
+    "to.speed.mode.migration.done": "true"
   }
-}</component>
+}]]></component>
   <component name="RunDashboard">
     <option name="configurationStatuses">
       <map>
@@ -219,6 +222,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="primer commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="primer commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
