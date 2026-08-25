@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Médica y Expediente - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="consulta" data-roles="Médico,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Consulta Médica y Expediente</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-consulta" class="space-y-6">
+            <div id="panelMedicoContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-brand-black">En Espera de Consulta</h3>
+                        <button onclick="cargarPanelMedico()" class="text-sm text-gray-500 hover:text-brand-black"><i class="fa-solid fa-rotate"></i></button>
+                    </div>
+                    <div id="colEnEspera" class="space-y-2"></div>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                    <h3 class="font-bold text-brand-black mb-3">En Consulta Médica</h3>
+                    <div id="colEnConsulta" class="space-y-2"></div>
+                </div>
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                    <h3 class="font-bold text-brand-black mb-3">Evaluados — Pendiente de cierre</h3>
+                    <div id="colEvaluados" class="space-y-2"></div>
+                </div>
+            </div>
+            <div id="mensajesConsulta"></div>
+
+            <!-- Formulario de consulta médica -->
+            <div id="formConsultaContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h2 id="tituloFormConsulta" class="text-lg font-bold text-brand-black mb-4"></h2>
+                <div id="mensajesFormConsulta"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Motivo de Visita *</label>
+                        <textarea id="cMotivoVisita" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Hallazgos Clínicos</label>
+                        <textarea id="cHallazgos" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-medium text-gray-700">Código CIE-10</label>
+                        <input id="cCie10Busqueda" oninput="buscarCie10Autocomplete()" placeholder="Escriba para buscar..."
+                               class="w-full p-2 border border-gray-300 rounded-md" autocomplete="off">
+                        <input type="hidden" id="cCie10Id">
+                        <div id="cCie10Sugerencias" class="hidden absolute z-10 bg-white border border-gray-200 rounded-md shadow-lg w-full max-h-48 overflow-y-auto"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Estado de Consulta</label>
+                        <select id="cEstadoConsulta" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="EN_CURSO">En curso</option>
+                            <option value="FINALIZADA">Finalizada</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Diagnóstico (obligatorio para finalizar)</label>
+                        <textarea id="cDiagnostico" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Plan de Tratamiento</label>
+                        <textarea id="cPlanTratamiento" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Notas Adicionales</label>
+                        <textarea id="cNotas" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <button onclick="guardarConsulta()" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow">
+                        Guardar Consulta
+                    </button>
+                    <button onclick="abrirModalOrdenLab()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">
+                        Generar Orden de Laboratorio
+                    </button>
+                    <button onclick="abrirModalReceta()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">
+                        Generar Receta Médica
+                    </button>
+                    <button onclick="cerrarFormConsulta()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Orden de Laboratorio (FA01 de CU-08) -->
+        <div id="modalOrdenLab" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 class="text-lg font-bold mb-4">Generar Orden de Laboratorio</h3>
+                <div id="mensajesOrdenLab"></div>
+                <div id="listaExamenesCatalogo" class="space-y-1 max-h-64 overflow-y-auto border border-gray-200 rounded-md p-2"></div>
+                <div class="mt-3 flex items-center gap-2">
+                    <input id="ordenEsExterna" type="checkbox" class="w-4 h-4">
+                    <label for="ordenEsExterna" class="text-sm font-medium text-gray-700">Orden Externa</label>
+                </div>
+                <div class="mt-3">
+                    <label class="block text-sm font-medium text-gray-700">Notas</label>
+                    <textarea id="ordenNotas" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                </div>
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalOrdenLab()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button onclick="guardarOrdenLab()" class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Guardar Orden</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Receta Médica (FA04 de CU-08) -->
+        <div id="modalReceta" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 class="text-lg font-bold mb-4">Generar Receta Médica</h3>
+                <div id="mensajesReceta"></div>
+                <div id="listaMedicamentosReceta" class="space-y-3"></div>
+                <button onclick="agregarLineaReceta()" class="mt-2 text-sm text-blue-600 hover:underline">+ Agregar medicamento</button>
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalReceta()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button onclick="guardarReceta()" class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Guardar Receta</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Cita de Seguimiento (CU-12) -->
+        <div id="modalSeguimiento" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 class="text-lg font-bold mb-2">Agendar Cita de Seguimiento</h3>
+                <div id="bannerSeguimiento" class="bg-green-50 border border-green-200 text-green-800 text-sm rounded-md p-3 mb-4 space-y-0.5"></div>
+                <div id="mensajesSeguimiento"></div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tipo de Seguimiento *</label>
+                        <select id="segTipo" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="MONITOREO_TRATAMIENTO">Monitoreo de Tratamiento</option>
+                            <option value="REVISION_RESULTADOS">Revisión de Resultados de Laboratorio</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Fecha *</label>
+                        <input id="segFecha" type="date" onchange="cargarHorariosSeguimiento()"
+                               class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Hora Disponible *</label>
+                        <select id="segHorario" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="">Seleccione una fecha primero</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Motivo del Seguimiento (Observaciones) *</label>
+                        <textarea id="segMotivo" rows="3" class="w-full p-2 border border-gray-300 rounded-md"
+                                  placeholder="Entre 10 y 2000 caracteres"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalSeguimiento()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Volver</button>
+                    <button onclick="confirmarSeguimiento()" class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Confirmar Agendamiento</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4.5 LABORATORIO (CU-09) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: consulta
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoConsulta = protegerPagina();
+
+    // CU-08: Consulta Médica
+    // ============================================================
+    let citaConsultaActual = null;
+    let consultaActualId = null;
+    let examenesCatalogo = [];
+    let medicamentosCatalogo = [];
+
+    function mostrarMensajeConsulta(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesConsulta').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function idMedicoActual() {
+        const id = sessionStorage.getItem('usuarioId');
+        return id ? Number(id) : null;
+    }
+
+    async function cargarPanelMedico() {
+        const medicoId = idMedicoActual();
+        if (!medicoId) { mostrarMensajeConsulta('No se encontró el ID del médico en la sesión.', 'error'); return; }
+        try {
+            const data = await apiFetch(`/api/medico/panel?medicoId=${medicoId}`);
+            renderColumnaMedico('colEnEspera', data.enEspera, 'ESPERA');
+            renderColumnaMedico('colEnConsulta', data.enConsulta, 'CONSULTA');
+            renderColumnaMedico('colEvaluados', data.evaluados, 'EVALUADO');
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    function renderColumnaMedico(contenedorId, citas, tipo) {
+        const cont = document.getElementById(contenedorId);
+        if (!citas.length) { cont.innerHTML = '<p class="text-sm text-gray-400">Sin pacientes.</p>'; return; }
+
+        cont.innerHTML = citas.map(c => {
+            const badge = c.esEmergencia ? '<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">Emergencia</span>' : '';
+            let acciones = '';
+            if (tipo === 'ESPERA') {
+                acciones = `
+                    <button onclick="iniciarConsulta(${c.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-sm">Iniciar Consulta</button>
+                    <button onclick="marcarNoAsistio(${c.id})" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-1.5 rounded-lg text-sm">No Asistió</button>`;
+            } else if (tipo === 'CONSULTA') {
+                acciones = `<button onclick="abrirFormConsulta(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-1.5 rounded-lg text-sm">Ver / Completar Consulta</button>`;
+            } else {
+                acciones = `
+                    <button onclick="finalizarAtencion(${c.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-sm">Finalizar Atención</button>
+                    <button onclick="abrirModalSeguimiento(${c.id})" class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50">Agendar Seguimiento</button>`;
+            }
+            return `
+                <div class="border border-gray-200 rounded-lg p-3">
+                    <p class="font-semibold">${c.nombrePaciente} ${badge}</p>
+                    <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
+                    <p class="text-sm text-gray-600">${new Date(c.fechaHora).toLocaleString('es-GT')}</p>
+                    <div class="mt-2 flex flex-wrap gap-2">${acciones}</div>
+                </div>`;
+        }).join('');
+    }
+
+    async function iniciarConsulta(idCita) {
+        try {
+            const data = await apiFetch(`/api/medico/citas/${idCita}/iniciar-consulta?medicoId=${idMedicoActual()}`, { method: 'POST' });
+            mostrarMensajeConsulta(data.mensajeAnuncio, 'info');
+            cargarPanelMedico();
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    async function marcarNoAsistio(idCita) {
+        try {
+            const data = await apiFetch(`/api/medico/citas/${idCita}/no-asistio?medicoId=${idMedicoActual()}`, { method: 'POST' });
+            mostrarMensajeConsulta(data.mensaje, 'exito');
+            cargarPanelMedico();
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    async function finalizarAtencion(idCita) {
+        try {
+            const data = await apiFetch(`/api/medico/citas/${idCita}/finalizar-atencion?medicoId=${idMedicoActual()}`, { method: 'POST' });
+            mostrarMensajeConsulta(data.mensaje, 'exito');
+            cargarPanelMedico();
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    async function abrirFormConsulta(idCita) {
+        citaConsultaActual = idCita;
+        document.getElementById('mensajesFormConsulta').innerHTML = '';
+        try {
+            const ctx = await apiFetch(`/api/medico/citas/${idCita}/consulta?medicoId=${idMedicoActual()}`);
+            consultaActualId = ctx.consultaId;
+            document.getElementById('tituloFormConsulta').innerText = `Consulta — ${ctx.nombrePaciente} (Cita #${idCita})`;
+            document.getElementById('cMotivoVisita').value = ctx.motivoVisita || '';
+            document.getElementById('cHallazgos').value = ctx.hallazgosClinicos || '';
+            document.getElementById('cCie10Busqueda').value = ctx.cie10Codigo || '';
+            document.getElementById('cCie10Id').value = ctx.cie10Id || '';
+            document.getElementById('cDiagnostico').value = ctx.diagnostico || '';
+            document.getElementById('cPlanTratamiento').value = ctx.planTratamiento || '';
+            document.getElementById('cNotas').value = ctx.notasAdicionales || '';
+            document.getElementById('cEstadoConsulta').value = ctx.finalizada ? 'FINALIZADA' : 'EN_CURSO';
+            document.getElementById('formConsultaContainer').classList.remove('hidden');
+            document.getElementById('formConsultaContainer').scrollIntoView({ behavior: 'smooth' });
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    function cerrarFormConsulta() {
+        citaConsultaActual = null;
+        consultaActualId = null;
+        document.getElementById('formConsultaContainer').classList.add('hidden');
+    }
+
+    let cie10Timeout = null;
+    async function buscarCie10Autocomplete() {
+        const texto = document.getElementById('cCie10Busqueda').value.trim();
+        document.getElementById('cCie10Id').value = '';
+        clearTimeout(cie10Timeout);
+        if (texto.length < 2) { document.getElementById('cCie10Sugerencias').classList.add('hidden'); return; }
+        cie10Timeout = setTimeout(async () => {
+            try {
+                const resultados = await apiFetch(`/api/medico/cie10?query=${encodeURIComponent(texto)}`);
+                const cont = document.getElementById('cCie10Sugerencias');
+                if (!resultados.length) { cont.classList.add('hidden'); return; }
+                cont.innerHTML = resultados.map(r => `
+                    <div class="p-2 hover:bg-gray-100 cursor-pointer text-sm"
+                         onclick="seleccionarCie10(${r.id}, '${r.codigo}', '${r.descripcion.replace(/'/g, "\\'")}')">
+                        <strong>${r.codigo}</strong> — ${r.descripcion}
+                    </div>`).join('');
+                cont.classList.remove('hidden');
+            } catch (e) { /* silencioso */ }
+        }, 250);
+    }
+
+    function seleccionarCie10(id, codigo, descripcion) {
+        document.getElementById('cCie10Id').value = id;
+        document.getElementById('cCie10Busqueda').value = `${codigo} — ${descripcion}`;
+        document.getElementById('cCie10Sugerencias').classList.add('hidden');
+    }
+
+    async function guardarConsulta() {
+        const body = {
+            motivoVisita: document.getElementById('cMotivoVisita').value.trim(),
+            hallazgosClinicos: document.getElementById('cHallazgos').value.trim(),
+            cie10Id: document.getElementById('cCie10Id').value ? Number(document.getElementById('cCie10Id').value) : null,
+            diagnostico: document.getElementById('cDiagnostico').value.trim(),
+            planTratamiento: document.getElementById('cPlanTratamiento').value.trim(),
+            notasAdicionales: document.getElementById('cNotas').value.trim(),
+            estadoConsulta: document.getElementById('cEstadoConsulta').value
+        };
+        try {
+            const data = await apiFetch(`/api/medico/citas/${citaConsultaActual}/consulta?medicoId=${idMedicoActual()}`, {
+                method: 'PUT', body: JSON.stringify(body)
+            });
+            consultaActualId = data.consultaId;
+            mostrarMensajeConsulta(data.mensaje, 'exito');
+            if (data.finalizada) { cerrarFormConsulta(); }
+            cargarPanelMedico();
+        } catch (e) {
+            document.getElementById('mensajesFormConsulta').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    // ---- FA01: Orden de Laboratorio ----
+    async function abrirModalOrdenLab() {
+        if (!consultaActualId) {
+            mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de generar una orden de laboratorio.', 'error');
+            return;
+        }
+        document.getElementById('mensajesOrdenLab').innerHTML = '';
+        document.getElementById('ordenEsExterna').checked = false;
+        document.getElementById('ordenNotas').value = '';
+        try {
+            if (!examenesCatalogo.length) examenesCatalogo = await apiFetch('/api/medico/examenes');
+            document.getElementById('listaExamenesCatalogo').innerHTML = examenesCatalogo.map(ex => `
+                <label class="flex items-center gap-2 text-sm p-1">
+                    <input type="checkbox" value="${ex.id}" class="examenCheckbox">
+                    ${ex.nombre} — Q${Number(ex.precio).toFixed(2)}
+                </label>`).join('');
+            document.getElementById('modalOrdenLab').classList.remove('hidden');
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    function cerrarModalOrdenLab() {
+        document.getElementById('modalOrdenLab').classList.add('hidden');
+    }
+
+    async function guardarOrdenLab() {
+        const examenIds = Array.from(document.querySelectorAll('.examenCheckbox:checked')).map(cb => Number(cb.value));
+        if (!examenIds.length) {
+            document.getElementById('mensajesOrdenLab').innerHTML =
+                '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Debe seleccionar al menos un examen de laboratorio.</div>';
+            return;
+        }
+        const body = {
+            examenIds,
+            esExterna: document.getElementById('ordenEsExterna').checked,
+            notas: document.getElementById('ordenNotas').value.trim()
+        };
+        try {
+            const data = await apiFetch(`/api/medico/consultas/${consultaActualId}/orden-laboratorio?medicoId=${idMedicoActual()}`, {
+                method: 'POST', body: JSON.stringify(body)
+            });
+            cerrarModalOrdenLab();
+            mostrarMensajeConsulta(data.mensaje, 'exito');
+        } catch (e) {
+            document.getElementById('mensajesOrdenLab').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    // ---- FA04: Receta Médica ----
+    async function abrirModalReceta() {
+        if (!consultaActualId) {
+            mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de generar una receta.', 'error');
+            return;
+        }
+        document.getElementById('mensajesReceta').innerHTML = '';
+        document.getElementById('listaMedicamentosReceta').innerHTML = '';
+        try {
+            if (!medicamentosCatalogo.length) medicamentosCatalogo = await apiFetch('/api/medico/medicamentos');
+            agregarLineaReceta();
+            document.getElementById('modalReceta').classList.remove('hidden');
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    function cerrarModalReceta() {
+        document.getElementById('modalReceta').classList.add('hidden');
+    }
+
+    function agregarLineaReceta() {
+        const idx = document.querySelectorAll('.lineaReceta').length;
+        const div = document.createElement('div');
+        div.className = 'lineaReceta border border-gray-200 rounded-md p-3 space-y-2';
+        div.innerHTML = `
+            <select class="rMedicamento w-full p-2 border border-gray-300 rounded-md">
+                ${medicamentosCatalogo.map(m => `<option value="${m.id}">${m.nombre} (${m.unidad})</option>`).join('')}
+            </select>
+            <div class="grid grid-cols-3 gap-2">
+                <input class="rDosis p-2 border border-gray-300 rounded-md text-sm" placeholder="Dosis">
+                <input class="rFrecuencia p-2 border border-gray-300 rounded-md text-sm" placeholder="Frecuencia">
+                <input class="rDuracion p-2 border border-gray-300 rounded-md text-sm" placeholder="Duración">
+            </div>
+            <input class="rIndicaciones w-full p-2 border border-gray-300 rounded-md text-sm" placeholder="Indicaciones (opcional)">
+            <button type="button" onclick="this.closest('.lineaReceta').remove()" class="text-xs text-red-600 hover:underline">Quitar</button>`;
+        document.getElementById('listaMedicamentosReceta').appendChild(div);
+    }
+
+    async function guardarReceta() {
+        const detalles = Array.from(document.querySelectorAll('.lineaReceta')).map(linea => ({
+            medicamentoId: Number(linea.querySelector('.rMedicamento').value),
+            dosis: linea.querySelector('.rDosis').value.trim(),
+            frecuencia: linea.querySelector('.rFrecuencia').value.trim(),
+            duracion: linea.querySelector('.rDuracion').value.trim(),
+            indicaciones: linea.querySelector('.rIndicaciones').value.trim()
+        }));
+        try {
+            const data = await apiFetch(`/api/medico/consultas/${consultaActualId}/receta?medicoId=${idMedicoActual()}`, {
+                method: 'POST', body: JSON.stringify({ detalles })
+            });
+            cerrarModalReceta();
+            mostrarMensajeConsulta(data.mensaje, 'exito');
+        } catch (e) {
+            document.getElementById('mensajesReceta').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    // ---- CU-12: Agendamiento de Cita de Seguimiento ----
+    let seguimientoConsultaId = null;
+    let seguimientoMedicoId = null;
+
+    async function abrirModalSeguimiento(idCita) {
+        document.getElementById('mensajesSeguimiento').innerHTML = '';
+        try {
+            // Reutiliza el endpoint de contexto de CU-08 para obtener el consultaId real de la cita
+            const ctxConsulta = await apiFetch(`/api/medico/citas/${idCita}/consulta?medicoId=${idMedicoActual()}`);
+            if (!ctxConsulta.consultaId) {
+                mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de agendar un seguimiento.', 'error');
+                return;
+            }
+            seguimientoConsultaId = ctxConsulta.consultaId;
+
+            const ctx = await apiFetch(`/api/medico/consultas/${seguimientoConsultaId}/seguimiento/contexto?medicoId=${idMedicoActual()}`);
+            seguimientoMedicoId = ctx.medicoId;
+
+            document.getElementById('bannerSeguimiento').innerHTML = `
+                <p><strong>Paciente:</strong> ${ctx.nombrePaciente}</p>
+                <p><strong>Médico:</strong> ${ctx.nombreMedico}</p>
+                <p><strong>Especialidad:</strong> ${ctx.nombreEspecialidad} · <strong>Sede:</strong> ${ctx.nombreSucursal}</p>`;
+
+            document.getElementById('segTipo').value = 'MONITOREO_TRATAMIENTO';
+            document.getElementById('segFecha').value = '';
+            document.getElementById('segFecha').min = new Date().toISOString().split('T')[0];
+            document.getElementById('segHorario').innerHTML = '<option value="">Seleccione una fecha primero</option>';
+            document.getElementById('segMotivo').value = '';
+            document.getElementById('modalSeguimiento').classList.remove('hidden');
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    function cerrarModalSeguimiento() {
+        document.getElementById('modalSeguimiento').classList.add('hidden');
+        seguimientoConsultaId = null;
+        seguimientoMedicoId = null;
+    }
+
+    // Paso 5 FB (CU-12): reutiliza el mismo endpoint de disponibilidad de CU-03
+    async function cargarHorariosSeguimiento() {
+        const fecha = document.getElementById('segFecha').value;
+        const select = document.getElementById('segHorario');
+        if (!fecha) { select.innerHTML = '<option value="">Seleccione una fecha primero</option>'; return; }
+        select.innerHTML = '<option value="">Cargando horarios...</option>';
+        try {
+            const data = await apiFetch(`/api/doctors/${seguimientoMedicoId}/available-slots?date=${fecha}`);
+            const horarios = data.horarios || [];
+            if (!horarios.length) {
+                select.innerHTML = '<option value="">Sin horarios disponibles para esta fecha</option>';
+                return;
+            }
+            select.innerHTML = horarios.map(h =>
+                `<option value="${h}">${new Date(h).toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit' })}</option>`
+            ).join('');
+        } catch (e) {
+            document.getElementById('mensajesSeguimiento').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    // Paso 7 FB (CU-12): confirmar agendamiento
+    async function confirmarSeguimiento() {
+        document.getElementById('mensajesSeguimiento').innerHTML = '';
+        const horario = document.getElementById('segHorario').value;
+        const motivo = document.getElementById('segMotivo').value.trim();
+
+        if (!horario) {
+            document.getElementById('mensajesSeguimiento').innerHTML =
+                '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Debe seleccionar una fecha y hora disponibles.</div>';
+            return;
+        }
+        if (motivo.length < 10 || motivo.length > 2000) {
+            document.getElementById('mensajesSeguimiento').innerHTML =
+                '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Las observaciones son obligatorias. Deben contener entre 10 y 2000 caracteres.</div>';
+            return;
+        }
+
+        const body = {
+            tipoSeguimiento: document.getElementById('segTipo').value,
+            fechaHora: horario,
+            motivoSeguimiento: motivo
+        };
+        try {
+            const data = await apiFetch(`/api/medico/consultas/${seguimientoConsultaId}/seguimiento?medicoId=${idMedicoActual()}`, {
+                method: 'POST', body: JSON.stringify(body)
+            });
+            cerrarModalSeguimiento();
+            mostrarMensajeConsulta(data.mensaje, 'exito');
+            cargarPanelMedico();
+        } catch (e) {
+            document.getElementById('mensajesSeguimiento').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+
+
+    // Carga inicial de datos de este módulo: solo si el usuario tiene
+    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    if (tieneAccesoConsulta) {
+        cargarPanelMedico();
+    }
+</script>
+</body>
+</html>

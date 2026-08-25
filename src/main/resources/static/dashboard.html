@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard General - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="dashboard" data-roles="*">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados.
+             "Administrador" = Admin de Sede (acotado a su sucursal).
+             "Administrador General" = ve todo, sin importar sede. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Dashboard General</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-dashboard" class="space-y-6">
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <p class="text-gray-700">
+                    Bienvenido(a), <span id="dashboardNombre" class="font-semibold"></span>.
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    Este panel de indicadores se conectará cuando exista un endpoint de estadísticas.
+                    Usa el menú de la izquierda según tu rol para trabajar con datos reales.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. CONTROL DE CITAS (CU-05) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: dashboard
+    // IMPORTANTE: protegerPagina() ya corrió en common.js. Si el rol
+    // actual no tiene acceso, detenemos aquí para no ejecutar
+    // llamadas a la API sobre un contenido que ya fue reemplazado.
+    // ============================================================
+    if (!protegerPagina()) {
+        // El bloque de abajo no se ejecuta: throw controlado evitaría
+        // seguir leyendo el archivo, pero como es un <script> normal
+        // basta con que las funciones no se auto-invoquen.
+    } else {
+        // El dashboard no tiene lógica propia adicional: el nombre
+        // del usuario ya lo llena mostrarUsuario() en common.js.
+
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paciente - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased min-h-screen">
+
+<header class="bg-brand-black text-white">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide">HIS <span class="text-brand-yellow">Médico</span></span>
+            <span class="ml-3 px-3 py-1 bg-brand-dark rounded-full text-xs font-semibold text-gray-300">Paciente</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="text-right leading-tight hidden sm:block">
+                <p id="nombrePacienteHeader" class="text-sm font-semibold">Cargando...</p>
+                <p class="text-xs text-gray-400">Paciente</p>
+            </div>
+            <button onclick="cerrarSesionPaciente()" title="Cerrar sesión" class="text-gray-300 hover:text-brand-yellow">
+                <i class="fa-solid fa-right-from-bracket text-lg"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-8">
+
+    <!-- ==================== VISTA: DASHBOARD ==================== -->
+    <div id="vistaDashboard">
+        <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+            <div>
+                <h1 class="text-2xl font-bold text-brand-black">Bienvenido(a), <span id="nombrePacienteSaludo">...</span></h1>
+                <p class="text-gray-500 text-sm">Aquí puedes ver el estado de tus consultas, resultados y recetas.</p>
+            </div>
+            <button onclick="iniciarWizard()"
+                    class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-5 py-3 rounded-lg shadow transition">
+                <i class="fa-solid fa-calendar-plus mr-1"></i> Agendar Cita
+            </button>
+        </div>
+
+        <div id="mensajesDashboard"></div>
+
+        <h2 class="text-lg font-bold text-brand-black mb-3">Mis Citas</h2>
+        <div id="listaMisCitas" class="space-y-3">
+            <p class="text-gray-400 text-sm">Cargando tus citas...</p>
+        </div>
+    </div>
+
+    <!-- ==================== VISTA: WIZARD AGENDAR CITA ==================== -->
+    <div id="vistaWizard" class="hidden">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 md:p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-xl font-bold text-brand-black">Agendar Cita</h1>
+                <button onclick="cancelarWizard()" class="text-gray-400 hover:text-red-500 text-sm font-semibold">
+                    <i class="fa-solid fa-xmark mr-1"></i> Cancelar
+                </button>
+            </div>
+
+            <!-- Indicador de progreso de 5 pasos -->
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex-1 flex items-center" id="pasoIndicador1">
+                    <div class="pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                    <span class="ml-2 text-xs font-semibold hidden md:inline">Sucursal</span>
+                    <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+                </div>
+                <div class="flex-1 flex items-center" id="pasoIndicador2">
+                    <div class="pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                    <span class="ml-2 text-xs font-semibold hidden md:inline">Especialidad</span>
+                    <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+                </div>
+                <div class="flex-1 flex items-center" id="pasoIndicador3">
+                    <div class="pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                    <span class="ml-2 text-xs font-semibold hidden md:inline">Médico</span>
+                    <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+                </div>
+                <div class="flex-1 flex items-center" id="pasoIndicador4">
+                    <div class="pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                    <span class="ml-2 text-xs font-semibold hidden md:inline">Fecha/Hora</span>
+                    <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+                </div>
+                <div class="flex items-center" id="pasoIndicador5">
+                    <div class="pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                    <span class="ml-2 text-xs font-semibold hidden md:inline">Confirmar</span>
+                </div>
+            </div>
+
+            <div id="mensajesWizard"></div>
+
+            <!-- Paso 1: Sucursal -->
+            <div id="wizardPaso1" class="hidden space-y-3">
+                <h2 class="font-bold text-brand-black">Selecciona una sucursal</h2>
+                <div id="listaSucursalesWizard" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+
+            <!-- Paso 2: Especialidad -->
+            <div id="wizardPaso2" class="hidden space-y-3">
+                <h2 class="font-bold text-brand-black">Selecciona una especialidad</h2>
+                <div id="listaEspecialidadesWizard" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                <button onclick="irAPaso(1)" class="text-sm text-gray-500 hover:text-brand-black mt-2"><i class="fa-solid fa-arrow-left mr-1"></i> Volver</button>
+            </div>
+
+            <!-- Paso 3: Médico -->
+            <div id="wizardPaso3" class="hidden space-y-3">
+                <h2 class="font-bold text-brand-black">Selecciona un médico</h2>
+                <div id="listaMedicosWizard" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                <button onclick="irAPaso(2)" class="text-sm text-gray-500 hover:text-brand-black mt-2"><i class="fa-solid fa-arrow-left mr-1"></i> Volver</button>
+            </div>
+
+            <!-- Paso 4: Fecha y hora -->
+            <div id="wizardPaso4" class="hidden space-y-3">
+                <h2 class="font-bold text-brand-black">Selecciona fecha y hora</h2>
+                <div class="flex items-center gap-3">
+                    <input id="wizardFecha" type="date" onchange="cargarHorariosWizard()"
+                           class="p-2 border border-gray-300 rounded-md">
+                </div>
+                <div id="listaHorariosWizard" class="grid grid-cols-3 md:grid-cols-4 gap-2 mt-2"></div>
+                <button onclick="irAPaso(3)" class="text-sm text-gray-500 hover:text-brand-black mt-2"><i class="fa-solid fa-arrow-left mr-1"></i> Volver</button>
+            </div>
+
+            <!-- Paso 5: Confirmar -->
+            <div id="wizardPaso5" class="hidden space-y-4">
+                <h2 class="font-bold text-brand-black">Confirma tu cita</h2>
+                <div class="bg-brand-lightgray border border-gray-200 rounded-lg p-4 text-sm space-y-1">
+                    <p><strong>Sucursal:</strong> <span id="resumenSucursal"></span></p>
+                    <p><strong>Especialidad:</strong> <span id="resumenEspecialidad"></span></p>
+                    <p><strong>Médico:</strong> <span id="resumenMedico"></span></p>
+                    <p><strong>Fecha y hora:</strong> <span id="resumenFechaHora"></span></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Motivo de la consulta (10 a 2000 caracteres)</label>
+                    <textarea id="wizardMotivo" rows="3" maxlength="2000"
+                              class="w-full p-2 border border-gray-300 rounded-md"
+                              placeholder="Describe brevemente el motivo de tu consulta..."></textarea>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="irAPaso(4)" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Volver
+                    </button>
+                    <button id="btnConfirmarCita" onclick="confirmarCitaWizard()"
+                            class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">
+                        Confirmar Cita
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal: Detalle de cita + seguimiento del proceso -->
+<div id="modalDetalleCita" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-brand-black">Detalle de tu Cita</h3>
+            <button onclick="cerrarModalDetalleCita()" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div id="detalleCitaBody"></div>
+    </div>
+</div>
+
+<script>
+    // -------- Guard de sesión --------
+    if (!sessionStorage.getItem('jwt')) {
+        window.location.href = 'login.html';
+    }
+    const ID_PACIENTE = sessionStorage.getItem('usuarioId');
+    document.getElementById('nombrePacienteHeader').innerText = sessionStorage.getItem('nombreCompleto') || 'Paciente';
+    document.getElementById('nombrePacienteSaludo').innerText = sessionStorage.getItem('nombreCompleto') || '';
+
+    function cerrarSesionPaciente() {
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+    }
+
+    function token() { return sessionStorage.getItem('jwt'); }
+
+    async function apiFetch(url, opciones = {}) {
+        const resp = await fetch(url, {
+            ...opciones,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token(),
+                ...(opciones.headers || {})
+            }
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.mensaje || data.message || 'Ocurrió un error inesperado.');
+        return data;
+    }
+
+    function mostrarMensajeDashboard(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200'
+        };
+        document.getElementById('mensajesDashboard').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    // ==================== Mis Citas ====================
+
+    const ESTADOS_TERMINALES_NEGATIVOS = ['Cancelada', 'No Asistió'];
+
+    function estadoColorClase(estado) {
+        const mapa = {
+            'Pendiente de pago': 'bg-amber-100 text-amber-700',
+            'Confirmada': 'bg-blue-100 text-blue-700',
+            'Paciente Presente': 'bg-indigo-100 text-indigo-700',
+            'Signos Vitales': 'bg-purple-100 text-purple-700',
+            'En Espera': 'bg-amber-100 text-amber-700',
+            'Consulta Médica': 'bg-yellow-100 text-yellow-800',
+            'Evaluado': 'bg-teal-100 text-teal-700',
+            'Atención Finalizada': 'bg-green-100 text-green-700',
+            'Cancelada': 'bg-red-100 text-red-700',
+            'No Asistió': 'bg-gray-200 text-gray-600'
+        };
+        return mapa[estado] || 'bg-gray-100 text-gray-700';
+    }
+
+    async function cargarMisCitas() {
+        try {
+            const citas = await apiFetch('/api/mis-citas');
+            const cont = document.getElementById('listaMisCitas');
+            if (citas.length === 0) {
+                cont.innerHTML = `<p class="text-gray-400 text-sm bg-white border border-gray-200 rounded-lg p-6 text-center">Aún no tienes citas registradas. Presiona "Agendar Cita" para reservar la primera.</p>`;
+                return;
+            }
+            cont.innerHTML = citas.map(c => `
+                <div onclick="abrirDetalleCita(${c.id})"
+                     class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm cursor-pointer hover:shadow-md transition flex justify-between items-center gap-3">
+                    <div>
+                        <p class="font-semibold text-brand-black">${c.especialidad} — ${c.medico}</p>
+                        <p class="text-sm text-gray-500">${c.sucursal} · ${new Date(c.fechaHora).toLocaleString('es-GT')}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${estadoColorClase(c.estado)}">${c.estado}</span>
+                </div>
+            `).join('');
+        } catch (e) {
+            mostrarMensajeDashboard(e.message, 'error');
+        }
+    }
+
+    // ==================== Detalle + seguimiento visual ====================
+
+    const PASOS_PROCESO = ['Pendiente de pago', 'Confirmada', 'Paciente Presente', 'Signos Vitales', 'En Espera', 'Consulta Médica', 'Evaluado', 'Atención Finalizada'];
+
+    function renderSeguimientoProceso(estadoActual) {
+        if (ESTADOS_TERMINALES_NEGATIVOS.includes(estadoActual)) {
+            const texto = estadoActual === 'Cancelada'
+                ? 'Esta cita fue cancelada.'
+                : 'No asististe a esta cita.';
+            return `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200 text-sm mb-4">${texto}</div>`;
+        }
+
+        const indiceActual = PASOS_PROCESO.indexOf(estadoActual);
+        return `
+            <div class="mb-4">
+                <div class="flex flex-wrap gap-2">
+                    ${PASOS_PROCESO.map((paso, i) => `
+                        <div class="flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-semibold
+                             ${i <= indiceActual ? 'bg-brand-yellow text-brand-black' : 'bg-gray-100 text-gray-400'}">
+                            ${i < indiceActual ? '<i class="fa-solid fa-check"></i>' : ''} ${paso}
+                        </div>
+                    `).join('')}
+                </div>
+                ${estadoActual === 'Pendiente de pago' ? `
+                    <div class="mt-3 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                        Debes acercarte a caja a realizar el pago para confirmar tu reserva. Si no se paga a tiempo, el horario se libera automáticamente.
+                    </div>` : ''}
+            </div>
+        `;
+    }
+
+    async function abrirDetalleCita(id) {
+        try {
+            const c = await apiFetch(`/api/mis-citas/${id}`);
+            let html = renderSeguimientoProceso(c.estado);
+
+            html += `
+                <div class="text-sm space-y-1 mb-4">
+                    <p><strong>Especialidad:</strong> ${c.especialidad}</p>
+                    <p><strong>Médico:</strong> ${c.medico}</p>
+                    <p><strong>Sucursal:</strong> ${c.sucursal}</p>
+                    <p><strong>Fecha/Hora:</strong> ${new Date(c.fechaHora).toLocaleString('es-GT')}</p>
+                    <p><strong>Motivo:</strong> ${c.motivoConsulta || '-'}</p>
+                    <p><strong>Monto:</strong> Q${Number(c.monto).toFixed(2)}</p>
+                </div>
+            `;
+
+            if (c.consulta) {
+                html += `
+                    <div class="border-t border-gray-100 pt-3 mb-4">
+                        <h4 class="font-bold text-brand-black text-sm mb-2"><i class="fa-solid fa-notes-medical mr-1"></i> Consulta Médica</h4>
+                        <div class="text-sm space-y-1">
+                            <p><strong>Motivo de visita:</strong> ${c.consulta.motivoVisita || '-'}</p>
+                            ${c.consulta.hallazgosClinicos ? `<p><strong>Hallazgos:</strong> ${c.consulta.hallazgosClinicos}</p>` : ''}
+                            ${c.consulta.diagnostico ? `<p><strong>Diagnóstico:</strong> ${c.consulta.diagnostico}</p>` : ''}
+                            ${c.consulta.planTratamiento ? `<p><strong>Plan de tratamiento:</strong> ${c.consulta.planTratamiento}</p>` : ''}
+                            <p><strong>Estado:</strong> ${c.consulta.finalizada ? 'Finalizada' : 'En curso'}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (c.ordenLaboratorio) {
+                const o = c.ordenLaboratorio;
+                html += `
+                    <div class="border-t border-gray-100 pt-3 mb-4">
+                        <h4 class="font-bold text-brand-black text-sm mb-2"><i class="fa-solid fa-flask mr-1"></i> Orden de Laboratorio #${o.id} — ${o.estadoNombre}</h4>
+                        <div class="space-y-2">
+                            ${o.examenes.map(e => `
+                                <div class="text-sm bg-gray-50 rounded-md p-2">
+                                    <p class="font-semibold">${e.nombreExamen}</p>
+                                    ${e.publicado
+                                        ? `<p>Resultado: ${e.valorResultado || '-'} ${e.unidad || ''} ${e.fueraDeRango ? '<span class="text-red-600 font-bold">(Fuera de rango)</span>' : ''}</p>
+                                           ${e.rangoReferencia ? `<p class="text-gray-500 text-xs">Rango de referencia: ${e.rangoReferencia}</p>` : ''}`
+                                        : `<p class="text-gray-400 text-xs">Resultado pendiente de publicación.</p>`}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (c.recetas && c.recetas.length > 0) {
+                c.recetas.forEach(r => {
+                    html += `
+                        <div class="border-t border-gray-100 pt-3 mb-4">
+                            <h4 class="font-bold text-brand-black text-sm mb-2"><i class="fa-solid fa-pills mr-1"></i> Receta Médica #${r.id}</h4>
+                            <div class="space-y-2">
+                                ${r.medicamentos.map(m => `
+                                    <div class="text-sm bg-gray-50 rounded-md p-2">
+                                        <p class="font-semibold">${m.nombreMedicamento}</p>
+                                        <p>Dosis: ${m.dosis} · Frecuencia: ${m.frecuencia} · Duración: ${m.duracion}</p>
+                                        ${m.indicaciones ? `<p class="text-gray-500 text-xs">${m.indicaciones}</p>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('detalleCitaBody').innerHTML = html;
+            document.getElementById('modalDetalleCita').classList.remove('hidden');
+        } catch (e) {
+            mostrarMensajeDashboard(e.message, 'error');
+        }
+    }
+
+    function cerrarModalDetalleCita() {
+        document.getElementById('modalDetalleCita').classList.add('hidden');
+    }
+
+    // ==================== Wizard: Agendar Cita (CU-03) ====================
+
+    let wizardPasoActual = 1;
+    let wizardSeleccion = { sucursalId: null, sucursalNombre: '', especialidadId: null, especialidadNombre: '', medicoId: null, medicoNombre: '', fechaHora: null };
+
+    function mostrarMensajeWizard(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            info: 'bg-blue-50 text-blue-700 border border-blue-200'
+        };
+        document.getElementById('mensajesWizard').innerHTML = `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function iniciarWizard() {
+        wizardSeleccion = { sucursalId: null, sucursalNombre: '', especialidadId: null, especialidadNombre: '', medicoId: null, medicoNombre: '', fechaHora: null };
+        document.getElementById('vistaDashboard').classList.add('hidden');
+        document.getElementById('vistaWizard').classList.remove('hidden');
+        irAPaso(1);
+    }
+
+    function cancelarWizard() {
+        document.getElementById('vistaWizard').classList.add('hidden');
+        document.getElementById('vistaDashboard').classList.remove('hidden');
+        cargarMisCitas();
+    }
+
+    function irAPaso(n) {
+        wizardPasoActual = n;
+        document.getElementById('mensajesWizard').innerHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById(`wizardPaso${i}`).classList.toggle('hidden', i !== n);
+            const circulo = document.querySelector(`#pasoIndicador${i} .pasoCirculo`);
+            circulo.className = `pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                i < n ? 'bg-green-500 text-white' : i === n ? 'bg-brand-yellow text-brand-black' : 'bg-gray-200 text-gray-500'
+            }`;
+        }
+        if (n === 1) cargarSucursalesWizard();
+        if (n === 5) llenarResumenWizard();
+    }
+
+    async function cargarSucursalesWizard() {
+        try {
+            const sucursales = await apiFetch('/api/branches');
+            document.getElementById('listaSucursalesWizard').innerHTML = sucursales.map(s => `
+                <button onclick="seleccionarSucursal(${s.id}, '${(s.nombre || '').replace(/'/g, "\\'")}')"
+                        class="text-left p-4 border border-gray-200 rounded-lg hover:border-brand-yellow hover:bg-brand-lightgray transition">
+                    <i class="fa-solid fa-location-dot text-brand-yellow mr-2"></i>
+                    <span class="font-semibold">${s.nombre}</span>
+                </button>
+            `).join('');
+        } catch (e) {
+            mostrarMensajeWizard(e.message, 'error');
+        }
+    }
+
+    function seleccionarSucursal(id, nombre) {
+        wizardSeleccion.sucursalId = id;
+        wizardSeleccion.sucursalNombre = nombre;
+        wizardSeleccion.especialidadId = null;
+        wizardSeleccion.medicoId = null;
+        irAPaso(2);
+        cargarEspecialidadesWizard();
+    }
+
+    async function cargarEspecialidadesWizard() {
+        try {
+            const especialidades = await apiFetch(`/api/branches/${wizardSeleccion.sucursalId}/specialties`);
+            document.getElementById('listaEspecialidadesWizard').innerHTML = especialidades.map(e => `
+                <button onclick="seleccionarEspecialidad(${e.id}, '${(e.nombre || '').replace(/'/g, "\\'")}')"
+                        class="text-left p-4 border border-gray-200 rounded-lg hover:border-brand-yellow hover:bg-brand-lightgray transition">
+                    <i class="fa-solid fa-stethoscope text-brand-yellow mr-2"></i>
+                    <span class="font-semibold">${e.nombre}</span>
+                </button>
+            `).join('');
+        } catch (e) {
+            // FA01: No hay especialidades disponibles en la sucursal
+            mostrarMensajeWizard(e.message, 'error');
+            document.getElementById('listaEspecialidadesWizard').innerHTML = '';
+        }
+    }
+
+    function seleccionarEspecialidad(id, nombre) {
+        wizardSeleccion.especialidadId = id;
+        wizardSeleccion.especialidadNombre = nombre;
+        wizardSeleccion.medicoId = null;
+        irAPaso(3);
+        cargarMedicosWizard();
+    }
+
+    async function cargarMedicosWizard() {
+        try {
+            const medicos = await apiFetch(`/api/branches/${wizardSeleccion.sucursalId}/specialties/${wizardSeleccion.especialidadId}/doctors`);
+            document.getElementById('listaMedicosWizard').innerHTML = medicos.map(m => `
+                <button onclick="seleccionarMedico(${m.id}, '${(m.nombreCompleto || '').replace(/'/g, "\\'")}')"
+                        class="text-left p-4 border border-gray-200 rounded-lg hover:border-brand-yellow hover:bg-brand-lightgray transition">
+                    <i class="fa-solid fa-user-doctor text-brand-yellow mr-2"></i>
+                    <span class="font-semibold">${m.nombreCompleto}</span>
+                </button>
+            `).join('');
+        } catch (e) {
+            // FA02: No hay médicos o disponibilidad
+            mostrarMensajeWizard(e.message, 'error');
+            document.getElementById('listaMedicosWizard').innerHTML = '';
+        }
+    }
+
+    function seleccionarMedico(id, nombre) {
+        wizardSeleccion.medicoId = id;
+        wizardSeleccion.medicoNombre = nombre;
+        wizardSeleccion.fechaHora = null;
+        irAPaso(4);
+
+        const manana = new Date();
+        manana.setDate(manana.getDate() + 1);
+        const pad = n => String(n).padStart(2, '0');
+        document.getElementById('wizardFecha').value = `${manana.getFullYear()}-${pad(manana.getMonth() + 1)}-${pad(manana.getDate())}`;
+        document.getElementById('wizardFecha').min = document.getElementById('wizardFecha').value;
+        cargarHorariosWizard();
+    }
+
+    async function cargarHorariosWizard() {
+        const fecha = document.getElementById('wizardFecha').value;
+        if (!fecha) return;
+        try {
+            const data = await apiFetch(`/api/doctors/${wizardSeleccion.medicoId}/available-slots?date=${fecha}`);
+            const horarios = data.horarios || [];
+            const cont = document.getElementById('listaHorariosWizard');
+            if (horarios.length === 0) {
+                cont.innerHTML = `<p class="col-span-full text-sm text-gray-400">No se encontraron horarios disponibles para la especialidad ${wizardSeleccion.especialidadNombre} en la Sede ${wizardSeleccion.sucursalNombre}. Por favor, seleccione otra fecha, especialidad o sede.</p>`;
+                return;
+            }
+            cont.innerHTML = horarios.map(h => `
+                <button onclick="seleccionarHorario('${h}')"
+                        class="p-2 border border-gray-200 rounded-lg text-sm font-semibold hover:border-brand-yellow hover:bg-brand-lightgray transition">
+                    ${new Date(h).toLocaleTimeString('es-GT', {hour: '2-digit', minute: '2-digit'})}
+                </button>
+            `).join('');
+        } catch (e) {
+            mostrarMensajeWizard(e.message, 'error');
+        }
+    }
+
+    function seleccionarHorario(fechaHoraISO) {
+        wizardSeleccion.fechaHora = fechaHoraISO;
+        irAPaso(5);
+    }
+
+    function llenarResumenWizard() {
+        document.getElementById('resumenSucursal').innerText = wizardSeleccion.sucursalNombre;
+        document.getElementById('resumenEspecialidad').innerText = wizardSeleccion.especialidadNombre;
+        document.getElementById('resumenMedico').innerText = wizardSeleccion.medicoNombre;
+        document.getElementById('resumenFechaHora').innerText = new Date(wizardSeleccion.fechaHora).toLocaleString('es-GT');
+    }
+
+    async function confirmarCitaWizard() {
+        const motivo = document.getElementById('wizardMotivo').value.trim();
+        if (motivo.length < 10 || motivo.length > 2000) {
+            mostrarMensajeWizard('El motivo debe contener entre 10 y 2000 caracteres.', 'error');
+            return;
+        }
+
+        const btn = document.getElementById('btnConfirmarCita');
+        btn.disabled = true;
+        btn.innerText = 'Confirmando...';
+
+        try {
+            await apiFetch('/api/appointments', {
+                method: 'POST',
+                body: JSON.stringify({
+                    pacienteId: Number(ID_PACIENTE),
+                    sucursalId: wizardSeleccion.sucursalId,
+                    especialidadId: wizardSeleccion.especialidadId,
+                    medicoId: wizardSeleccion.medicoId,
+                    fechaHora: wizardSeleccion.fechaHora,
+                    motivoConsulta: motivo
+                })
+            });
+
+            document.getElementById('vistaWizard').classList.add('hidden');
+            document.getElementById('vistaDashboard').classList.remove('hidden');
+            mostrarMensajeDashboard(
+                'Su cita ha sido registrada exitosamente. Diríjase a caja para realizar el pago y confirmar su reserva.',
+                'exito'
+            );
+            cargarMisCitas();
+        } catch (e) {
+            // FA03: horario ya no disponible u otro error de validación
+            mostrarMensajeWizard(e.message, 'error');
+            btn.disabled = false;
+            btn.innerText = 'Confirmar Cita';
+        }
+    }
+
+    // -------- Inicio --------
+    cargarMisCitas();
+</script>
+</body>
+</html>

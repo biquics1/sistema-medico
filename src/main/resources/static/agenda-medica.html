@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Médica - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="agenda-medica" data-roles="Médico">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Agenda Médica</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-agenda-medica" class="space-y-4">
+
+            <!-- Controles: vista día/semana/mes, navegación, búsqueda -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <div class="flex bg-gray-100 rounded-lg p-1">
+                            <button onclick="seleccionarVistaAgenda('dia')" id="btnVistaDia"
+                                    class="px-3 py-1.5 rounded-md text-sm font-semibold">Día</button>
+                            <button onclick="seleccionarVistaAgenda('semana')" id="btnVistaSemana"
+                                    class="px-3 py-1.5 rounded-md text-sm font-semibold">Semana</button>
+                            <button onclick="seleccionarVistaAgenda('mes')" id="btnVistaMes"
+                                    class="px-3 py-1.5 rounded-md text-sm font-semibold">Mes</button>
+                        </div>
+                        <button onclick="navegarAgenda(-1)" class="px-2 py-1.5 border rounded-md">‹</button>
+                        <button onclick="irHoyAgenda()" class="px-3 py-1.5 border rounded-md text-sm font-semibold">Hoy</button>
+                        <button onclick="navegarAgenda(1)" class="px-2 py-1.5 border rounded-md">›</button>
+                        <span id="agendaPeriodoLabel" class="text-sm font-semibold text-brand-black ml-2"></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="abrirModalEvento()"
+                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-2 rounded-lg text-sm">
+                            + Nuevo Evento
+                        </button>
+                        <button onclick="toggleTaskPanel()"
+                                class="bg-gray-100 hover:bg-gray-200 text-brand-black font-semibold px-3 py-2 rounded-lg text-sm">
+                            <i class="fa-solid fa-list-check mr-1"></i> Tareas
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-end gap-3 pt-2 border-t border-gray-100">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Buscar por fecha — Desde</label>
+                        <input id="agendaDesde" type="date" class="p-2 border border-gray-300 rounded-md text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-500">Hasta</label>
+                        <input id="agendaHasta" type="date" class="p-2 border border-gray-300 rounded-md text-sm">
+                    </div>
+                    <button onclick="buscarRangoManualAgenda()" class="px-3 py-2 border rounded-md text-sm font-semibold">Buscar</button>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-xs font-medium text-gray-500">Buscar por nombre de paciente</label>
+                        <input id="agendaBuscarPaciente" oninput="filtrarPacienteAgenda()" placeholder="Nombre del paciente..."
+                               class="w-full p-2 border border-gray-300 rounded-md text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <div id="mensajesAgenda"></div>
+
+            <div class="flex gap-4 items-start">
+                <!-- Columna principal: eventos + kanban -->
+                <div class="flex-1 space-y-4 min-w-0">
+
+                    <!-- Mis Eventos del período -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                        <h3 class="text-sm font-bold text-brand-black mb-2">Mis Eventos</h3>
+                        <div id="listaEventosAgenda" class="flex flex-wrap gap-2">
+                            <p class="text-gray-400 text-sm">Cargando eventos...</p>
+                        </div>
+                    </div>
+
+                    <!-- Tablero Kanban de citas -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                            <h3 class="text-xs font-bold text-gray-600 uppercase mb-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-blue-400"></span> Pendientes
+                                <span id="contPendientes" class="ml-auto text-gray-400"></span>
+                            </h3>
+                            <div id="colPendientes" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                            <h3 class="text-xs font-bold text-gray-600 uppercase mb-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-brand-yellow"></span> En Proceso
+                                <span id="contEnProceso" class="ml-auto text-gray-400"></span>
+                            </h3>
+                            <div id="colEnProceso" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                            <h3 class="text-xs font-bold text-gray-600 uppercase mb-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-green-500"></span> Finalizadas
+                                <span id="contFinalizadas" class="ml-auto text-gray-400"></span>
+                            </h3>
+                            <div id="colFinalizadas" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                            <h3 class="text-xs font-bold text-gray-600 uppercase mb-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-purple-500"></span> Seguimiento (Próximas)
+                                <span id="contSeguimiento" class="ml-auto text-gray-400"></span>
+                            </h3>
+                            <div id="colSeguimiento" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel lateral de tareas (toggleable) -->
+                <div id="taskPanelContainer" class="hidden w-80 shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-sm font-bold text-brand-black">Mis Tareas</h3>
+                        <button onclick="abrirModalTarea()" class="text-brand-black bg-brand-yellow hover:bg-brand-yellowhover font-bold text-xs px-2 py-1 rounded-md">
+                            + Nueva
+                        </button>
+                    </div>
+                    <div class="flex gap-1 mb-3">
+                        <button onclick="filtrarTareas('pendientes')" id="btnTareasPendientes"
+                                class="flex-1 text-xs font-semibold px-2 py-1 rounded-md">Pendientes</button>
+                        <button onclick="filtrarTareas('completadas')" id="btnTareasCompletadas"
+                                class="flex-1 text-xs font-semibold px-2 py-1 rounded-md">Completadas</button>
+                        <button onclick="filtrarTareas('todas')" id="btnTareasTodas"
+                                class="flex-1 text-xs font-semibold px-2 py-1 rounded-md">Todas</button>
+                    </div>
+                    <div id="listaTareasAgenda" class="space-y-2 max-h-[60vh] overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal: detalle de cita (agenda) -->
+        <div id="modalDetalleCitaAgenda" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold text-brand-black mb-4">Detalle de la Cita</h3>
+                <div id="detalleCitaAgendaBody" class="space-y-1 text-sm text-gray-700"></div>
+                <div class="pt-4">
+                    <button onclick="document.getElementById('modalDetalleCitaAgenda').classList.add('hidden')"
+                            class="w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Nuevo/Editar Evento -->
+        <div id="modalEvento" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 id="modalEventoTitulo" class="text-lg font-bold text-brand-black mb-4">Nuevo Evento</h3>
+                <div id="mensajesModalEvento"></div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Título</label>
+                        <input id="evTitulo" maxlength="200" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Descripción (opcional)</label>
+                        <textarea id="evDescripcion" maxlength="2000" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Tipo de evento</label>
+                        <select id="evTipo" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="0">Reunión</option>
+                            <option value="1">Descanso</option>
+                            <option value="2">Capacitación</option>
+                            <option value="3">Personal</option>
+                            <option value="4">Otro</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input id="evTodoElDia" type="checkbox" onchange="toggleTodoElDiaEvento()">
+                        <label for="evTodoElDia" class="text-sm text-gray-700">Todo el día</label>
+                    </div>
+                    <div id="evFechasHora" class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Fecha inicio</label>
+                            <input id="evFechaInicioDT" type="datetime-local" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Fecha fin</label>
+                            <input id="evFechaFinDT" type="datetime-local" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <div id="evFechasDia" class="hidden grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Fecha inicio</label>
+                            <input id="evFechaInicioD" type="date" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Fecha fin</label>
+                            <input id="evFechaFinD" type="date" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalEvento()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button id="btnEliminarEvento" onclick="eliminarEventoActual()"
+                            class="hidden flex-1 bg-red-100 text-red-700 font-bold py-2 rounded-lg">Eliminar</button>
+                    <button id="btnGuardarEvento" onclick="guardarEvento()"
+                            class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Crear Evento</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Nueva/Editar Tarea -->
+        <div id="modalTarea" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                <h3 id="modalTareaTitulo" class="text-lg font-bold text-brand-black mb-4">Nueva Tarea</h3>
+                <div id="mensajesModalTarea"></div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Título</label>
+                        <input id="taTitulo" maxlength="200" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Descripción (opcional)</label>
+                        <textarea id="taDescripcion" maxlength="1000" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Prioridad</label>
+                            <select id="taPrioridad" class="w-full p-2 border border-gray-300 rounded-md">
+                                <option value="0">Baja</option>
+                                <option value="1" selected>Normal</option>
+                                <option value="2">Alta</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Fecha límite (opcional)</label>
+                            <input id="taFechaLimite" type="date" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalTarea()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button id="btnGuardarTarea" onclick="guardarTarea()"
+                            class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Crear Tarea</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. SIN ACCESO -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: agenda-medica
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoAgenda = protegerPagina();
+
+    // CU-14: Agenda Médica (Kanban de citas + eventos + tareas)
+    // ============================================================
+    let agendaVista = 'dia'; // 'dia' | 'semana' | 'mes'
+    let agendaFechaRef = new Date();
+    let agendaRangoManual = null; // {desde:Date, hasta:Date} si el usuario usó el buscador de fechas
+    let agendaCitasCache = [];
+    let agendaEventosCache = [];
+    let agendaEventoEditandoId = null;
+    let agendaTareasCache = [];
+    let agendaTareaFiltro = 'pendientes';
+    let agendaTareaEditandoId = null;
+
+    const NOMBRES_DIA = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const NOMBRES_MES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    function mostrarMensajeAgenda(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200'
+        };
+        document.getElementById('mensajesAgenda').innerHTML =
+            `<div class="p-3 rounded-md mb-2 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function inicioDelDia(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+    function finDelDia(d) { const x = new Date(d); x.setHours(23, 59, 59, 999); return x; }
+    function toFechaISO(d) { // 'YYYY-MM-DDTHH:mm:ss' para el backend (LocalDateTime)
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+    function toFechaInputValue(d) { // 'YYYY-MM-DD' para <input type="date">
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
+    function calcularRangoAgenda() {
+        if (agendaRangoManual) return agendaRangoManual;
+
+        if (agendaVista === 'dia') {
+            return { desde: inicioDelDia(agendaFechaRef), hasta: finDelDia(agendaFechaRef) };
+        }
+        if (agendaVista === 'semana') {
+            const d = new Date(agendaFechaRef);
+            const diaSemana = (d.getDay() + 6) % 7; // 0 = lunes
+            const lunes = new Date(d); lunes.setDate(d.getDate() - diaSemana);
+            const domingo = new Date(lunes); domingo.setDate(lunes.getDate() + 6);
+            return { desde: inicioDelDia(lunes), hasta: finDelDia(domingo) };
+        }
+        // mes
+        const primero = new Date(agendaFechaRef.getFullYear(), agendaFechaRef.getMonth(), 1);
+        const ultimo = new Date(agendaFechaRef.getFullYear(), agendaFechaRef.getMonth() + 1, 0);
+        return { desde: inicioDelDia(primero), hasta: finDelDia(ultimo) };
+    }
+
+    function renderPeriodoLabelAgenda(rango) {
+        let texto;
+        if (agendaRangoManual) {
+            texto = `${rango.desde.toLocaleDateString('es-GT')} — ${rango.hasta.toLocaleDateString('es-GT')}`;
+        } else if (agendaVista === 'dia') {
+            texto = `${NOMBRES_DIA[agendaFechaRef.getDay()]}, ${agendaFechaRef.getDate()} de ${NOMBRES_MES[agendaFechaRef.getMonth()]} de ${agendaFechaRef.getFullYear()}`;
+        } else if (agendaVista === 'semana') {
+            texto = `Semana del ${rango.desde.getDate()} al ${rango.hasta.getDate()} de ${NOMBRES_MES[rango.hasta.getMonth()]} de ${rango.hasta.getFullYear()}`;
+        } else {
+            texto = `${NOMBRES_MES[agendaFechaRef.getMonth()]} de ${agendaFechaRef.getFullYear()}`;
+        }
+        document.getElementById('agendaPeriodoLabel').innerText = texto;
+
+        ['Dia', 'Semana', 'Mes'].forEach(v => {
+            const btn = document.getElementById(`btnVista${v}`);
+            const activo = !agendaRangoManual && agendaVista === v.toLowerCase();
+            btn.className = `px-3 py-1.5 rounded-md text-sm font-semibold ${activo ? 'bg-brand-black text-white' : 'text-gray-600'}`;
+        });
+    }
+
+    function seleccionarVistaAgenda(v) {
+        agendaVista = v;
+        agendaRangoManual = null;
+        document.getElementById('agendaDesde').value = '';
+        document.getElementById('agendaHasta').value = '';
+        cargarAgenda();
+    }
+
+    function navegarAgenda(delta) {
+        agendaRangoManual = null;
+        document.getElementById('agendaDesde').value = '';
+        document.getElementById('agendaHasta').value = '';
+        if (agendaVista === 'dia') agendaFechaRef.setDate(agendaFechaRef.getDate() + delta);
+        else if (agendaVista === 'semana') agendaFechaRef.setDate(agendaFechaRef.getDate() + delta * 7);
+        else agendaFechaRef.setMonth(agendaFechaRef.getMonth() + delta);
+        agendaFechaRef = new Date(agendaFechaRef);
+        cargarAgenda();
+    }
+
+    function irHoyAgenda() {
+        agendaFechaRef = new Date();
+        agendaRangoManual = null;
+        document.getElementById('agendaDesde').value = '';
+        document.getElementById('agendaHasta').value = '';
+        cargarAgenda();
+    }
+
+    function buscarRangoManualAgenda() {
+        const desdeVal = document.getElementById('agendaDesde').value;
+        const hastaVal = document.getElementById('agendaHasta').value;
+        if (!desdeVal) { mostrarMensajeAgenda('Seleccione al menos la fecha "Desde" para buscar.', 'error'); return; }
+        const desde = inicioDelDia(new Date(desdeVal + 'T00:00:00'));
+        const hasta = finDelDia(new Date((hastaVal || desdeVal) + 'T00:00:00'));
+        agendaRangoManual = { desde, hasta };
+        cargarAgenda();
+    }
+
+    function filtrarPacienteAgenda() {
+        renderKanbanAgenda();
+    }
+
+    async function cargarAgenda() {
+        const rango = calcularRangoAgenda();
+        renderPeriodoLabelAgenda(rango);
+        document.getElementById('mensajesAgenda').innerHTML = '';
+
+        try {
+            const [citas, eventos] = await Promise.all([
+                apiFetch(`/api/agenda-medica/citas?desde=${toFechaISO(rango.desde)}&hasta=${toFechaISO(rango.hasta)}`),
+                apiFetch(`/api/agenda-medica/eventos?desde=${toFechaISO(rango.desde)}&hasta=${toFechaISO(rango.hasta)}`)
+            ]);
+            agendaCitasCache = citas;
+            agendaEventosCache = eventos;
+            renderKanbanAgenda();
+            renderEventosAgenda();
+        } catch (e) {
+            mostrarMensajeAgenda(e.message, 'error');
+        }
+
+        if (!document.getElementById('taskPanelContainer').classList.contains('hidden')) {
+            cargarTareasAgenda();
+        }
+    }
+
+    // Clasifica cada cita en una de las 4 columnas del Kanban.
+    function clasificarCitaColumna(cita) {
+        const hoyStr = toFechaInputValue(new Date());
+        const fechaCitaStr = toFechaInputValue(new Date(cita.fechaHora));
+        if (fechaCitaStr > hoyStr) return 'seguimiento';
+        if (['Evaluado', 'Atención Finalizada'].includes(cita.estado)) return 'finalizadas';
+        if (cita.estado === 'Consulta Médica') return 'en_proceso';
+        return 'pendientes';
+    }
+
+    function estadoColorClase(estado) {
+        const mapa = {
+            'Confirmada': 'bg-blue-100 text-blue-700',
+            'Paciente Presente': 'bg-indigo-100 text-indigo-700',
+            'Signos Vitales': 'bg-purple-100 text-purple-700',
+            'En Espera': 'bg-amber-100 text-amber-700',
+            'Consulta Médica': 'bg-yellow-100 text-yellow-800',
+            'Evaluado': 'bg-teal-100 text-teal-700',
+            'Atención Finalizada': 'bg-green-100 text-green-700'
+        };
+        return mapa[estado] || 'bg-gray-100 text-gray-700';
+    }
+
+    function renderKanbanAgenda() {
+        const busqueda = document.getElementById('agendaBuscarPaciente').value.trim().toLowerCase();
+        const filtradas = agendaCitasCache.filter(c => !busqueda || (c.pacienteNombre || '').toLowerCase().includes(busqueda));
+
+        const columnas = { pendientes: [], en_proceso: [], finalizadas: [], seguimiento: [] };
+        filtradas.forEach(c => columnas[clasificarCitaColumna(c)].push(c));
+
+        const idsColumna = { pendientes: 'colPendientes', en_proceso: 'colEnProceso', finalizadas: 'colFinalizadas', seguimiento: 'colSeguimiento' };
+        const idsConteo = { pendientes: 'contPendientes', en_proceso: 'contEnProceso', finalizadas: 'contFinalizadas', seguimiento: 'contSeguimiento' };
+
+        Object.keys(columnas).forEach(key => {
+            const lista = columnas[key];
+            document.getElementById(idsConteo[key]).innerText = lista.length;
+            const cont = document.getElementById(idsColumna[key]);
+            if (lista.length === 0) {
+                cont.innerHTML = `<p class="text-gray-400 text-xs text-center py-4">Sin citas.</p>`;
+                return;
+            }
+            cont.innerHTML = lista.map(c => `
+                <div onclick="abrirDetalleCitaAgenda(${c.id})"
+                     class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 cursor-pointer hover:shadow-md transition">
+                    <div class="flex justify-between items-start gap-2">
+                        <p class="font-semibold text-sm text-brand-black">${c.pacienteNombre}</p>
+                        ${c.esEmergencia ? '<span class="text-xs font-bold text-red-600">EMERGENCIA</span>' : ''}
+                    </div>
+                    <p class="text-xs text-gray-500 mt-0.5">${c.especialidad}</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-xs font-medium text-gray-600">${new Date(c.fechaHora).toLocaleString('es-GT', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'})}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${estadoColorClase(c.estado)}">${c.estado}</span>
+                    </div>
+                </div>
+            `).join('');
+        });
+    }
+
+    function abrirDetalleCitaAgenda(id) {
+        const c = agendaCitasCache.find(x => x.id === id);
+        if (!c) return;
+        document.getElementById('detalleCitaAgendaBody').innerHTML = `
+            <p><strong>Paciente:</strong> ${c.pacienteNombre} ${c.esEmergencia ? '<span class="text-red-600 font-bold">EMERGENCIA</span>' : ''}</p>
+            <p><strong>Especialidad:</strong> ${c.especialidad}</p>
+            <p><strong>Estado:</strong> ${c.estado}</p>
+            <p><strong>Fecha/Hora:</strong> ${new Date(c.fechaHora).toLocaleString('es-GT')}</p>
+            <p><strong>Motivo:</strong> ${c.motivoConsulta || '-'}</p>
+        `;
+        document.getElementById('modalDetalleCitaAgenda').classList.remove('hidden');
+    }
+
+    // ---------------- Eventos ----------------
+
+    function renderEventosAgenda() {
+        const cont = document.getElementById('listaEventosAgenda');
+        if (agendaEventosCache.length === 0) {
+            cont.innerHTML = `<p class="text-gray-400 text-sm">Sin eventos en este período.</p>`;
+            return;
+        }
+        cont.innerHTML = agendaEventosCache.map(e => `
+            <div onclick="abrirModalEvento(${e.id})"
+                 class="cursor-pointer px-3 py-2 rounded-lg text-xs text-white" style="background-color:#8b5cf6;">
+                <p class="font-bold">${e.titulo}</p>
+                <p class="opacity-90">${e.tipoEventoNombre} · ${e.todoElDia ? 'Todo el día' : new Date(e.fechaInicio).toLocaleString('es-GT', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'})}</p>
+            </div>
+        `).join('');
+    }
+
+    function toggleTodoElDiaEvento() {
+        const todoElDia = document.getElementById('evTodoElDia').checked;
+        document.getElementById('evFechasHora').classList.toggle('hidden', todoElDia);
+        document.getElementById('evFechasDia').classList.toggle('hidden', !todoElDia);
+    }
+
+    function abrirModalEvento(id) {
+        agendaEventoEditandoId = id || null;
+        document.getElementById('mensajesModalEvento').innerHTML = '';
+        document.getElementById('modalEventoTitulo').innerText = id ? 'Editar Evento' : 'Nuevo Evento';
+        document.getElementById('btnGuardarEvento').innerText = id ? 'Guardar' : 'Crear Evento';
+        document.getElementById('btnEliminarEvento').classList.toggle('hidden', !id);
+
+        const ev = id ? agendaEventosCache.find(x => x.id === id) : null;
+
+        document.getElementById('evTitulo').value = ev ? ev.titulo : '';
+        document.getElementById('evDescripcion').value = ev ? (ev.descripcion || '') : '';
+        document.getElementById('evTipo').value = ev ? ev.tipoEvento : '0';
+        document.getElementById('evTodoElDia').checked = ev ? !!ev.todoElDia : false;
+        toggleTodoElDiaEvento();
+
+        const inicio = ev ? new Date(ev.fechaInicio) : new Date();
+        const fin = ev ? new Date(ev.fechaFin) : new Date(Date.now() + 60 * 60 * 1000);
+        const pad = n => String(n).padStart(2, '0');
+        const dtLocal = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+        document.getElementById('evFechaInicioDT').value = dtLocal(inicio);
+        document.getElementById('evFechaFinDT').value = dtLocal(fin);
+        document.getElementById('evFechaInicioD').value = toFechaInputValue(inicio);
+        document.getElementById('evFechaFinD').value = toFechaInputValue(fin);
+
+        document.getElementById('modalEvento').classList.remove('hidden');
+    }
+
+    function cerrarModalEvento() {
+        document.getElementById('modalEvento').classList.add('hidden');
+        agendaEventoEditandoId = null;
+    }
+
+    async function guardarEvento() {
+        const errorBox = document.getElementById('mensajesModalEvento');
+        errorBox.innerHTML = '';
+
+        const titulo = document.getElementById('evTitulo').value.trim();
+        const descripcion = document.getElementById('evDescripcion').value.trim();
+        const tipoEvento = Number(document.getElementById('evTipo').value);
+        const todoElDia = document.getElementById('evTodoElDia').checked;
+
+        if (titulo.length < 5) {
+            errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">El título debe contener entre 5 y 200 caracteres.</div>`;
+            return;
+        }
+
+        let fechaInicio, fechaFin;
+        if (todoElDia) {
+            fechaInicio = document.getElementById('evFechaInicioD').value + 'T00:00:00';
+            fechaFin = document.getElementById('evFechaFinD').value + 'T23:59:59';
+        } else {
+            fechaInicio = document.getElementById('evFechaInicioDT').value + ':00';
+            fechaFin = document.getElementById('evFechaFinDT').value + ':00';
+        }
+
+        if (!(new Date(fechaFin) > new Date(fechaInicio))) {
+            errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">La fecha de fin debe ser posterior a la fecha de inicio.</div>`;
+            return;
+        }
+
+        const body = { titulo, descripcion: descripcion || null, tipoEvento, fechaInicio, fechaFin, todoElDia };
+
+        try {
+            if (agendaEventoEditandoId) {
+                await apiFetch(`/api/agenda-medica/eventos/${agendaEventoEditandoId}`, { method: 'PUT', body: JSON.stringify(body) });
+                mostrarMensajeAgenda('Evento actualizado exitosamente.', 'exito');
+            } else {
+                await apiFetch('/api/agenda-medica/eventos', { method: 'POST', body: JSON.stringify(body) });
+                mostrarMensajeAgenda(`Evento creado exitosamente. ${titulo}.`, 'exito');
+            }
+            cerrarModalEvento();
+            cargarAgenda();
+        } catch (e) {
+            errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    async function eliminarEventoActual() {
+        if (!agendaEventoEditandoId) return;
+        // CORREGIDO (FA04): el CU exige confirmación explícita antes de eliminar
+        // un evento; antes se borraba directamente al presionar el botón.
+        if (!confirm('¿Está seguro de eliminar este evento?')) return;
+        try {
+            await apiFetch(`/api/agenda-medica/eventos/${agendaEventoEditandoId}`, { method: 'DELETE' });
+            cerrarModalEvento();
+            mostrarMensajeAgenda('Evento eliminado correctamente.', 'exito');
+            cargarAgenda();
+        } catch (e) {
+            mostrarMensajeAgenda(e.message, 'error');
+        }
+    }
+
+    // ---------------- Panel de Tareas ----------------
+
+    function toggleTaskPanel() {
+        const panel = document.getElementById('taskPanelContainer');
+        panel.classList.toggle('hidden');
+        if (!panel.classList.contains('hidden')) {
+            filtrarTareas(agendaTareaFiltro);
+        }
+    }
+
+    function filtrarTareas(filtro) {
+        agendaTareaFiltro = filtro;
+        ['Pendientes', 'Completadas', 'Todas'].forEach(f => {
+            const btn = document.getElementById(`btnTareas${f}`);
+            const activo = f.toLowerCase() === filtro;
+            btn.className = `flex-1 text-xs font-semibold px-2 py-1 rounded-md ${activo ? 'bg-brand-black text-white' : 'bg-gray-100 text-gray-600'}`;
+        });
+        cargarTareasAgenda();
+    }
+
+    async function cargarTareasAgenda() {
+        try {
+            agendaTareasCache = await apiFetch(`/api/agenda-medica/tareas?filtro=${agendaTareaFiltro}`);
+            renderTareasAgenda();
+        } catch (e) {
+            mostrarMensajeAgenda(e.message, 'error');
+        }
+    }
+
+    function renderTareasAgenda() {
+        const cont = document.getElementById('listaTareasAgenda');
+        if (agendaTareasCache.length === 0) {
+            cont.innerHTML = `<p class="text-gray-400 text-xs text-center py-4">Sin tareas.</p>`;
+            return;
+        }
+        const colorPrioridad = { 0: 'bg-gray-100 text-gray-600', 1: 'bg-blue-100 text-blue-700', 2: 'bg-red-100 text-red-700' };
+        cont.innerHTML = agendaTareasCache.map(t => `
+            <div class="border border-gray-200 rounded-lg p-2">
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" ${t.completada ? 'checked' : ''} onchange="toggleCompletadaTarea(${t.id}, this.checked)" class="mt-1">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold ${t.completada ? 'line-through text-gray-400' : 'text-brand-black'}">${t.titulo}</p>
+                        ${t.descripcion ? `<p class="text-xs text-gray-500">${t.descripcion}</p>` : ''}
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${colorPrioridad[t.prioridad]}">${t.prioridadNombre}</span>
+                            ${t.fechaLimite ? `<span class="text-[10px] text-gray-400">Vence: ${t.fechaLimite}</span>` : ''}
+                        </div>
+                    </div>
+                    <button onclick="editarTarea(${t.id})" class="text-gray-400 hover:text-blue-600 text-xs"><i class="fa-solid fa-pen"></i></button>
+                    <button onclick="eliminarTarea(${t.id})" class="text-gray-400 hover:text-red-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function toggleCompletadaTarea(id, completada) {
+        try {
+            await apiFetch(`/api/agenda-medica/tareas/${id}/completar?completada=${completada}`, { method: 'PATCH' });
+            cargarTareasAgenda();
+        } catch (e) {
+            mostrarMensajeAgenda(e.message, 'error');
+        }
+    }
+
+    function abrirModalTarea() {
+        agendaTareaEditandoId = null;
+        document.getElementById('mensajesModalTarea').innerHTML = '';
+        document.getElementById('modalTareaTitulo').innerText = 'Nueva Tarea';
+        document.getElementById('btnGuardarTarea').innerText = 'Crear Tarea';
+        document.getElementById('taTitulo').value = '';
+        document.getElementById('taDescripcion').value = '';
+        document.getElementById('taPrioridad').value = '1';
+        document.getElementById('taFechaLimite').value = '';
+        document.getElementById('modalTarea').classList.remove('hidden');
+    }
+
+    function editarTarea(id) {
+        const t = agendaTareasCache.find(x => x.id === id);
+        if (!t) return;
+        agendaTareaEditandoId = id;
+        document.getElementById('mensajesModalTarea').innerHTML = '';
+        document.getElementById('modalTareaTitulo').innerText = 'Editar Tarea';
+        document.getElementById('btnGuardarTarea').innerText = 'Guardar';
+        document.getElementById('taTitulo').value = t.titulo;
+        document.getElementById('taDescripcion').value = t.descripcion || '';
+        document.getElementById('taPrioridad').value = t.prioridad;
+        document.getElementById('taFechaLimite').value = t.fechaLimite || '';
+        document.getElementById('modalTarea').classList.remove('hidden');
+    }
+
+    function cerrarModalTarea() {
+        document.getElementById('modalTarea').classList.add('hidden');
+        agendaTareaEditandoId = null;
+    }
+
+    async function guardarTarea() {
+        const errorBox = document.getElementById('mensajesModalTarea');
+        errorBox.innerHTML = '';
+
+        const titulo = document.getElementById('taTitulo').value.trim();
+        if (titulo.length < 5) {
+            errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">El título debe contener entre 5 y 200 caracteres.</div>`;
+            return;
+        }
+
+        const body = {
+            titulo,
+            descripcion: document.getElementById('taDescripcion').value.trim() || null,
+            prioridad: Number(document.getElementById('taPrioridad').value),
+            fechaLimite: document.getElementById('taFechaLimite').value || null
+        };
+
+        try {
+            if (agendaTareaEditandoId) {
+                await apiFetch(`/api/agenda-medica/tareas/${agendaTareaEditandoId}`, { method: 'PUT', body: JSON.stringify(body) });
+            } else {
+                await apiFetch('/api/agenda-medica/tareas', { method: 'POST', body: JSON.stringify(body) });
+            }
+            cerrarModalTarea();
+            cargarTareasAgenda();
+        } catch (e) {
+            errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    async function eliminarTarea(id) {
+        try {
+            await apiFetch(`/api/agenda-medica/tareas/${id}`, { method: 'DELETE' });
+            cargarTareasAgenda();
+        } catch (e) {
+            mostrarMensajeAgenda(e.message, 'error');
+        }
+    }
+
+
+    // Carga inicial de datos de este módulo: solo si el usuario tiene
+    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    if (tieneAccesoAgenda) {
+        cargarAgenda();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+### =====================================================================
+### Sistema Informático Hospitalario — pruebas manuales CU-00 a CU-12
+### IntelliJ HTTP Client (funciona igual en VS Code con la extensión REST Client)
+###
+### Todas las rutas /api/** excepto /api/register, /api/verify-dpi,
+### /api/auth/login y los catálogos GET públicos requieren
+### Authorization: Bearer <token>.
+###
+### NUEVO: idCajero, idEnfermero, idFarmaceutico, medicoId e
+### idUsuarioReasigna YA NO se envían en el body/query — el backend los
+### toma directo del token (@AuthenticationPrincipal). Solo inicia sesión
+### con el usuario correcto y el sistema sabe quién eres.
+### =====================================================================
+
+### ============ CU-00: Verificar DPI ============
+POST http://localhost:8080/api/verify-dpi
+Content-Type: application/json
+
+{
+  "dpi": "1234567890123"
+}
+
+### ============ Login por rol (guarda el token para el resto del archivo) ============
+
+# @name loginAdmin
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "admin001",
+  "password": "CAMBIA_ESTA_CLAVE"
+}
+
+# @name loginPaciente
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "paciente1",
+  "password": "Hospital2026!"
+}
+
+# @name loginRecepcion
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "recepc001",
+  "password": "CAMBIA_ESTA_CLAVE"
+}
+
+# @name loginCajero
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "cajero001",
+  "password": "Hospital2026!"
+}
+
+# @name loginEnfermero
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "enferm01",
+  "password": "Hospital2026!"
+}
+
+# @name loginMedico
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "medico001",
+  "password": "CAMBIA_ESTA_CLAVE"
+}
+
+# @name loginLaboratorista
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "labora01",
+  "password": "Hospital2026!"
+}
+
+# @name loginFarmaceutico
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "farmac01",
+  "password": "Hospital2026!"
+}
+
+
+### ============ CU-00 FA06/FA07: credenciales incorrectas / bloqueo (RN-CU00-03) ============
+### Ejecuta esto 5 veces seguidas con la misma contraseña mala: al 5to intento
+### debe responder "Cuenta bloqueada temporalmente. Intente de nuevo en 15 minutos."
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "paciente1",
+  "password": "clave-incorrecta"
+}
+
+
+### ============ CU-01: Mantenimiento de Usuarios (solo Administrador) ============
+
+GET http://localhost:8080/api/users
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+GET http://localhost:8080/api/users/buscar?campo=NOMBRE&valor=Ana&pagina=0&tamano=20
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+POST http://localhost:8080/api/users
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "nombreCompleto": "Juan Pérez López",
+  "correoElectronico": "juan.perez@hospital.com",
+  "nombreUsuario": "jperez01",
+  "password": "ClaveSegura123",
+  "rolId": 1,
+  "sucursalId": 1
+}
+
+GET http://localhost:8080/api/users/1
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+DELETE http://localhost:8080/api/users/1
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+
+### ============ CU-02: Registro de Usuarios Externos (público) ============
+POST http://localhost:8080/api/register
+Content-Type: application/json
+
+{
+  "nombreCompleto": "María López Gómez",
+  "correoElectronico": "maria.lopez@correo.com",
+  "nombreUsuario": "mlopez01",
+  "password": "PatientePass123",
+  "dpi": "1234567890123",
+  "telefono": "55512345",
+  "nit": "12345678",
+  "numeroSeguro": "IGSS-000111"
+}
+
+
+### ============ CU-03: Agendar Citas (paciente autenticado) ============
+
+GET http://localhost:8080/api/branches
+
+GET http://localhost:8080/api/branches/1/specialties
+
+GET http://localhost:8080/api/branches/1/specialties/1/doctors
+Authorization: Bearer {{loginPaciente.response.body.$.token}}
+
+GET http://localhost:8080/api/doctors/2/available-slots?fecha=2026-08-20
+Authorization: Bearer {{loginPaciente.response.body.$.token}}
+
+POST http://localhost:8080/api/appointments
+Authorization: Bearer {{loginPaciente.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "pacienteId": 6,
+  "sucursalId": 1,
+  "especialidadId": 1,
+  "medicoId": 2,
+  "fechaHora": "2026-08-20T09:00:00",
+  "motivoConsulta": "Dolor abdominal leve de dos días de evolución"
+}
+
+
+### ============ CU-04: Pago en Línea con Tarjeta (paciente autenticado) ============
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{loginPaciente.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "citaId": 1,
+  "numeroTarjeta": "4532015112830366",
+  "nombreTitular": "SOFIA RAMIREZ",
+  "vencimiento": "12/28",
+  "cvv": "123",
+  "idempotencyKey": "demo-pago-001"
+}
+
+### Alternativa: tarjeta rechazada (FA03)
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{loginPaciente.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "citaId": 1,
+  "numeroTarjeta": "4000000000000002",
+  "nombreTitular": "SOFIA RAMIREZ",
+  "vencimiento": "12/28",
+  "cvv": "123",
+  "idempotencyKey": "demo-pago-002"
+}
+
+
+### ============ CU-05: Recepción y Verificación de Cita ============
+
+GET http://localhost:8080/api/recepcion/citas/buscar?tipo=DPI&valor=1234567890123
+Authorization: Bearer {{loginRecepcion.response.body.$.token}}
+
+GET http://localhost:8080/api/recepcion/citas/buscar?tipo=CITA&valor=1
+Authorization: Bearer {{loginRecepcion.response.body.$.token}}
+
+POST http://localhost:8080/api/recepcion/citas/1/registrar-llegada
+Authorization: Bearer {{loginRecepcion.response.body.$.token}}
+
+GET http://localhost:8080/api/recepcion/medicos-disponibles?sucursalId=1&especialidadId=1&medicoActualId=2
+Authorization: Bearer {{loginRecepcion.response.body.$.token}}
+
+### Reasignar médico (FA07) — idUsuarioReasigna ya NO va en el body, sale del token
+POST http://localhost:8080/api/recepcion/citas/1/reasignar-medico
+Authorization: Bearer {{loginRecepcion.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "idMedicoNuevo": 3,
+  "motivo": "El médico original tuvo una emergencia"
+}
+
+
+### ============ CU-06: Cobro de Consulta en Caja ============
+
+GET http://localhost:8080/api/caja/citas/buscar?tipo=DPI&valor=1234567890123
+Authorization: Bearer {{loginCajero.response.body.$.token}}
+
+### Cobrar en efectivo — idCajero ya NO va en el body, sale del token
+POST http://localhost:8080/api/caja/citas/1/cobrar
+Authorization: Bearer {{loginCajero.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "metodoPago": "EFECTIVO",
+  "montoRecibido": 200.00,
+  "uuidIdempotencia": "demo-caja-001"
+}
+
+### Cobrar con tarjeta
+POST http://localhost:8080/api/caja/citas/1/cobrar
+Authorization: Bearer {{loginCajero.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "metodoPago": "VISA",
+  "ultimosCuatroDigitos": "4321",
+  "uuidIdempotencia": "demo-caja-002"
+}
+
+
+### ============ CU-07: Toma de Signos Vitales ============
+
+GET http://localhost:8080/api/enfermeria/cola
+Authorization: Bearer {{loginEnfermero.response.body.$.token}}
+
+POST http://localhost:8080/api/enfermeria/citas/1/llamar
+Authorization: Bearer {{loginEnfermero.response.body.$.token}}
+
+### Registrar signos vitales normales — idEnfermero ya NO va en el body, sale del token
+POST http://localhost:8080/api/enfermeria/citas/1/signos-vitales
+Authorization: Bearer {{loginEnfermero.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "presionSistolica": 120,
+  "presionDiastolica": 80,
+  "temperatura": 36.8,
+  "peso": 70.5,
+  "talla": 170.0,
+  "frecuenciaCardiaca": 75,
+  "esEmergencia": false
+}
+
+### Alternativa: valores fuera de rango clínico (dispara alertas, FA03)
+POST http://localhost:8080/api/enfermeria/citas/1/signos-vitales
+Authorization: Bearer {{loginEnfermero.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "presionSistolica": 150,
+  "presionDiastolica": 95,
+  "temperatura": 38.5,
+  "peso": 70.5,
+  "talla": 170.0,
+  "frecuenciaCardiaca": 110,
+  "esEmergencia": false
+}
+
+### Alternativa: emergencia (FA01)
+POST http://localhost:8080/api/enfermeria/citas/1/signos-vitales
+Authorization: Bearer {{loginEnfermero.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "presionSistolica": 120,
+  "presionDiastolica": 80,
+  "temperatura": 36.8,
+  "peso": 70.5,
+  "talla": 170.0,
+  "frecuenciaCardiaca": 75,
+  "esEmergencia": true
+}
+
+
+### ============ CU-08: Consulta Médica ============
+### medicoId ya NO va como query param: sale del token
+
+GET http://localhost:8080/api/medico/panel
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+POST http://localhost:8080/api/medico/citas/1/iniciar-consulta
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+GET http://localhost:8080/api/medico/citas/1/consulta
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+GET http://localhost:8080/api/medico/cie10?query=faringitis
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+### Guardar consulta como BORRADOR (En curso)
+PUT http://localhost:8080/api/medico/citas/1/consulta
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "motivoVisita": "Dolor de garganta y fiebre desde hace 2 días",
+  "hallazgosClinicos": "Faringe eritematosa, amígdalas inflamadas",
+  "cie10Id": 2,
+  "diagnostico": null,
+  "planTratamiento": null,
+  "notasAdicionales": null,
+  "estadoConsulta": "EN_CURSO"
+}
+
+### Finalizar consulta (Consulta Médica -> Evaluado). Requiere diagnóstico (FA05)
+PUT http://localhost:8080/api/medico/citas/1/consulta
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "motivoVisita": "Dolor de garganta y fiebre desde hace 2 días",
+  "hallazgosClinicos": "Faringe eritematosa, amígdalas inflamadas",
+  "cie10Id": 2,
+  "diagnostico": "Faringitis aguda bacteriana, sin complicaciones",
+  "planTratamiento": "Antibiótico por 7 días, reposo, abundantes líquidos",
+  "notasAdicionales": "Control en caso de persistir fiebre tras 48 horas",
+  "estadoConsulta": "FINALIZADA"
+}
+
+GET http://localhost:8080/api/medico/examenes
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+### Generar orden de laboratorio (FA01) — cambia el 1 por el id real de la ConsultaMedica
+POST http://localhost:8080/api/medico/consultas/1/orden-laboratorio
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "examenIds": [1, 2],
+  "esExterna": false,
+  "notas": "Descartar proceso infeccioso"
+}
+
+GET http://localhost:8080/api/medico/medicamentos
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+### Generar receta médica (FA04)
+POST http://localhost:8080/api/medico/consultas/1/receta
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "detalles": [
+    {
+      "medicamentoId": 3,
+      "dosis": "500mg",
+      "frecuencia": "Cada 8 horas",
+      "duracion": "7 días",
+      "indicaciones": "Tomar con alimentos"
+    }
+  ]
+}
+
+POST http://localhost:8080/api/medico/citas/1/no-asistio
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+POST http://localhost:8080/api/medico/citas/1/finalizar-atencion
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+
+### ============ CU-09: Gestión de Laboratorio ============
+
+GET http://localhost:8080/api/laboratorio/ordenes?estado=0
+Authorization: Bearer {{loginLaboratorista.response.body.$.token}}
+
+GET http://localhost:8080/api/laboratorio/ordenes/1
+Authorization: Bearer {{loginLaboratorista.response.body.$.token}}
+
+PUT http://localhost:8080/api/laboratorio/ordenes/1/examenes/1/resultado
+Authorization: Bearer {{loginLaboratorista.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "valorResultado": "4.8",
+  "unidad": "millones/uL",
+  "fueraDeRango": false,
+  "notasResultado": "Dentro de parámetros normales"
+}
+
+POST http://localhost:8080/api/laboratorio/ordenes/1/examenes/1/publicar
+Authorization: Bearer {{loginLaboratorista.response.body.$.token}}
+
+
+### ============ CU-10: Cobro de Laboratorio en Caja ============
+
+GET http://localhost:8080/api/caja/laboratorio/buscar?tipo=ORDEN&valor=1
+Authorization: Bearer {{loginCajero.response.body.$.token}}
+
+POST http://localhost:8080/api/caja/laboratorio/1/cobrar
+Authorization: Bearer {{loginCajero.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "metodoPago": "EFECTIVO",
+  "montoRecibido": 150.00,
+  "uuidIdempotencia": "demo-caja-lab-001"
+}
+
+
+### ============ CU-11: Despacho de Medicamentos ============
+### idFarmaceutico ya NO va en el body: sale del token
+
+GET http://localhost:8080/api/farmacia/recetas/buscar?tipo=RECETA&valor=1
+Authorization: Bearer {{loginFarmaceutico.response.body.$.token}}
+
+GET http://localhost:8080/api/farmacia/recetas/1?idSucursal=1
+Authorization: Bearer {{loginFarmaceutico.response.body.$.token}}
+
+POST http://localhost:8080/api/farmacia/carrito/pagar
+Authorization: Bearer {{loginFarmaceutico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "idSucursal": 1,
+  "idPaciente": 6,
+  "metodoPago": "EFECTIVO",
+  "montoRecibido": 100.00,
+  "uuidIdempotencia": "demo-farmacia-001",
+  "items": [
+    {
+      "origen": "RECETA",
+      "recetaId": 1,
+      "medicamentoId": 3,
+      "cantidad": 14,
+      "sustituido": false
+    }
+  ]
+}
+
+POST http://localhost:8080/api/farmacia/recetas/1/cancelar
+Authorization: Bearer {{loginFarmaceutico.response.body.$.token}}
+
+### Ajustar stock (Administrador o Farmacéutico) — idUsuario ya NO va en el body
+POST http://localhost:8080/api/farmacia/inventario/ajustar
+Authorization: Bearer {{loginFarmaceutico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "medicamentoId": 3,
+  "sucursalId": 1,
+  "tipoMovimiento": "COMPRA",
+  "cantidad": 50,
+  "costoUnitario": 4.50
+}
+
+
+### ============ CU-12: Agendamiento de Cita de Seguimiento (médico autenticado) ============
+### Se dispara desde la consulta médica (CU-08) recién finalizada.
+### medicoId sale del token; consultaId es el que devuelve el paso "Finalizar consulta" de CU-08.
+
+### Paso 2-3 FB: contexto precargado (paciente, médico, sucursal, especialidad)
+GET http://localhost:8080/api/medico/consultas/1/seguimiento/contexto
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+### Paso 5 FB: mismo calendario de disponibilidad que CU-03 (reutiliza el endpoint)
+GET http://localhost:8080/api/doctors/2/available-slots?fecha=2026-08-27
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+
+### Paso 7 FB: confirmar el agendamiento — Monitoreo de Tratamiento
+POST http://localhost:8080/api/medico/consultas/1/seguimiento
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "tipoSeguimiento": "MONITOREO_TRATAMIENTO",
+  "fechaHora": "2026-08-27T09:00:00",
+  "motivoSeguimiento": "Control de evolución tras tratamiento antibiótico por faringitis aguda."
+}
+
+### Alternativa: Revisión de Resultados de Laboratorio
+POST http://localhost:8080/api/medico/consultas/1/seguimiento
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "tipoSeguimiento": "REVISION_RESULTADOS",
+  "fechaHora": "2026-08-27T09:30:00",
+  "motivoSeguimiento": "Revisión de resultados de hemograma y glucosa solicitados en la consulta."
+}
+
+### FA01: horario ya no disponible (usa una fecha/hora que ya tenga una cita)
+POST http://localhost:8080/api/medico/consultas/1/seguimiento
+Authorization: Bearer {{loginMedico.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "tipoSeguimiento": "MONITOREO_TRATAMIENTO",
+  "fechaHora": "2026-08-20T09:00:00",
+  "motivoSeguimiento": "Debe rechazar: ese horario ya está ocupado por otra cita."
+}

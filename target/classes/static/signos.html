@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Signos Vitales (Triaje) - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="signos" data-roles="Enfermero,Administrador,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Registro de Signos Vitales (Triaje)</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-signos" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold text-brand-black">Pacientes en Espera</h2>
+                        <button onclick="cargarColaSignos()" class="text-sm text-gray-500 hover:text-brand-black">
+                            <i class="fa-solid fa-rotate"></i> Actualizar
+                        </button>
+                    </div>
+                    <div id="mensajesSignos"></div>
+                    <div id="listaPresentes" class="space-y-2"></div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <h2 class="text-lg font-bold text-brand-black mb-4">En Toma de Signos</h2>
+                    <div id="listaEnProceso" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <div id="formSignosContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+                <h2 id="formSignosTitulo" class="text-lg font-bold text-brand-black mb-4"></h2>
+                <div id="mensajesFormSignos"></div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Presión Sistólica (mmHg)</label>
+                        <input id="svSistolica" type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Presión Diastólica (mmHg)</label>
+                        <input id="svDiastolica" type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Temperatura (°C)</label>
+                        <input id="svTemperatura" type="number" step="0.1" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Frecuencia Cardíaca (lpm)</label>
+                        <input id="svFrecuencia" type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+                        <input id="svPeso" type="number" step="0.01" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Talla (cm)</label>
+                        <input id="svTalla" type="number" step="0.01" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                </div>
+
+                <div class="mt-3 flex items-center gap-2">
+                    <input id="svEmergencia" type="checkbox" class="w-4 h-4">
+                    <label for="svEmergencia" class="text-sm font-medium text-gray-700">¿Es Emergencia?</label>
+                </div>
+
+                <div class="mt-4 flex gap-2">
+                    <button onclick="registrarSignosVitales()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                        Registrar Signos Vitales
+                    </button>
+                    <button onclick="cerrarFormSignos()"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg transition">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CONSULTA MÉDICA (CU-08) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: signos
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoSignos = protegerPagina();
+
+    let citaSignosActual = null;
+
+    function mostrarMensajeSignos(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesSignos').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function cargarColaSignos() {
+        try {
+            const data = await apiFetch('/api/enfermeria/cola');
+            renderColaSignos(data.presentes, data.enProceso);
+        } catch (e) {
+            mostrarMensajeSignos(e.message, 'error');
+        }
+    }
+
+    function renderColaSignos(presentes, enProceso) {
+        const listaPresentes = document.getElementById('listaPresentes');
+        const listaEnProceso = document.getElementById('listaEnProceso');
+
+        listaPresentes.innerHTML = presentes.length ? presentes.map(c => `
+            <div class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
+                <div>
+                    <p class="font-semibold">${c.nombrePaciente} ${c.esEmergencia ? '<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">EMERGENCIA</span>' : ''}</p>
+                    <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
+                </div>
+                <button onclick="llamarPaciente(${c.id})"
+                        class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-2 rounded-lg text-sm">
+                    Llamar y Tomar Signos
+                </button>
+            </div>`).join('') : '<p class="text-sm text-gray-400">No hay pacientes en espera.</p>';
+
+        listaEnProceso.innerHTML = enProceso.length ? enProceso.map(c => `
+            <div class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
+                <div>
+                    <p class="font-semibold">${c.nombrePaciente} ${c.esEmergencia ? '<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">EMERGENCIA</span>' : ''}</p>
+                    <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
+                </div>
+                <button onclick="abrirFormSignos(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}')"
+                        class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-2 rounded-lg text-sm">
+                    Registrar Signos Vitales
+                </button>
+            </div>`).join('') : '<p class="text-sm text-gray-400">No hay pacientes en toma de signos.</p>';
+    }
+
+    async function llamarPaciente(idCita) {
+        try {
+            const data = await apiFetch(`/api/enfermeria/citas/${idCita}/llamar`, { method: 'POST' });
+            mostrarMensajeSignos(data.mensajeAnuncio, 'info');
+            cargarColaSignos();
+        } catch (e) {
+            mostrarMensajeSignos(e.message, 'error');
+        }
+    }
+
+    function abrirFormSignos(idCita, nombrePaciente) {
+        citaSignosActual = idCita;
+        document.getElementById('formSignosTitulo').innerText = `Signos Vitales — ${nombrePaciente} (Cita #${idCita})`;
+        document.getElementById('mensajesFormSignos').innerHTML = '';
+        ['svSistolica', 'svDiastolica', 'svTemperatura', 'svFrecuencia', 'svPeso', 'svTalla']
+            .forEach(id => document.getElementById(id).value = '');
+        document.getElementById('svEmergencia').checked = false;
+        document.getElementById('formSignosContainer').classList.remove('hidden');
+        document.getElementById('formSignosContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cerrarFormSignos() {
+        citaSignosActual = null;
+        document.getElementById('formSignosContainer').classList.add('hidden');
+    }
+
+    async function registrarSignosVitales() {
+        const idEnfermero = sessionStorage.getItem('usuarioId');
+        const body = {
+            presionSistolica: Number(document.getElementById('svSistolica').value),
+            presionDiastolica: Number(document.getElementById('svDiastolica').value),
+            temperatura: Number(document.getElementById('svTemperatura').value),
+            peso: Number(document.getElementById('svPeso').value),
+            talla: Number(document.getElementById('svTalla').value),
+            frecuenciaCardiaca: Number(document.getElementById('svFrecuencia').value),
+            esEmergencia: document.getElementById('svEmergencia').checked,
+            idEnfermero: idEnfermero ? Number(idEnfermero) : null
+        };
+
+        try {
+            const data = await apiFetch(`/api/enfermeria/citas/${citaSignosActual}/signos-vitales`, {
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+            let mensaje = data.mensaje;
+            if (data.alertasClinicas && data.alertasClinicas.length) {
+                mensaje += '<br><span class="font-semibold">⚠ ' + data.alertasClinicas.join(' ') + '</span>';
+            }
+            mostrarMensajeSignos(mensaje, 'exito');
+            cerrarFormSignos();
+            cargarColaSignos();
+        } catch (e) {
+            document.getElementById('mensajesFormSignos').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    // Carga inicial de datos de este módulo: solo si el usuario tiene
+    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    if (tieneAccesoSignos) {
+        cargarColaSignos();
+    }
+</script>
+</body>
+</html>

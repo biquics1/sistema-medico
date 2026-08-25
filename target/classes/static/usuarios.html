@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="usuarios" data-roles="Administrador,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Gestión de Usuarios</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-usuarios" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <h2 class="text-lg font-bold text-brand-black">Listado de Usuarios</h2>
+                    <div class="flex gap-2">
+                        <select id="filtroCampo" class="p-2 border border-gray-300 rounded-md text-sm">
+                            <option value="nombreCompleto">Nombre</option>
+                            <option value="nombreUsuario">Nombre de Usuario</option>
+                            <option value="correoElectronico">Correo Electrónico</option>
+                            <option value="rolNombre">Rol</option>
+                            <option value="dpi">DPI</option>
+                        </select>
+                        <input id="filtroTexto" maxlength="25" placeholder="Buscar..."
+                               class="p-2 border border-gray-300 rounded-md text-sm">
+                        <button onclick="renderTablaUsuarios()"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button onclick="abrirModalUsuario()"
+                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
+                            + Crear Usuario
+                        </button>
+                    </div>
+                </div>
+
+                <div id="mensajesUsuarios"></div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-3 py-2">ID</th>
+                            <th class="px-3 py-2">Nombre</th>
+                            <th class="px-3 py-2">Correo</th>
+                            <th class="px-3 py-2">Rol</th>
+                            <th class="px-3 py-2">Usuario</th>
+                            <th class="px-3 py-2">Estado</th>
+                            <th class="px-3 py-2">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablaUsuariosBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+                    <div>
+                        <span id="conteoUsuarios"></span>
+                        <select id="usuariosPorPagina" onchange="paginaUsuariosActual = 1; renderTablaUsuarios()" class="ml-2 border border-gray-300 rounded-md p-1">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select> por página
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <button onclick="cambiarPaginaUsuarios(-1)" class="px-2 py-1 border rounded-md">‹</button>
+                        <span id="paginaUsuariosLabel"></span>
+                        <button onclick="cambiarPaginaUsuarios(1)" class="px-2 py-1 border rounded-md">›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal crear/editar usuario -->
+        <div id="modalUsuario" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 id="modalUsuarioTitulo" class="text-lg font-bold text-brand-black mb-4">Crear Usuario</h3>
+                <div id="mensajesModalUsuario"></div>
+
+                <form id="formUsuario" class="space-y-3">
+                    <input type="hidden" id="usuarioId">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Nombre Completo</label>
+                        <input id="uNombreCompleto" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                        <input id="uCorreoElectronico" type="email" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
+                        <input id="uNombreUsuario" maxlength="9" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Contraseña <span id="labelPasswordOpcional" class="text-gray-400 text-xs hidden">(dejar en blanco para no cambiarla)</span>
+                        </label>
+                        <input id="uPassword" type="password" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">DPI (opcional)</label>
+                            <input id="uDpi" maxlength="13" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Teléfono (opcional)</label>
+                            <input id="uTelefono" maxlength="8" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">NIT (opcional)</label>
+                            <input id="uNit" maxlength="9" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">No. Seguro (opcional)</label>
+                            <input id="uNumeroSeguro" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Rol</label>
+                        <select id="uRolId" onchange="toggleCampoEspecialidad()" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Sucursal</label>
+                        <select id="uSucursalId" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                    </div>
+                    <div id="campoEspecialidadUsuario" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700">Especialidad (solo médicos)</label>
+                        <select id="uEspecialidadId" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Estado</label>
+                        <select id="uEstado" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="cerrarModalUsuario()"
+                                class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                        <button type="button" onclick="guardarUsuario()"
+                                class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal confirmar eliminación -->
+        <div id="modalEliminarUsuario" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-sm text-center">
+                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-3"></i>
+                <p class="text-gray-700 mb-4" id="mensajeConfirmarEliminar"></p>
+                <div class="flex gap-2">
+                    <button onclick="cerrarModalEliminarUsuario()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button onclick="confirmarEliminarUsuario()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg">Eliminar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: usuarios
+    //
+    // IMPORTANTE (fix del error "abrirModalUsuario is not defined"):
+    // Las funciones que se invocan desde atributos onclick="..." del
+    // HTML DEBEN quedar declaradas en el nivel superior del <script>,
+    // NUNCA dentro de un bloque if/else. Una función declarada dentro
+    // de un bloque puede no quedar expuesta de forma global, y por
+    // eso el botón "Editar" (generado dinámicamente en el <tbody>)
+    // no la encontraba. Aquí solo usamos el resultado de
+    // protegerPagina() para decidir si cargamos los datos al final,
+    // pero las funciones siempre se definen.
+    // ============================================================
+    const tieneAccesoUsuarios = protegerPagina();
+
+    // CU-01: Gestión de Usuarios
+    let usuariosCache = [];
+    let rolesCache = [];
+    let sucursalesCache = [];
+    let especialidadesCache = [];
+    let paginaUsuariosActual = 1;
+    let idUsuarioAEliminar = null;
+
+    function mostrarMensajeUsuarios(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200'
+        };
+        document.getElementById('mensajesUsuarios').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function cargarCatalogosUsuario() {
+        [rolesCache, sucursalesCache, especialidadesCache] = await Promise.all([
+            apiFetch('/api/roles'),
+            apiFetch('/api/sucursales'),
+            apiFetch('/api/especialidades')
+        ]);
+
+        // NUEVO: un Administrador de Sede (rol "Administrador", no "Administrador
+        // General") no puede crear/asignar el rol "Administrador General", y solo
+        // puede trabajar dentro de su propia sucursal. El backend ya lo valida
+        // (UsuarioService.crear/actualizar), esto es solo para que el formulario
+        // no ofrezca opciones que de todos modos van a ser rechazadas.
+        const esAdminDeSede = rolActual === 'Administrador';
+        const rolesParaFormulario = esAdminDeSede
+            ? rolesCache.filter(r => r.nombre !== 'Administrador General')
+            : rolesCache;
+
+        const selectRol = document.getElementById('uRolId');
+        selectRol.innerHTML = rolesParaFormulario.map(r => `<option value="${r.id}">${r.nombre}</option>`).join('');
+
+        const selectSucursal = document.getElementById('uSucursalId');
+        selectSucursal.innerHTML = '<option value="">-- Seleccione --</option>' +
+            sucursalesCache.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+
+        if (esAdminDeSede) {
+            const miSucursalId = sessionStorage.getItem('sucursalId') || '';
+            selectSucursal.value = miSucursalId;
+            selectSucursal.disabled = true;
+        } else {
+            selectSucursal.disabled = false;
+        }
+
+        const selectEspecialidad = document.getElementById('uEspecialidadId');
+        selectEspecialidad.innerHTML = '<option value="">-- Seleccione --</option>' +
+            especialidadesCache.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+    }
+
+    function toggleCampoEspecialidad() {
+        const rolSeleccionado = rolesCache.find(r => r.id == document.getElementById('uRolId').value);
+        const esMedico = rolSeleccionado && rolSeleccionado.nombre === 'Médico';
+        document.getElementById('campoEspecialidadUsuario').classList.toggle('hidden', !esMedico);
+    }
+
+    async function cargarUsuarios() {
+        try {
+            usuariosCache = await apiFetch('/api/users');
+            renderTablaUsuarios();
+        } catch (e) {
+            mostrarMensajeUsuarios(e.message, 'error');
+        }
+    }
+
+    function renderTablaUsuarios() {
+        const campo = document.getElementById('filtroCampo').value;
+        const texto = document.getElementById('filtroTexto').value.trim().toLowerCase();
+
+        let filtrados = usuariosCache;
+        if (texto) {
+            filtrados = usuariosCache.filter(u => (u[campo] || '').toString().toLowerCase().includes(texto));
+        }
+
+        const porPagina = Number(document.getElementById('usuariosPorPagina').value);
+        const totalPaginas = Math.max(1, Math.ceil(filtrados.length / porPagina));
+        if (paginaUsuariosActual > totalPaginas) paginaUsuariosActual = totalPaginas;
+        const inicio = (paginaUsuariosActual - 1) * porPagina;
+        const pagina = filtrados.slice(inicio, inicio + porPagina);
+
+        const tbody = document.getElementById('tablaUsuariosBody');
+        if (pagina.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">No se encontraron datos usuarios.</td></tr>`;
+        } else {
+            tbody.innerHTML = pagina.map(u => `
+                <tr class="border-t border-gray-100">
+                    <td class="px-3 py-2">${u.id}</td>
+                    <td class="px-3 py-2">${u.nombreCompleto}</td>
+                    <td class="px-3 py-2">${u.correoElectronico}</td>
+                    <td class="px-3 py-2">${u.rolNombre}</td>
+                    <td class="px-3 py-2">${u.nombreUsuario}</td>
+                    <td class="px-3 py-2">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold ${u.estado === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}">
+                            ${u.estado === 1 ? 'Activo' : 'Inactivo'}
+                        </span>
+                    </td>
+                    <td class="px-3 py-2">
+                        <button onclick="abrirModalUsuario(${u.id})" class="text-blue-600 hover:underline mr-2">Editar</button>
+                        <button onclick="abrirModalEliminarUsuario(${u.id}, '${u.nombreUsuario}')" class="text-orange-600 hover:underline">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('conteoUsuarios').innerText = `${filtrados.length} registro(s)`;
+        document.getElementById('paginaUsuariosLabel').innerText = `${paginaUsuariosActual} / ${totalPaginas}`;
+    }
+
+    function cambiarPaginaUsuarios(delta) {
+        paginaUsuariosActual = Math.max(1, paginaUsuariosActual + delta);
+        renderTablaUsuarios();
+    }
+
+    async function abrirModalUsuario(id) {
+        document.getElementById('formUsuario').reset();
+        document.getElementById('mensajesModalUsuario').innerHTML = '';
+        document.getElementById('usuarioId').value = '';
+        await cargarCatalogosUsuario();
+
+        if (id) {
+            document.getElementById('modalUsuarioTitulo').innerText = 'Editar Usuario';
+            document.getElementById('labelPasswordOpcional').classList.remove('hidden');
+            try {
+                const u = await apiFetch(`/api/users/${id}`);
+                document.getElementById('usuarioId').value = u.id;
+                document.getElementById('uNombreCompleto').value = u.nombreCompleto;
+                document.getElementById('uCorreoElectronico').value = u.correoElectronico;
+                document.getElementById('uNombreUsuario').value = u.nombreUsuario;
+                document.getElementById('uDpi').value = u.dpi || '';
+                document.getElementById('uTelefono').value = u.telefono || '';
+                const rol = rolesCache.find(r => r.nombre === u.rolNombre);
+                if (rol) document.getElementById('uRolId').value = rol.id;
+                const sucursal = sucursalesCache.find(s => s.nombre === u.sucursalNombre);
+                if (sucursal) document.getElementById('uSucursalId').value = sucursal.id;
+                const especialidad = especialidadesCache.find(e => e.nombre === u.especialidadNombre);
+                if (especialidad) document.getElementById('uEspecialidadId').value = especialidad.id;
+                document.getElementById('uEstado').value = u.estado;
+                toggleCampoEspecialidad();
+            } catch (e) {
+                mostrarMensajeUsuarios(e.message, 'error');
+                return;
+            }
+        } else {
+            document.getElementById('modalUsuarioTitulo').innerText = 'Crear Usuario';
+            document.getElementById('labelPasswordOpcional').classList.add('hidden');
+            document.getElementById('uEstado').value = '1';
+        }
+
+        document.getElementById('modalUsuario').classList.remove('hidden');
+    }
+
+    function cerrarModalUsuario() {
+        document.getElementById('modalUsuario').classList.add('hidden');
+    }
+
+    async function guardarUsuario() {
+        const id = document.getElementById('usuarioId').value;
+        const body = {
+            nombreCompleto: document.getElementById('uNombreCompleto').value.trim(),
+            correoElectronico: document.getElementById('uCorreoElectronico').value.trim(),
+            nombreUsuario: document.getElementById('uNombreUsuario').value.trim(),
+            password: document.getElementById('uPassword').value,
+            dpi: document.getElementById('uDpi').value.trim() || null,
+            telefono: document.getElementById('uTelefono').value.trim() || null,
+            nit: document.getElementById('uNit').value.trim() || null,
+            numeroSeguro: document.getElementById('uNumeroSeguro').value.trim() || null,
+            rolId: Number(document.getElementById('uRolId').value),
+            sucursalId: document.getElementById('uSucursalId').value ? Number(document.getElementById('uSucursalId').value) : null,
+            especialidadId: document.getElementById('uEspecialidadId').value ? Number(document.getElementById('uEspecialidadId').value) : null,
+            estado: Number(document.getElementById('uEstado').value)
+        };
+
+        try {
+            if (id) {
+                await apiFetch(`/api/users/${id}`, { method: 'PUT', body: JSON.stringify(body) });
+                mostrarMensajeUsuarios('Usuario actualizado correctamente.', 'exito');
+            } else {
+                await apiFetch('/api/users', { method: 'POST', body: JSON.stringify(body) });
+                mostrarMensajeUsuarios('Usuario creado correctamente.', 'exito');
+            }
+            cerrarModalUsuario();
+            cargarUsuarios();
+        } catch (e) {
+            document.getElementById('mensajesModalUsuario').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    function abrirModalEliminarUsuario(id, nombreUsuario) {
+        idUsuarioAEliminar = id;
+        document.getElementById('mensajeConfirmarEliminar').innerText =
+            `¿Está seguro que desea eliminar el usuario "${nombreUsuario}"? Esta acción no se puede deshacer.`;
+        document.getElementById('modalEliminarUsuario').classList.remove('hidden');
+    }
+
+    function cerrarModalEliminarUsuario() {
+        document.getElementById('modalEliminarUsuario').classList.add('hidden');
+        idUsuarioAEliminar = null;
+    }
+
+    async function confirmarEliminarUsuario() {
+        try {
+            await apiFetch(`/api/users/${idUsuarioAEliminar}`, { method: 'DELETE' });
+            cerrarModalEliminarUsuario();
+            mostrarMensajeUsuarios('El usuario ha sido eliminado correctamente.', 'exito');
+            cargarUsuarios();
+        } catch (e) {
+            cerrarModalEliminarUsuario();
+            mostrarMensajeUsuarios(e.message, 'error');
+        }
+    }
+
+    // Carga inicial de datos: solo si el usuario tiene acceso a este módulo.
+    if (tieneAccesoUsuarios) {
+        cargarUsuarios();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control y Gestión de Citas - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Control y Gestión de Citas</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-citas" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+                <h2 class="text-lg font-bold text-brand-black mb-4">Buscar Cita</h2>
+
+                <div class="flex gap-2 mb-4">
+                    <button id="btnPorDpi" onclick="cambiarTipoBusqueda('DPI')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por DPI</button>
+                    <button id="btnPorCita" onclick="cambiarTipoBusqueda('CITA')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por No. Cita</button>
+                </div>
+
+                <div class="flex gap-2 mb-4">
+                    <input id="valorBusqueda" maxlength="13" placeholder="Ingrese DPI (13 dígitos)"
+                           class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow">
+                    <button onclick="buscarCita()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                        Buscar
+                    </button>
+                </div>
+
+                <div id="mensajesCita"></div>
+                <div id="resultadoCita"></div>
+            </div>
+        </section>
+
+        <!-- 3. SIGNOS VITALES — pendiente (CU-07) -->
+        <!-- 3. SIGNOS VITALES (CU-07) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: citas
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoCitas = protegerPagina();
+
+    let tipoBusqueda = 'DPI';
+    let citaActual = null;
+
+    function cambiarTipoBusqueda(tipo) {
+        tipoBusqueda = tipo;
+        document.getElementById('btnPorDpi').classList.toggle('bg-brand-yellow', tipo === 'DPI');
+        document.getElementById('btnPorDpi').classList.toggle('text-brand-black', tipo === 'DPI');
+        document.getElementById('btnPorCita').classList.toggle('bg-brand-yellow', tipo === 'CITA');
+        document.getElementById('btnPorCita').classList.toggle('text-brand-black', tipo === 'CITA');
+        const input = document.getElementById('valorBusqueda');
+        input.value = '';
+        input.placeholder = tipo === 'DPI' ? 'Ingrese DPI (13 dígitos)' : 'Ingrese número de cita';
+    }
+
+    function mostrarMensajeCita(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesCita').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function buscarCita() {
+        const valor = document.getElementById('valorBusqueda').value.trim();
+        document.getElementById('mensajesCita').innerHTML = '';
+        document.getElementById('resultadoCita').innerHTML = '';
+        if (!valor) { mostrarMensajeCita('Debe ingresar un número de cita o DPI para buscar.', 'error'); return; }
+
+        try {
+            const data = await apiFetch(`/api/recepcion/citas/buscar?tipo=${tipoBusqueda}&valor=${encodeURIComponent(valor)}`);
+            if (data.citaEncontrada) {
+                citaActual = data.cita;
+                renderCita(data.cita);
+            } else if (data.accionSugerida === 'REGISTRAR_PACIENTE') {
+                mostrarMensajeCita(data.mensaje, 'info');
+                document.getElementById('resultadoCita').innerHTML =
+                    `<button onclick="location.href='register.html'" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Registrar Paciente</button>`;
+            } else if (data.accionSugerida === 'NUEVA_CITA_WALKIN') {
+                mostrarMensajeCita(data.mensaje, 'info');
+                document.getElementById('resultadoCita').innerHTML =
+                    `<button onclick="location.href='agendar.html?walkin=true'" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Nueva Cita (Walk-in)</button>`;
+            }
+        } catch (e) {
+            mostrarMensajeCita(e.message, 'error');
+        }
+    }
+
+    function renderCita(cita) {
+        const badgeEmergencia = cita.esEmergencia
+            ? '<span class="ml-2 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">EMERGENCIA</span>' : '';
+
+        let botonPrincipal = '';
+        if (cita.estado === 'Confirmada') {
+            botonPrincipal = `<button onclick="registrarLlegada()" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">Registrar llegada</button>`;
+        } else if (cita.estado === 'Pendiente de pago') {
+            mostrarMensajeCita("La cita tiene estado 'Pendiente de pago'. Debe realizar el pago en caja antes de ser atendido.", 'error');
+        } else if (cita.estado === 'Cancelada') {
+            mostrarMensajeCita('La cita fue cancelada. El paciente debe agendar una nueva cita.', 'error');
+        }
+
+        document.getElementById('resultadoCita').innerHTML = `
+            <div class="border border-gray-200 rounded-lg p-4 mt-2">
+                <p class="font-semibold">${cita.nombrePaciente} ${badgeEmergencia}</p>
+                <p class="text-sm text-gray-600">No. Cita: ${cita.id} · Estado: ${cita.estado}</p>
+                <p class="text-sm text-gray-600">${cita.especialidad} · ${cita.sucursal}</p>
+                <p class="text-sm text-gray-600">Médico: ${cita.nombreMedico}</p>
+                <p class="text-sm text-gray-600">${new Date(cita.fechaHora).toLocaleString('es-GT')}</p>
+                <p class="text-sm text-gray-600 mt-1">${cita.motivoConsulta}</p>
+                <div class="mt-3">${botonPrincipal}</div>
+            </div>`;
+    }
+
+    async function registrarLlegada() {
+        try {
+            const data = await apiFetch(`/api/recepcion/citas/${citaActual.id}/registrar-llegada`, { method: 'POST' });
+            mostrarMensajeCita(data.mensaje, 'exito');
+            citaActual = data.cita;
+            renderCita(data.cita);
+        } catch (e) {
+            mostrarMensajeCita(e.message, 'error');
+        }
+    }
+
+    // Carga inicial / estado por defecto de los controles: solo si el
+    // usuario tiene acceso a este módulo (de lo contrario esos
+    // elementos del DOM ya fueron reemplazados por protegerPagina()).
+    if (tieneAccesoCitas) {
+        cambiarTipoBusqueda('DPI');
+        document.getElementById('valorBusqueda').addEventListener('keypress', (e) => { if (e.key === 'Enter') buscarCita(); });
+    }
+</script>
+</body>
+</html>

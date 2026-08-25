@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento de Catálogos del Sistema - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="catalogos" data-roles="Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Mantenimiento de Catálogos del Sistema</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-catalogos" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <h2 class="text-lg font-bold text-brand-black">Mantenimiento de Catálogos del Sistema</h2>
+                    <button onclick="abrirModalCatalogo()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
+                        + Crear
+                    </button>
+                </div>
+
+                <!-- Sub-pestañas: un catálogo a la vez -->
+                <div id="catalogoTabs" class="flex gap-2 mb-4 flex-wrap"></div>
+
+                <div class="flex gap-2 mb-4">
+                    <input id="filtroCatalogo" placeholder="Buscar por nombre..." oninput="debounceFiltrarCatalogo()"
+                           class="p-2 border border-gray-300 rounded-md text-sm w-full max-w-xs">
+                </div>
+
+                <div id="mensajesCatalogo"></div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                        <tr id="catalogoTheadRow"></tr>
+                        </thead>
+                        <tbody id="catalogoTbody"></tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+                    <span id="conteoCatalogo"></span>
+                    <div class="flex gap-2 items-center">
+                        <button onclick="cambiarPaginaCatalogo(-1)" class="px-2 py-1 border rounded-md">‹</button>
+                        <span id="paginaCatalogoLabel"></span>
+                        <button onclick="cambiarPaginaCatalogo(1)" class="px-2 py-1 border rounded-md">›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal: Crear/Editar registro de catálogo (campos generados dinámicamente) -->
+        <div id="modalCatalogo" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 id="modalCatalogoTitulo" class="text-lg font-bold text-brand-black mb-4">Nuevo Registro</h3>
+                <div id="mensajesModalCatalogo"></div>
+                <div id="camposCatalogoContainer" class="space-y-3"></div>
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalCatalogo()"
+                            class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button id="btnGuardarCatalogo" onclick="guardarCatalogo()"
+                            class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Crear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Confirmar eliminación de catálogo -->
+        <div id="modalEliminarCatalogo" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-sm text-center">
+                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-3"></i>
+                <p id="mensajeEliminarCatalogo" class="text-gray-700 mb-4"></p>
+                <div class="flex gap-2">
+                    <button onclick="cerrarModalEliminarCatalogo()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button onclick="confirmarEliminarCatalogo()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg">Eliminar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. AGENDA MÉDICA (CU-14) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: catalogos
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoCatalogos = protegerPagina();
+
+    // CU-14: Mantenimiento de Catálogos del Sistema
+    // ============================================================
+    // Cada catálogo define: label, adminPath (GET paginado), basePath (POST/PUT/DELETE),
+    // columns (qué se muestra en la tabla) y campos (qué se pide en el formulario).
+    // "estado" (Activo/Inactivo) se agrega automáticamente a todos los formularios.
+    const CATALOGOS_CONFIG = {
+        especialidad: {
+            label: 'Especialidades', adminPath: 'especialidades/admin', basePath: 'especialidades',
+            columns: [{field: 'nombre', label: 'Nombre'}, {field: 'descripcion', label: 'Descripción'}],
+            campos: [
+                {name: 'nombre', label: 'Nombre', type: 'text', maxlength: 200, required: true},
+                {name: 'descripcion', label: 'Descripción', type: 'textarea', maxlength: 500, required: true}
+            ]
+        },
+        sucursal: {
+            label: 'Sucursales', adminPath: 'sucursales/admin', basePath: 'sucursales',
+            columns: [
+                {field: 'nombre', label: 'Nombre'}, {field: 'telefono', label: 'Teléfono'},
+                {field: 'direccion', label: 'Dirección'}
+            ],
+            campos: [
+                {name: 'nombre', label: 'Nombre', type: 'text', maxlength: 100, required: true},
+                {name: 'telefono', label: 'Teléfono (8 dígitos, opcional)', type: 'text', maxlength: 8},
+                {name: 'direccion', label: 'Dirección (opcional)', type: 'text', maxlength: 500},
+                {name: 'descripcion', label: 'Descripción (opcional)', type: 'textarea', maxlength: 250}
+            ]
+        },
+        estado_cita: {
+            label: 'Estados de Cita', adminPath: 'estados-cita', basePath: 'estados-cita',
+            columns: [{field: 'nombre', label: 'Nombre'}, {field: 'descripcion', label: 'Descripción'}],
+            campos: [
+                {name: 'nombre', label: 'Nombre', type: 'text', maxlength: 50, required: true},
+                {name: 'descripcion', label: 'Descripción (opcional)', type: 'textarea', maxlength: 200}
+            ]
+        },
+        laboratorio: {
+            label: 'Laboratorios', adminPath: 'laboratorios/admin', basePath: 'laboratorios',
+            columns: [{field: 'nombre', label: 'Nombre'}, {field: 'descripcion', label: 'Descripción'}],
+            campos: [
+                {name: 'nombre', label: 'Nombre', type: 'text', maxlength: 200, required: true},
+                {name: 'descripcion', label: 'Descripción (opcional)', type: 'textarea', maxlength: 500}
+            ]
+        },
+        examen_laboratorio: {
+            label: 'Exámenes de Lab', adminPath: 'examenes-laboratorio', basePath: 'examenes-laboratorio',
+            columns: [
+                {field: 'codigo', label: 'Código'}, {field: 'nombre', label: 'Nombre'},
+                {field: 'precio', label: 'Precio', formatter: v => v != null ? 'Q' + Number(v).toFixed(2) : '-'},
+                {field: 'laboratorioNombre', label: 'Laboratorio'}
+            ],
+            campos: [
+                {name: 'codigo', label: 'Código (opcional)', type: 'text', maxlength: 20},
+                {name: 'nombre', label: 'Nombre', type: 'text', maxlength: 200, required: true},
+                {name: 'precio', label: 'Precio (Q)', type: 'number', min: 0.01, step: 0.01, required: true},
+                {name: 'rangoReferencia', label: 'Rango de Referencia (opcional)', type: 'text', maxlength: 100},
+                {name: 'unidadMedida', label: 'Unidad de Medida (opcional)', type: 'text', maxlength: 30},
+                {name: 'laboratorioId', label: 'Laboratorio', type: 'select', optionsSource: 'laboratorios', required: true}
+            ]
+        },
+        rol: {
+            label: 'Roles', adminPath: 'roles/admin', basePath: 'roles',
+            columns: [{field: 'nombre', label: 'Nombre'}, {field: 'descripcion', label: 'Descripción'}],
+            campos: [
+                {name: 'nombre', label: 'Nombre', type: 'text', maxlength: 200, required: true},
+                {name: 'descripcion', label: 'Descripción (opcional)', type: 'textarea', maxlength: 500}
+            ]
+        }
+    };
+
+    let catalogoActivo = 'especialidad';
+    let catalogoPagina = 0;
+    const catalogoTamano = 10;
+    let catalogoFiltro = '';
+    let catalogoTotalPaginas = 1;
+    let catalogoRegistrosCache = [];
+    let catalogoEditandoId = null;
+    let catalogoEliminarId = null;
+    let catalogoFiltroTimeout = null;
+    let laboratoriosSelectCache = [];
+
+    function mostrarMensajeCatalogo(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200'
+        };
+        document.getElementById('mensajesCatalogo').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function renderTabsCatalogo() {
+        const cont = document.getElementById('catalogoTabs');
+        cont.innerHTML = Object.entries(CATALOGOS_CONFIG).map(([key, cfg]) => `
+            <button onclick="seleccionarCatalogo('${key}')"
+                class="px-3 py-2 rounded-md text-sm font-semibold ${key === catalogoActivo ? 'bg-brand-black text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}">
+                ${cfg.label}
+            </button>
+        `).join('');
+    }
+
+    function seleccionarCatalogo(key) {
+        catalogoActivo = key;
+        catalogoPagina = 0;
+        catalogoFiltro = '';
+        document.getElementById('filtroCatalogo').value = '';
+        renderTabsCatalogo();
+        renderTheadCatalogo();
+        cargarCatalogo();
+    }
+
+    function renderTheadCatalogo() {
+        const cfg = CATALOGOS_CONFIG[catalogoActivo];
+        document.getElementById('catalogoTheadRow').innerHTML =
+            `<th class="px-3 py-2">ID</th>` +
+            cfg.columns.map(c => `<th class="px-3 py-2">${c.label}</th>`).join('') +
+            `<th class="px-3 py-2">Estado</th><th class="px-3 py-2">Acciones</th>`;
+    }
+
+    function debounceFiltrarCatalogo() {
+        clearTimeout(catalogoFiltroTimeout);
+        catalogoFiltroTimeout = setTimeout(() => {
+            catalogoFiltro = document.getElementById('filtroCatalogo').value.trim();
+            catalogoPagina = 0;
+            cargarCatalogo();
+        }, 350);
+    }
+
+    async function cargarCatalogo() {
+        const cfg = CATALOGOS_CONFIG[catalogoActivo];
+        try {
+            const query = new URLSearchParams({
+                page: catalogoPagina, size: catalogoTamano, sort: 'nombre'
+            });
+            if (catalogoFiltro) query.set('filtro', catalogoFiltro);
+
+            const data = await apiFetch(`/api/${cfg.adminPath}?${query.toString()}`);
+            catalogoRegistrosCache = data.contenido || [];
+            catalogoTotalPaginas = data.totalPaginas || 1;
+            renderTablaCatalogo();
+        } catch (e) {
+            mostrarMensajeCatalogo(e.message, 'error');
+        }
+    }
+
+    function renderTablaCatalogo() {
+        const cfg = CATALOGOS_CONFIG[catalogoActivo];
+        const tbody = document.getElementById('catalogoTbody');
+
+        if (catalogoRegistrosCache.length === 0) {
+            const colspan = cfg.columns.length + 3;
+            tbody.innerHTML = `<tr><td colspan="${colspan}" class="text-center text-gray-400 py-4">No se encontraron resultados.</td></tr>`;
+        } else {
+            tbody.innerHTML = catalogoRegistrosCache.map(r => `
+                <tr class="border-t border-gray-100">
+                    <td class="px-3 py-2">${r.id}</td>
+                    ${cfg.columns.map(c => `<td class="px-3 py-2">${c.formatter ? c.formatter(r[c.field]) : (r[c.field] ?? '-')}</td>`).join('')}
+                    <td class="px-3 py-2">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold ${r.estado === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}">
+                            ${r.estado === 1 ? 'Activo' : 'Inactivo'}
+                        </span>
+                    </td>
+                    <td class="px-3 py-2 whitespace-nowrap">
+                        <button onclick="abrirModalCatalogo(${r.id})" class="text-blue-600 hover:underline mr-2">Editar</button>
+                        <button onclick="abrirModalEliminarCatalogo(${r.id}, '${(r.nombre || '').replace(/'/g, "\\'")}')" class="text-orange-600 hover:underline">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('conteoCatalogo').innerText = `Página ${catalogoPagina + 1} de ${catalogoTotalPaginas}`;
+        document.getElementById('paginaCatalogoLabel').innerText = `${catalogoPagina + 1} / ${catalogoTotalPaginas}`;
+    }
+
+    function cambiarPaginaCatalogo(delta) {
+        const nueva = catalogoPagina + delta;
+        if (nueva < 0 || nueva >= catalogoTotalPaginas) return;
+        catalogoPagina = nueva;
+        cargarCatalogo();
+    }
+
+    async function cargarLaboratoriosSelect() {
+        if (laboratoriosSelectCache.length === 0) {
+            laboratoriosSelectCache = await apiFetch('/api/laboratorios');
+        }
+        return laboratoriosSelectCache;
+    }
+
+    async function renderCampoFormulario(campo, valorActual) {
+        const valor = valorActual ?? '';
+        if (campo.type === 'textarea') {
+            return `
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">${campo.label}</label>
+                    <textarea id="campo_${campo.name}" maxlength="${campo.maxlength || 1000}" rows="2"
+                              class="w-full p-2 border border-gray-300 rounded-md">${valor}</textarea>
+                </div>`;
+        }
+        if (campo.type === 'select' && campo.optionsSource === 'laboratorios') {
+            const laboratorios = await cargarLaboratoriosSelect();
+            return `
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">${campo.label}</label>
+                    <select id="campo_${campo.name}" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="">-- Seleccione --</option>
+                        ${laboratorios.map(l => `<option value="${l.id}" ${String(l.id) === String(valor) ? 'selected' : ''}>${l.nombre}</option>`).join('')}
+                    </select>
+                </div>`;
+        }
+        // text / number
+        return `
+            <div>
+                <label class="block text-sm font-medium text-gray-700">${campo.label}</label>
+                <input id="campo_${campo.name}" type="${campo.type}" value="${valor}"
+                       ${campo.maxlength ? `maxlength="${campo.maxlength}"` : ''}
+                       ${campo.min !== undefined ? `min="${campo.min}"` : ''}
+                       ${campo.step !== undefined ? `step="${campo.step}"` : ''}
+                       class="w-full p-2 border border-gray-300 rounded-md">
+            </div>`;
+    }
+
+    async function abrirModalCatalogo(id) {
+        const cfg = CATALOGOS_CONFIG[catalogoActivo];
+        catalogoEditandoId = id || null;
+        document.getElementById('mensajesModalCatalogo').innerHTML = '';
+        document.getElementById('modalCatalogoTitulo').innerText = id ? `Editar ${cfg.label.slice(0, -1)}` : `Nuevo Registro — ${cfg.label}`;
+        document.getElementById('btnGuardarCatalogo').innerText = id ? 'Actualizar' : 'Crear';
+
+        const registro = id ? catalogoRegistrosCache.find(r => r.id === id) : {};
+
+        const camposHtml = await Promise.all(cfg.campos.map(c => renderCampoFormulario(c, registro ? registro[c.name] : '')));
+        const estadoActual = registro && registro.estado !== undefined ? registro.estado : 1;
+
+        document.getElementById('camposCatalogoContainer').innerHTML = camposHtml.join('') + `
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Estado</label>
+                <select id="campo_estado" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="1" ${estadoActual === 1 ? 'selected' : ''}>Activo</option>
+                    <option value="0" ${estadoActual === 0 ? 'selected' : ''}>Inactivo</option>
+                </select>
+            </div>`;
+
+        document.getElementById('modalCatalogo').classList.remove('hidden');
+    }
+
+    function cerrarModalCatalogo() {
+        document.getElementById('modalCatalogo').classList.add('hidden');
+        catalogoEditandoId = null;
+    }
+
+    async function guardarCatalogo() {
+        const cfg = CATALOGOS_CONFIG[catalogoActivo];
+        const errorBox = document.getElementById('mensajesModalCatalogo');
+        errorBox.innerHTML = '';
+
+        const body = {};
+        for (const campo of cfg.campos) {
+            const el = document.getElementById(`campo_${campo.name}`);
+            let valor = el.value.trim ? el.value.trim() : el.value;
+            if (campo.required && !valor) {
+                errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">El campo ${campo.label} es obligatorio.</div>`;
+                return;
+            }
+            if (campo.type === 'number') valor = valor === '' ? null : Number(valor);
+            if (campo.type === 'select' && campo.optionsSource === 'laboratorios') valor = valor === '' ? null : Number(valor);
+            body[campo.name] = valor === '' ? null : valor;
+        }
+        body.estado = Number(document.getElementById('campo_estado').value);
+
+        try {
+            if (catalogoEditandoId) {
+                await apiFetch(`/api/${cfg.basePath}/${catalogoEditandoId}`, { method: 'PUT', body: JSON.stringify(body) });
+                mostrarMensajeCatalogo('El registro ha sido actualizado correctamente.', 'exito');
+            } else {
+                await apiFetch(`/api/${cfg.basePath}`, { method: 'POST', body: JSON.stringify(body) });
+                mostrarMensajeCatalogo('El registro ha sido creado exitosamente.', 'exito');
+            }
+            cerrarModalCatalogo();
+            cargarCatalogo();
+        } catch (e) {
+            errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    function abrirModalEliminarCatalogo(id, nombre) {
+        catalogoEliminarId = id;
+        document.getElementById('mensajeEliminarCatalogo').innerText =
+            `¿Está seguro que desea eliminar el registro "${nombre}"? Esta acción no se puede deshacer.`;
+        document.getElementById('modalEliminarCatalogo').classList.remove('hidden');
+    }
+
+    function cerrarModalEliminarCatalogo() {
+        document.getElementById('modalEliminarCatalogo').classList.add('hidden');
+        catalogoEliminarId = null;
+    }
+
+    async function confirmarEliminarCatalogo() {
+        const cfg = CATALOGOS_CONFIG[catalogoActivo];
+        try {
+            await apiFetch(`/api/${cfg.basePath}/${catalogoEliminarId}`, { method: 'DELETE' });
+            cerrarModalEliminarCatalogo();
+            mostrarMensajeCatalogo('El registro ha sido eliminado correctamente.', 'exito');
+            cargarCatalogo();
+        } catch (e) {
+            cerrarModalEliminarCatalogo();
+            mostrarMensajeCatalogo(e.message, 'error');
+        }
+    }
+
+    // Carga inicial de datos de este módulo: solo si el usuario tiene
+    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    if (tieneAccesoCatalogos) {
+        renderTabsCatalogo();
+        renderTheadCatalogo();
+        seleccionarCatalogo(catalogoActivo);
+    }
+</script>
+</body>
+</html>

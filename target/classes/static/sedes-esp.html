@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Especialidades por Sede - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="sedes-esp" data-roles="Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Especialidades por Sede</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-sedes-esp" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <h2 class="text-lg font-bold text-brand-black">Especialidades por Sede</h2>
+                    <div class="flex gap-2">
+                        <input id="filtroIdSedesEsp" placeholder="Filtrar por ID..."
+                               class="p-2 border border-gray-300 rounded-md text-sm w-40">
+                        <button onclick="renderTablaSedesEsp()"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                        <button onclick="abrirModalSedesEsp()"
+                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
+                            + Asignar Especialidad
+                        </button>
+                    </div>
+                </div>
+
+                <div id="mensajesSedesEsp"></div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-3 py-2">ID</th>
+                            <th class="px-3 py-2">Sede</th>
+                            <th class="px-3 py-2">Especialidad</th>
+                            <th class="px-3 py-2">Estado</th>
+                            <th class="px-3 py-2">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablaSedesEspBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+                    <span id="conteoSedesEsp"></span>
+                    <div class="flex gap-2 items-center">
+                        <button onclick="cambiarPaginaSedesEsp(-1)" class="px-2 py-1 border rounded-md">‹</button>
+                        <span id="paginaSedesEspLabel"></span>
+                        <button onclick="cambiarPaginaSedesEsp(1)" class="px-2 py-1 border rounded-md">›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal asignar sede-especialidad -->
+        <div id="modalSedesEsp" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold text-brand-black mb-4">Asignar Especialidad a Sede</h3>
+                <div id="mensajesModalSedesEsp"></div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Sede</label>
+                        <select id="seSucursalId" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Especialidad</label>
+                        <select id="seEspecialidadId" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalSedesEsp()"
+                            class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button onclick="guardarSedesEsp()"
+                            class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Asignar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal confirmar eliminación sede-especialidad -->
+        <div id="modalEliminarSedesEsp" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-sm text-center">
+                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-3"></i>
+                <p class="text-gray-700 mb-4">¿Confirmar eliminación?</p>
+                <div class="flex gap-2">
+                    <button onclick="cerrarModalEliminarSedesEsp()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button onclick="confirmarEliminarSedesEsp()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg">Eliminar</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 7. BITÁCORA DE MOVIMIENTOS DE INVENTARIO (CU-13/15) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: sedes-esp
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoSedesEsp = protegerPagina();
+
+    // CU-13: Especialidades por Sede
+    // ============================================================
+    let sedesEspCache = [];
+    let paginaSedesEspActual = 1;
+    const sedesEspPorPagina = 10;
+    let idSedesEspAEliminar = null;
+
+    function mostrarMensajeSedesEsp(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200'
+        };
+        document.getElementById('mensajesSedesEsp').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function cargarSedesEsp() {
+        try {
+            sedesEspCache = await apiFetch('/api/branch-specialty');
+            renderTablaSedesEsp();
+        } catch (e) {
+            mostrarMensajeSedesEsp(e.message, 'error');
+        }
+    }
+
+    function renderTablaSedesEsp() {
+        const filtroId = document.getElementById('filtroIdSedesEsp').value.trim();
+        let filtrados = sedesEspCache;
+        if (filtroId) {
+            filtrados = sedesEspCache.filter(se => String(se.id) === filtroId);
+        }
+
+        const totalPaginas = Math.max(1, Math.ceil(filtrados.length / sedesEspPorPagina));
+        if (paginaSedesEspActual > totalPaginas) paginaSedesEspActual = totalPaginas;
+        const inicio = (paginaSedesEspActual - 1) * sedesEspPorPagina;
+        const pagina = filtrados.slice(inicio, inicio + sedesEspPorPagina);
+
+        const tbody = document.getElementById('tablaSedesEspBody');
+        if (pagina.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-gray-400 py-4">No se encontraron resultados.</td></tr>`;
+        } else {
+            tbody.innerHTML = pagina.map(se => `
+            <tr class="border-t border-gray-100">
+                <td class="px-3 py-2">${se.id}</td>
+                <td class="px-3 py-2">${se.sucursalNombre}</td>
+                <td class="px-3 py-2">${se.especialidadNombre}</td>
+                <td class="px-3 py-2">
+                    <span class="px-2 py-1 rounded-full text-xs font-bold ${se.estado === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}">
+                        ${se.estado === 1 ? 'Activo' : 'Inactivo'}
+                    </span>
+                </td>
+                <td class="px-3 py-2">
+                    <button onclick="abrirModalEliminarSedesEsp(${se.id})" class="text-orange-600 hover:underline">Eliminar</button>
+                </td>
+            </tr>
+        `).join('');
+        }
+
+        document.getElementById('conteoSedesEsp').innerText = `${filtrados.length} registro(s)`;
+        document.getElementById('paginaSedesEspLabel').innerText = `${paginaSedesEspActual} / ${totalPaginas}`;
+    }
+
+    function cambiarPaginaSedesEsp(delta) {
+        paginaSedesEspActual = Math.max(1, paginaSedesEspActual + delta);
+        renderTablaSedesEsp();
+    }
+
+    async function abrirModalSedesEsp() {
+        document.getElementById('mensajesModalSedesEsp').innerHTML = '';
+        try {
+            const [sucursales, especialidades] = await Promise.all([
+                apiFetch('/api/sucursales'),
+                apiFetch('/api/especialidades')
+            ]);
+            document.getElementById('seSucursalId').innerHTML =
+                '<option value="">-- Seleccione --</option>' +
+                sucursales.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+            document.getElementById('seEspecialidadId').innerHTML =
+                '<option value="">-- Seleccione --</option>' +
+                especialidades.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+        } catch (e) {
+            mostrarMensajeSedesEsp(e.message, 'error');
+            return;
+        }
+        document.getElementById('modalSedesEsp').classList.remove('hidden');
+    }
+
+    function cerrarModalSedesEsp() {
+        document.getElementById('modalSedesEsp').classList.add('hidden');
+    }
+
+    async function guardarSedesEsp() {
+        const sucursalId = document.getElementById('seSucursalId').value;
+        const especialidadId = document.getElementById('seEspecialidadId').value;
+
+        if (!sucursalId) {
+            document.getElementById('mensajesModalSedesEsp').innerHTML =
+                '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Debe seleccionar una sede.</div>';
+            return;
+        }
+        if (!especialidadId) {
+            document.getElementById('mensajesModalSedesEsp').innerHTML =
+                '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Debe seleccionar una especialidad.</div>';
+            return;
+        }
+
+        try {
+            await apiFetch('/api/branch-specialty', {
+                method: 'POST',
+                body: JSON.stringify({ sucursalId: Number(sucursalId), especialidadId: Number(especialidadId) })
+            });
+            cerrarModalSedesEsp();
+            mostrarMensajeSedesEsp('Especialidad asignada a la sede correctamente', 'exito');
+            cargarSedesEsp();
+        } catch (e) {
+            document.getElementById('mensajesModalSedesEsp').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    function abrirModalEliminarSedesEsp(id) {
+        idSedesEspAEliminar = id;
+        document.getElementById('modalEliminarSedesEsp').classList.remove('hidden');
+    }
+
+    function cerrarModalEliminarSedesEsp() {
+        document.getElementById('modalEliminarSedesEsp').classList.add('hidden');
+        idSedesEspAEliminar = null;
+    }
+
+    async function confirmarEliminarSedesEsp() {
+        try {
+            await apiFetch(`/api/branch-specialty/${idSedesEspAEliminar}`, { method: 'DELETE' });
+            cerrarModalEliminarSedesEsp();
+            mostrarMensajeSedesEsp('Asignación eliminada correctamente', 'exito');
+            cargarSedesEsp();
+        } catch (e) {
+            cerrarModalEliminarSedesEsp();
+            mostrarMensajeSedesEsp(e.message, 'error');
+        }
+    }
+
+
+
+    // Carga inicial de datos de este módulo: solo si el usuario tiene
+    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    if (tieneAccesoSedesEsp) {
+        cargarSedesEsp();
+    }
+</script>
+</body>
+</html>

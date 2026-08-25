@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de Caja y Facturación - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="caja" data-roles="Cajero,Administrador,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Módulo de Caja y Facturación</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-caja" class="space-y-6">
+            <div class="flex gap-2 max-w-2xl">
+                <button id="btnCajaTabConsulta" onclick="cambiarTabCaja('CONSULTA')"
+                        class="flex-1 py-2 rounded-lg font-semibold border transition">Cobro de Consulta</button>
+                <button id="btnCajaTabLab" onclick="cambiarTabCaja('LAB')"
+                        class="flex-1 py-2 rounded-lg font-semibold border transition">Cobro de Laboratorio</button>
+            </div>
+
+            <div id="cajaTabConsulta" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+                <h2 class="text-lg font-bold text-brand-black mb-4">Cobro de Consulta</h2>
+
+                <div class="flex gap-2 mb-4">
+                    <button id="btnCajaPorDpi" onclick="cambiarTipoBusquedaCaja('DPI')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por DPI</button>
+                    <button id="btnCajaPorCita" onclick="cambiarTipoBusquedaCaja('CITA')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por No. Cita</button>
+                </div>
+
+                <div class="flex gap-2 mb-4">
+                    <input id="valorBusquedaCaja" maxlength="13" placeholder="Ingrese DPI (13 dígitos)"
+                           class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow">
+                    <button onclick="buscarCitaCaja()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                        Buscar
+                    </button>
+                </div>
+
+                <div id="mensajesCaja"></div>
+                <div id="resultadoCaja"></div>
+            </div>
+
+            <!-- CU-09 precondición RN-CU09-01: cobro de orden de laboratorio antes de la toma de muestras -->
+            <div id="cajaTabLab" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+                <h2 class="text-lg font-bold text-brand-black mb-4">Cobro de Laboratorio</h2>
+
+                <div class="flex gap-2 mb-4">
+                    <button id="btnCajaLabPorDpi" onclick="cambiarTipoBusquedaCajaLab('DPI')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por DPI</button>
+                    <button id="btnCajaLabPorOrden" onclick="cambiarTipoBusquedaCajaLab('ORDEN')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por No. Orden</button>
+                </div>
+
+                <div class="flex gap-2 mb-4">
+                    <input id="valorBusquedaCajaLab" maxlength="13" placeholder="Ingrese DPI (13 dígitos)"
+                           class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow">
+                    <button onclick="buscarOrdenLabCaja()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                        Buscar
+                    </button>
+                </div>
+
+                <div id="mensajesCajaLab"></div>
+                <div id="resultadoCajaLab"></div>
+            </div>
+        </section>
+
+        <!-- 5.4 FARMACIA (CU-11 Despacho de Medicamentos + venta libre con carrito) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: caja
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else. Una función
+    // (especialmente async) declarada dentro de un bloque no queda
+    // expuesta en el ámbito global aunque el bloque se ejecute, y el
+    // onclick del HTML no la encuentra ("buscarCitaCaja is not
+    // defined"). Por eso protegerPagina() solo decide si se ejecutan
+    // las llamadas iniciales que tocan el DOM, nunca si se declaran
+    // las funciones.
+    // ============================================================
+    const tieneAccesoCaja = protegerPagina();
+
+    let tipoBusquedaCaja = 'DPI';
+    let citaCajaActual = null;
+
+    function cambiarTipoBusquedaCaja(tipo) {
+        tipoBusquedaCaja = tipo;
+        document.getElementById('btnCajaPorDpi').classList.toggle('bg-brand-yellow', tipo === 'DPI');
+        document.getElementById('btnCajaPorDpi').classList.toggle('text-brand-black', tipo === 'DPI');
+        document.getElementById('btnCajaPorCita').classList.toggle('bg-brand-yellow', tipo === 'CITA');
+        document.getElementById('btnCajaPorCita').classList.toggle('text-brand-black', tipo === 'CITA');
+        const input = document.getElementById('valorBusquedaCaja');
+        input.value = '';
+        input.placeholder = tipo === 'DPI' ? 'Ingrese DPI (13 dígitos)' : 'Ingrese número de cita';
+    }
+
+    function mostrarMensajeCaja(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesCaja').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function buscarCitaCaja() {
+        const valor = document.getElementById('valorBusquedaCaja').value.trim();
+        document.getElementById('mensajesCaja').innerHTML = '';
+        document.getElementById('resultadoCaja').innerHTML = '';
+        if (!valor) { mostrarMensajeCaja('Debe ingresar un número de cita o DPI para buscar.', 'error'); return; }
+
+        try {
+            const data = await apiFetch(`/api/caja/citas/buscar?tipo=${tipoBusquedaCaja}&valor=${encodeURIComponent(valor)}`);
+            if (data.encontrada) {
+                citaCajaActual = data.cita;
+                renderFormularioCobro(data.cita);
+            } else {
+                mostrarMensajeCaja(data.mensaje, 'info');
+            }
+        } catch (e) {
+            mostrarMensajeCaja(e.message, 'error');
+        }
+    }
+
+    function renderFormularioCobro(cita) {
+        document.getElementById('resultadoCaja').innerHTML = `
+            <div class="border border-gray-200 rounded-lg p-4 mt-2">
+                <p class="font-semibold">${cita.nombrePaciente}</p>
+                <p class="text-sm text-gray-600">No. Cita: ${cita.id} · ${cita.especialidad} · ${cita.sucursal}</p>
+                <p class="text-sm text-gray-600">Médico: ${cita.nombreMedico}</p>
+                <p class="text-sm text-gray-600">${new Date(cita.fechaHora).toLocaleString('es-GT')}</p>
+                <p class="text-xl font-bold text-brand-black mt-2">Total a pagar: Q${Number(cita.monto).toFixed(2)}</p>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Método de Pago</label>
+                    <select id="metodoPago" onchange="toggleCamposPago()"
+                            class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="EFECTIVO">Efectivo</option>
+                        <option value="VISA">Visa</option>
+                        <option value="MASTERCARD">Mastercard</option>
+                        <option value="DEBITO">Débito</option>
+                    </select>
+                </div>
+
+                <div id="campoEfectivo" class="mt-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto Recibido (Q)</label>
+                    <input id="montoRecibido" type="number" step="0.01"
+                           class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+
+                <div id="campoTarjeta" class="mt-3 hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Últimos 4 dígitos de la tarjeta</label>
+                    <input id="ultimosCuatroDigitos" maxlength="4"
+                           class="w-full p-2 border border-gray-300 rounded-md" placeholder="1234">
+                    <p class="text-xs text-gray-400 mt-1">Prueba con 0002 para simular un rechazo del banco.</p>
+                </div>
+
+                <button onclick="registrarPago(${cita.id}, ${cita.monto})"
+                        class="w-full mt-4 bg-brand-black hover:bg-brand-dark text-brand-yellow font-bold py-3 rounded-lg shadow transition">
+                    Registrar Pago
+                </button>
+            </div>
+            <div id="comprobante"></div>
+        `;
+    }
+
+    function toggleCamposPago() {
+        const esEfectivo = document.getElementById('metodoPago').value === 'EFECTIVO';
+        document.getElementById('campoEfectivo').classList.toggle('hidden', !esEfectivo);
+        document.getElementById('campoTarjeta').classList.toggle('hidden', esEfectivo);
+    }
+
+    async function registrarPago(idCita, montoTotal) {
+        const metodoPago = document.getElementById('metodoPago').value;
+        // idCajero se omite por ahora: tu LoginResponseDTO no trae el id numérico
+        // del usuario (solo nombreUsuario, nombreCompleto, rol y token), así que
+        // el backend lo deja en null. El pago se registra igual, solo que sin
+        // trazabilidad de qué cajero lo cobró. Si más adelante quieres ese dato,
+        // hay que agregar "id" al LoginResponseDTO.
+        const body = { metodoPago, uuidIdempotencia: crypto.randomUUID() };
+
+        if (metodoPago === 'EFECTIVO') {
+            const montoRecibido = Number(document.getElementById('montoRecibido').value);
+            if (!montoRecibido || montoRecibido < montoTotal) {
+                mostrarMensajeCaja(`El monto recibido (Q${(montoRecibido || 0).toFixed(2)}) es menor al monto a cobrar (Q${Number(montoTotal).toFixed(2)})`, 'error');
+                return;
+            }
+            body.montoRecibido = montoRecibido;
+        } else {
+            const digitos = document.getElementById('ultimosCuatroDigitos').value.trim();
+            if (!/^\d{4}$/.test(digitos)) {
+                mostrarMensajeCaja('Ingrese los últimos 4 dígitos de la tarjeta.', 'error');
+                return;
+            }
+            body.ultimosCuatroDigitos = digitos;
+        }
+
+        try {
+            const data = await apiFetch(`/api/caja/citas/${idCita}/cobrar`, {
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+            mostrarComprobante(data);
+        } catch (e) {
+            mostrarMensajeCaja(e.message, 'error');
+        }
+    }
+
+    function mostrarComprobante(c) {
+        mostrarMensajeCaja(c.mensaje, 'exito');
+        document.getElementById('comprobante').innerHTML = `
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 mt-4 bg-gray-50">
+                <p class="text-center font-bold text-brand-black mb-2">Comprobante de Pago</p>
+                <p class="text-sm">No. Transacción: <strong>${c.numeroTransaccion}</strong></p>
+                <p class="text-sm">Paciente: ${c.nombrePaciente}</p>
+                <p class="text-sm">Sucursal: ${c.sucursal}</p>
+                <p class="text-sm">Servicio: ${c.detalleServicio}</p>
+                <p class="text-sm">Método de pago: ${c.metodoPago}</p>
+                <p class="text-sm">Monto total: Q${Number(c.montoTotal).toFixed(2)}</p>
+                ${c.metodoPago === 'EFECTIVO' ? `
+                <p class="text-sm">Monto recibido: Q${Number(c.montoRecibido).toFixed(2)}</p>
+                <p class="text-sm">Cambio a devolver: Q${Number(c.cambioDevuelto).toFixed(2)}</p>` : ''}
+                <p class="text-sm">Fecha: ${new Date(c.fechaPago).toLocaleString('es-GT')}</p>
+                <button onclick="window.print()" class="w-full mt-3 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">
+                    Imprimir Comprobante
+                </button>
+                <button onclick="document.getElementById('valorBusquedaCaja').value=''; document.getElementById('resultadoCaja').innerHTML=''; document.getElementById('mensajesCaja').innerHTML='';"
+                        class="w-full mt-2 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">
+                    Nuevo Cobro
+                </button>
+            </div>
+        `;
+    }
+
+    document.getElementById('valorBusquedaCaja')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') buscarCitaCaja(); });
+    function cambiarTabCaja(tab) {
+        document.getElementById('cajaTabConsulta').classList.toggle('hidden', tab !== 'CONSULTA');
+        document.getElementById('cajaTabLab').classList.toggle('hidden', tab !== 'LAB');
+        document.getElementById('btnCajaTabConsulta').classList.toggle('bg-brand-yellow', tab === 'CONSULTA');
+        document.getElementById('btnCajaTabConsulta').classList.toggle('text-brand-black', tab === 'CONSULTA');
+        document.getElementById('btnCajaTabLab').classList.toggle('bg-brand-yellow', tab === 'LAB');
+        document.getElementById('btnCajaTabLab').classList.toggle('text-brand-black', tab === 'LAB');
+    }
+
+    let tipoBusquedaCajaLab = 'DPI';
+    let ordenLabCajaActual = null;
+
+    function cambiarTipoBusquedaCajaLab(tipo) {
+        tipoBusquedaCajaLab = tipo;
+        document.getElementById('btnCajaLabPorDpi').classList.toggle('bg-brand-yellow', tipo === 'DPI');
+        document.getElementById('btnCajaLabPorDpi').classList.toggle('text-brand-black', tipo === 'DPI');
+        document.getElementById('btnCajaLabPorOrden').classList.toggle('bg-brand-yellow', tipo === 'ORDEN');
+        document.getElementById('btnCajaLabPorOrden').classList.toggle('text-brand-black', tipo === 'ORDEN');
+        const input = document.getElementById('valorBusquedaCajaLab');
+        input.value = '';
+        input.placeholder = tipo === 'DPI' ? 'Ingrese DPI (13 dígitos)' : 'Ingrese número de orden';
+    }
+
+    function mostrarMensajeCajaLab(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesCajaLab').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function buscarOrdenLabCaja() {
+        const valor = document.getElementById('valorBusquedaCajaLab').value.trim();
+        document.getElementById('mensajesCajaLab').innerHTML = '';
+        document.getElementById('resultadoCajaLab').innerHTML = '';
+        if (!valor) { mostrarMensajeCajaLab('Debe ingresar un número de orden o DPI para buscar.', 'error'); return; }
+
+        try {
+            const data = await apiFetch(`/api/caja/laboratorio/buscar?tipo=${tipoBusquedaCajaLab}&valor=${encodeURIComponent(valor)}`);
+            if (data.encontrada) {
+                renderListaOrdenesLabCaja(data.ordenes);
+            } else {
+                mostrarMensajeCajaLab(data.mensaje, 'info');
+            }
+        } catch (e) {
+            mostrarMensajeCajaLab(e.message, 'error');
+        }
+    }
+
+    function renderListaOrdenesLabCaja(ordenes) {
+        document.getElementById('resultadoCajaLab').innerHTML = ordenes.map(o => `
+            <div class="border border-gray-200 rounded-lg p-4 mt-2">
+                <p class="font-semibold">${o.nombrePaciente} <span class="text-gray-500 font-normal">(DPI: ${o.dpiPaciente})</span></p>
+                <p class="text-sm text-gray-600">No. Orden: ${o.id} · ${o.cantidadExamenes} examen(es)</p>
+                <p class="text-sm text-gray-600">${new Date(o.fechaCreacion).toLocaleString('es-GT')}</p>
+                <p class="text-xl font-bold text-brand-black mt-2">Total a pagar: Q${Number(o.montoTotal).toFixed(2)}</p>
+                <button onclick='seleccionarOrdenLabCaja(${JSON.stringify(o)})'
+                        class="mt-2 bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg text-sm">
+                    Cobrar esta orden
+                </button>
+                <div id="formCobroLab-${o.id}"></div>
+            </div>`).join('');
+    }
+
+    function seleccionarOrdenLabCaja(orden) {
+        ordenLabCajaActual = orden;
+        document.getElementById(`formCobroLab-${orden.id}`).innerHTML = `
+            <div class="mt-3 border-t border-gray-200 pt-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Método de Pago</label>
+                <select id="metodoPagoLab" onchange="toggleCamposPagoLab()" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="EFECTIVO">Efectivo</option>
+                    <option value="VISA">Visa</option>
+                    <option value="MASTERCARD">Mastercard</option>
+                    <option value="DEBITO">Débito</option>
+                </select>
+                <div id="campoEfectivoLab" class="mt-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Monto Recibido (Q)</label>
+                    <input id="montoRecibidoLab" type="number" step="0.01" class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                <div id="campoTarjetaLab" class="mt-3 hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Últimos 4 dígitos de la tarjeta</label>
+                    <input id="ultimosCuatroDigitosLab" maxlength="4" class="w-full p-2 border border-gray-300 rounded-md" placeholder="1234">
+                    <p class="text-xs text-gray-400 mt-1">Prueba con 0002 para simular un rechazo del banco.</p>
+                </div>
+                <button onclick="confirmarCobroLab(${orden.id}, ${orden.montoTotal})"
+                        class="w-full mt-4 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-3 rounded-lg shadow transition">
+                    Confirmar Pago Q${Number(orden.montoTotal).toFixed(2)}
+                </button>
+                <div id="comprobanteLab"></div>
+            </div>`;
+    }
+
+    function toggleCamposPagoLab() {
+        const esEfectivo = document.getElementById('metodoPagoLab').value === 'EFECTIVO';
+        document.getElementById('campoEfectivoLab').classList.toggle('hidden', !esEfectivo);
+        document.getElementById('campoTarjetaLab').classList.toggle('hidden', esEfectivo);
+    }
+
+    async function confirmarCobroLab(idOrden, montoTotal) {
+        const metodoPago = document.getElementById('metodoPagoLab').value;
+        const body = { metodoPago, uuidIdempotencia: crypto.randomUUID() };
+
+        if (metodoPago === 'EFECTIVO') {
+            const montoRecibido = Number(document.getElementById('montoRecibidoLab').value);
+            if (!montoRecibido || montoRecibido < montoTotal) {
+                mostrarMensajeCajaLab(`El monto recibido (Q${(montoRecibido || 0).toFixed(2)}) es menor al monto a cobrar (Q${Number(montoTotal).toFixed(2)})`, 'error');
+                return;
+            }
+            body.montoRecibido = montoRecibido;
+        } else {
+            const digitos = document.getElementById('ultimosCuatroDigitosLab').value.trim();
+            if (!/^\d{4}$/.test(digitos)) {
+                mostrarMensajeCajaLab('Ingrese los últimos 4 dígitos de la tarjeta.', 'error');
+                return;
+            }
+            body.ultimosCuatroDigitos = digitos;
+        }
+
+        try {
+            const data = await apiFetch(`/api/caja/laboratorio/${idOrden}/cobrar`, { method: 'POST', body: JSON.stringify(body) });
+            mostrarMensajeCajaLab(data.mensaje, 'exito');
+            document.getElementById('comprobanteLab').innerHTML = `
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 mt-4 bg-gray-50">
+                    <p class="text-center font-bold text-brand-black mb-2">Comprobante de Pago — Laboratorio</p>
+                    <p class="text-sm">No. Transacción: <strong>${data.numeroTransaccion}</strong></p>
+                    <p class="text-sm">Paciente: ${data.nombrePaciente}</p>
+                    <p class="text-sm">${data.detalleServicio}</p>
+                    <p class="text-sm">Método de pago: ${data.metodoPago}</p>
+                    <p class="text-sm">Monto total: Q${Number(data.montoTotal).toFixed(2)}</p>
+                    <p class="text-sm">Fecha: ${new Date(data.fechaPago).toLocaleString('es-GT')}</p>
+                    <button onclick="window.print()" class="w-full mt-3 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Imprimir Comprobante</button>
+                </div>`;
+        } catch (e) {
+            mostrarMensajeCajaLab(e.message, 'error');
+        }
+    }
+
+    // Carga inicial / estado por defecto de los controles: solo si el
+    // usuario tiene acceso a este módulo (de lo contrario esos
+    // elementos del DOM ya fueron reemplazados por protegerPagina()).
+    if (tieneAccesoCaja) {
+        cambiarTipoBusquedaCaja('DPI');
+        cambiarTabCaja('CONSULTA');
+        cambiarTipoBusquedaCajaLab('DPI');
+    }
+</script>
+</body>
+</html>

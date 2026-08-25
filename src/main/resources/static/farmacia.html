@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despacho de Medicamentos - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Despacho de Medicamentos</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-farmacia" class="space-y-6">
+
+            <!-- Barra superior: sucursal + carrito -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <label class="text-sm font-medium text-gray-700">Sucursal desde la que se despacha</label>
+                    <select id="farmaciaSucursalId" onchange="cambiarSucursalFarmacia()" class="p-2 border border-gray-300 rounded-md">
+                        <option value="">-- Seleccione --</option>
+                    </select>
+                </div>
+                <button onclick="abrirCarritoFarmacia()"
+                        class="relative bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                    <i class="fa-solid fa-cart-shopping"></i> Carrito
+                    <span id="carritoContadorFarmacia"
+                          class="hidden absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                </button>
+            </div>
+
+            <!-- Tabs: Receta / Medicamento -->
+            <div class="flex gap-2 max-w-2xl">
+                <button id="btnFarmaciaTabReceta" onclick="cambiarTabFarmacia('RECETA')"
+                        class="flex-1 py-2 rounded-lg font-semibold border transition">Buscar por Receta</button>
+                <button id="btnFarmaciaTabMedicamento" onclick="cambiarTabFarmacia('MEDICAMENTO')"
+                        class="flex-1 py-2 rounded-lg font-semibold border transition">Buscar Medicamento</button>
+            </div>
+
+            <!-- TAB Receta -->
+            <div id="farmaciaTabReceta" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
+                <h2 class="text-lg font-bold text-brand-black mb-4">Buscar Receta</h2>
+
+                <div class="flex gap-2 mb-4">
+                    <button id="btnFarmaciaPorReceta" onclick="cambiarTipoBusquedaFarmacia('RECETA')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por ID Receta</button>
+                    <button id="btnFarmaciaPorConsulta" onclick="cambiarTipoBusquedaFarmacia('CONSULTA')"
+                            class="flex-1 py-2 rounded-lg font-semibold border transition">Por ID Consulta</button>
+                </div>
+
+                <div class="flex gap-2 mb-4">
+                    <input id="valorBusquedaFarmacia" placeholder="Ingrese ID de receta"
+                           class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow">
+                    <button onclick="buscarRecetasFarmacia()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                        Buscar
+                    </button>
+                </div>
+
+                <div id="mensajesFarmacia"></div>
+                <div id="resultadoFarmacia"></div>
+            </div>
+
+            <!-- TAB Medicamento (catálogo / historial con stock) -->
+            <div id="farmaciaTabMedicamento" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-brand-black">Catálogo de Medicamentos</h2>
+                    <button id="btnNuevoMedicamentoFarmacia" onclick="abrirModalNuevoMedicamento()"
+                            class="hidden bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg transition">
+                        <i class="fa-solid fa-plus"></i> Nuevo Medicamento
+                    </button>
+                </div>
+
+                <div class="flex gap-2 mb-4 max-w-2xl">
+                    <input id="valorBusquedaMedicamento" placeholder="Buscar por nombre (déjelo vacío para ver todos)"
+                           class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow">
+                    <button onclick="buscarMedicamentosFarmacia()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                        Buscar
+                    </button>
+                </div>
+
+                <div id="mensajesMedicamentoFarmacia"></div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-3 py-2">Medicamento</th>
+                            <th class="px-3 py-2">Unidad</th>
+                            <th class="px-3 py-2">Precio</th>
+                            <th class="px-3 py-2">Stock</th>
+                            <th class="px-3 py-2">Cantidad</th>
+                            <th class="px-3 py-2">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablaMedicamentosFarmaciaBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Detalle de receta: agregar ítems al carrito -->
+            <div id="detalleRecetaFarmaciaContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="tituloDetalleRecetaFarmacia" class="text-lg font-bold text-brand-black"></h2>
+                    <button onclick="cerrarDetalleRecetaFarmacia()" class="text-sm text-gray-500 hover:text-brand-black">Volver</button>
+                </div>
+                <div id="mensajesDetalleFarmacia"></div>
+                <div id="infoRecetaFarmacia" class="text-sm text-gray-600 mb-4"></div>
+                <div id="listaMedicamentosFarmacia" class="space-y-4"></div>
+                <div class="flex justify-end mt-4">
+                    <button onclick="cancelarDespachoFarmacia()"
+                            class="bg-white border border-red-300 text-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg">
+                        Paciente no adquiere los medicamentos
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal: Carrito de Farmacia y proceso de pago -->
+        <div id="modalCarritoFarmacia" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-brand-black">Carrito de Farmacia</h3>
+                    <button onclick="cerrarCarritoFarmacia()" class="text-gray-500 hover:text-brand-black">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div id="mensajesCarritoFarmacia"></div>
+                <div id="carritoVacioFarmacia" class="hidden text-center text-gray-500 py-8">El carrito está vacío.</div>
+                <div id="listaCarritoFarmacia" class="divide-y divide-gray-200 mb-4"></div>
+
+                <div id="carritoResumenPagoFarmacia" class="border-t border-gray-200 pt-4 mt-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <p class="text-lg font-bold text-brand-black">Total</p>
+                        <p id="totalCarritoFarmacia" class="text-lg font-bold text-brand-black">Q0.00</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ID Paciente (opcional, solo venta libre)</label>
+                            <input id="carritoIdPaciente" type="number" placeholder="Ej. 12"
+                                   class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Método de pago</label>
+                            <select id="carritoMetodoPago" onchange="cambiarMetodoPagoFarmacia()" class="w-full p-2 border border-gray-300 rounded-md">
+                                <option value="EFECTIVO">Efectivo</option>
+                                <option value="VISA">Visa</option>
+                                <option value="MASTERCARD">Mastercard</option>
+                                <option value="DEBITO">Débito</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="carritoPagoEfectivo" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Monto recibido (Q)</label>
+                            <input id="carritoMontoRecibido" type="number" min="0" step="0.01" oninput="calcularCambioFarmacia()"
+                                   class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div class="flex items-end">
+                            <p class="text-sm text-gray-600">Cambio a devolver: <span id="carritoCambioFarmacia" class="font-bold">Q0.00</span></p>
+                        </div>
+                    </div>
+
+                    <div id="carritoPagoTarjeta" class="hidden mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Últimos 4 dígitos de la tarjeta</label>
+                        <input id="carritoUltimosDigitos" maxlength="4" placeholder="0000" class="w-40 p-2 border border-gray-300 rounded-md">
+                    </div>
+
+                    <button onclick="confirmarPagoCarritoFarmacia()"
+                            class="w-full bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-3 rounded-lg shadow transition">
+                        Confirmar y Pagar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Nuevo Medicamento (Administrador) -->
+        <div id="modalNuevoMedicamento" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-brand-black">Nuevo Medicamento</h3>
+                    <button onclick="cerrarModalNuevoMedicamento()" class="text-gray-500 hover:text-brand-black">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                <div id="mensajesNuevoMedicamento"></div>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                        <input id="nmNombre" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                        <textarea id="nmDescripcion" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Precio (Q)</label>
+                            <input id="nmPrecio" type="number" min="0.01" step="0.01" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Unidad</label>
+                            <input id="nmUnidad" placeholder="tableta, ml, etc." class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Stock mínimo (opcional)</label>
+                            <input id="nmStockMinimo" type="number" min="0" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div class="flex items-end pb-2">
+                            <label class="text-sm text-gray-700 flex items-center gap-2">
+                                <input id="nmEsControlado" type="checkbox"> Medicamento controlado
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="guardarNuevoMedicamento()"
+                        class="w-full mt-5 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-3 rounded-lg shadow transition">
+                    Guardar Medicamento
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal: Ajustar Stock (Administrador) -->
+        <div id="modalAjustarStock" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="tituloAjustarStock" class="text-lg font-bold text-brand-black">Ajustar Stock</h3>
+                    <button onclick="cerrarModalAjustarStock()" class="text-gray-500 hover:text-brand-black">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                <div id="mensajesAjustarStock"></div>
+                <p class="text-sm text-gray-600 mb-3">Sucursal: <span id="ajusteStockSucursalNombre" class="font-semibold"></span></p>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de movimiento</label>
+                        <select id="asTipoMovimiento" onchange="cambiarTipoMovimientoStock()" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="COMPRA">Entrada por compra</option>
+                            <option value="AJUSTE_POSITIVO">Ajuste positivo (+)</option>
+                            <option value="AJUSTE_NEGATIVO">Ajuste negativo (-)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+                        <input id="asCantidad" type="number" min="1" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div id="asCostoUnitarioBox">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Costo unitario (Q)</label>
+                        <input id="asCostoUnitario" type="number" min="0.01" step="0.01" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div id="asMotivoBox" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Motivo / Justificación</label>
+                        <textarea id="asMotivo" rows="2" placeholder="Mínimo 10 caracteres" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                </div>
+                <button onclick="guardarAjusteStock()"
+                        class="w-full mt-5 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-3 rounded-lg shadow transition">
+                    Registrar Movimiento
+                </button>
+            </div>
+        </div>
+
+        <!-- 5.5 GESTIÓN DE USUARIOS (CU-01) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: farmacia
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoFarmacia = protegerPagina();
+
+    // CU-11: Farmacia (recetas + venta libre) con carrito y pago
+    // ============================================================
+    let tipoBusquedaFarmacia = 'RECETA';
+    let tabFarmaciaActual = 'RECETA';
+    let recetaFarmaciaActualId = null;
+    let sucursalesFarmaciaCache = [];
+    let medicamentosFarmaciaCache = [];
+    let ultimaBusquedaMedicamentos = [];
+    let carritoFarmacia = []; // { origen, recetaId, medicamentoId, nombreMedicamento, cantidad, precioUnitario, sustituido, medicamentoSustitutoId, razonSustitucion, nombreSustituto }
+
+    function mostrarMensajeFarmacia(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesFarmacia').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function mostrarMensajeDetalleFarmacia(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesDetalleFarmacia').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function mostrarMensajeMedicamentoFarmacia(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesMedicamentoFarmacia').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function mostrarMensajeCarritoFarmacia(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesCarritoFarmacia').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function cargarSucursalesFarmacia() {
+        if (sucursalesFarmaciaCache.length) return;
+        try {
+            sucursalesFarmaciaCache = await apiFetch('/api/sucursales');
+
+            // Administrador de Sede y Farmacéutico: ambos quedan atados a su
+            // propia sucursal (el backend ya lo valida vía
+            // AuthUsuario.sucursalScopeOrNull()); aquí solo bloqueamos el
+            // combo en la UI para que no intenten elegir otra sede y reciban
+            // un mensaje de error innecesario.
+            const miSucursalId = sessionStorage.getItem('sucursalId');
+            const esUsuarioAcotadoASede = (rolActual === 'Administrador' || rolActual === 'Farmacéutico');
+            if (esUsuarioAcotadoASede && miSucursalId) {
+                sucursalesFarmaciaCache = sucursalesFarmaciaCache.filter(s => String(s.id) === String(miSucursalId));
+            }
+
+            document.getElementById('farmaciaSucursalId').innerHTML =
+                '<option value="">-- Seleccione --</option>' +
+                sucursalesFarmaciaCache.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+
+            if (esUsuarioAcotadoASede && miSucursalId) {
+                const select = document.getElementById('farmaciaSucursalId');
+                select.value = miSucursalId;
+                select.disabled = true;
+                cambiarSucursalFarmacia();
+            }
+        } catch (e) {
+            mostrarMensajeFarmacia(e.message, 'error');
+        }
+    }
+
+    async function cargarMedicamentosCacheFarmacia() {
+        if (medicamentosFarmaciaCache.length) return;
+        medicamentosFarmaciaCache = await apiFetch('/api/medicamentos');
+    }
+
+    function cambiarSucursalFarmacia() {
+        // si cambia de sucursal, refresca la vista activa para recalcular stock
+        if (tabFarmaciaActual === 'MEDICAMENTO' && ultimaBusquedaMedicamentos.length) {
+            buscarMedicamentosFarmacia();
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Tabs: Receta / Medicamento
+    // ------------------------------------------------------------
+    function cambiarTabFarmacia(tab) {
+        tabFarmaciaActual = tab;
+        document.getElementById('farmaciaTabReceta').classList.toggle('hidden', tab !== 'RECETA');
+        document.getElementById('farmaciaTabMedicamento').classList.toggle('hidden', tab !== 'MEDICAMENTO');
+        document.getElementById('btnFarmaciaTabReceta').classList.toggle('bg-brand-yellow', tab === 'RECETA');
+        document.getElementById('btnFarmaciaTabReceta').classList.toggle('text-brand-black', tab === 'RECETA');
+        document.getElementById('btnFarmaciaTabMedicamento').classList.toggle('bg-brand-yellow', tab === 'MEDICAMENTO');
+        document.getElementById('btnFarmaciaTabMedicamento').classList.toggle('text-brand-black', tab === 'MEDICAMENTO');
+        document.getElementById('detalleRecetaFarmaciaContainer').classList.add('hidden');
+        if (tab === 'MEDICAMENTO' && !ultimaBusquedaMedicamentos.length) {
+            buscarMedicamentosFarmacia();
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Búsqueda por receta
+    // ------------------------------------------------------------
+    function cambiarTipoBusquedaFarmacia(tipo) {
+        tipoBusquedaFarmacia = tipo;
+        document.getElementById('btnFarmaciaPorReceta').classList.toggle('bg-brand-yellow', tipo === 'RECETA');
+        document.getElementById('btnFarmaciaPorReceta').classList.toggle('text-brand-black', tipo === 'RECETA');
+        document.getElementById('btnFarmaciaPorConsulta').classList.toggle('bg-brand-yellow', tipo === 'CONSULTA');
+        document.getElementById('btnFarmaciaPorConsulta').classList.toggle('text-brand-black', tipo === 'CONSULTA');
+        const input = document.getElementById('valorBusquedaFarmacia');
+        input.value = '';
+        input.placeholder = tipo === 'RECETA' ? 'Ingrese ID de receta' : 'Ingrese ID de consulta';
+    }
+
+    async function buscarRecetasFarmacia() {
+        const valor = document.getElementById('valorBusquedaFarmacia').value.trim();
+        document.getElementById('mensajesFarmacia').innerHTML = '';
+        document.getElementById('resultadoFarmacia').innerHTML = '';
+        if (!valor) { mostrarMensajeFarmacia('Debe ingresar un ID de receta o de consulta para buscar.', 'error'); return; }
+        if (!document.getElementById('farmaciaSucursalId').value) {
+            mostrarMensajeFarmacia('Debe seleccionar la sucursal antes de buscar.', 'error');
+            return;
+        }
+
+        try {
+            const data = await apiFetch(`/api/farmacia/recetas/buscar?tipo=${tipoBusquedaFarmacia}&valor=${encodeURIComponent(valor)}`);
+            if (!data || data.length === 0) {
+                mostrarMensajeFarmacia('No se encontraron recetas activas para el criterio ingresado.', 'info');
+                return;
+            }
+            renderListaRecetasFarmacia(data);
+        } catch (e) {
+            mostrarMensajeFarmacia(e.message, 'error');
+        }
+    }
+
+    function renderListaRecetasFarmacia(recetas) {
+        document.getElementById('resultadoFarmacia').innerHTML = recetas.map(r => `
+            <div class="flex justify-between items-center border border-gray-200 rounded-lg p-4 mb-2">
+                <div>
+                    <p class="font-semibold text-brand-black">Receta #${r.id} · Consulta #${r.consultaId}</p>
+                    <p class="text-xs text-gray-500">Emitida: ${new Date(r.fechaEmision).toLocaleString('es-GT')} · ${r.diasTranscurridos} día(s)</p>
+                    ${r.notas ? `<p class="text-xs text-gray-500">Notas: ${r.notas}</p>` : ''}
+                </div>
+                ${r.vigente
+            ? `<button onclick="abrirDetalleRecetaFarmacia(${r.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">Ver / Comprar</button>`
+            : `<span class="text-xs font-bold text-red-600 border border-red-300 rounded-full px-3 py-1">Vencida</span>`}
+            </div>
+        `).join('');
+    }
+
+    async function abrirDetalleRecetaFarmacia(idReceta) {
+        const idSucursal = document.getElementById('farmaciaSucursalId').value;
+        if (!idSucursal) { mostrarMensajeFarmacia('Debe seleccionar la sucursal antes de continuar.', 'error'); return; }
+
+        try {
+            await cargarMedicamentosCacheFarmacia();
+            const data = await apiFetch(`/api/farmacia/recetas/${idReceta}?idSucursal=${idSucursal}`);
+            recetaFarmaciaActualId = idReceta;
+            document.getElementById('tituloDetalleRecetaFarmacia').innerText = `Receta #${data.id} — ${data.nombrePaciente}`;
+            document.getElementById('infoRecetaFarmacia').innerHTML =
+                `Consulta #${data.consultaId} · Emitida: ${new Date(data.fechaEmision).toLocaleString('es-GT')} · Vigente (${data.diasTranscurridos} día(s))`;
+            document.getElementById('mensajesDetalleFarmacia').innerHTML = '';
+            renderMedicamentosFarmacia(data.items);
+            document.getElementById('detalleRecetaFarmaciaContainer').classList.remove('hidden');
+        } catch (e) {
+            mostrarMensajeFarmacia(e.message, 'error');
+        }
+    }
+
+    function renderMedicamentosFarmacia(items) {
+        document.getElementById('listaMedicamentosFarmacia').innerHTML = items.map(it => {
+            const badge = it.stockDisponible === null || it.stockDisponible === undefined
+                ? `<span class="text-xs font-semibold text-red-600 whitespace-nowrap">Sin inventario registrado</span>`
+                : it.stockBajo
+                    ? `<span class="text-xs font-semibold text-orange-600 whitespace-nowrap">Stock bajo: ${it.stockDisponible} (mínimo ${it.stockMinimo ?? '-'})</span>`
+                    : `<span class="text-xs font-semibold text-green-600 whitespace-nowrap">Disponible: ${it.stockDisponible}</span>`;
+            return `
+            <div class="border border-gray-200 rounded-lg p-4" data-medicamento-id="${it.medicamentoId}">
+                <div class="flex justify-between items-start flex-wrap gap-2">
+                    <div>
+                        <p class="font-semibold text-brand-black">${it.nombreMedicamento}</p>
+                        <p class="text-xs text-gray-500">Dosis: ${it.dosis} · Frecuencia: ${it.frecuencia} · Duración: ${it.duracion}</p>
+                        ${it.indicaciones ? `<p class="text-xs text-gray-500">Indicaciones: ${it.indicaciones}</p>` : ''}
+                        <p class="text-xs text-gray-500">Precio unitario: Q${Number(it.precioUnitario).toFixed(2)}</p>
+                    </div>
+                    ${badge}
+                </div>
+                <div class="flex items-center gap-4 mt-3 flex-wrap">
+                    <label class="text-sm text-gray-600">Cantidad
+                        <input type="number" min="1" value="1" class="itemCantidad ml-2 w-20 p-1 border border-gray-300 rounded-md">
+                    </label>
+                    <label class="text-sm text-gray-600 flex items-center gap-1">
+                        <input type="checkbox" class="itemSustituido" onchange="toggleSustitucionFarmacia(this)"> Sustituir medicamento
+                    </label>
+                    <button onclick="agregarRecetaItemAlCarrito(this, ${it.medicamentoId}, '${it.nombreMedicamento.replace(/'/g, "\\'")}', ${it.precioUnitario})"
+                            class="ml-auto bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                        <i class="fa-solid fa-cart-plus"></i> Comprar
+                    </button>
+                </div>
+                <div class="itemSustitucionBox hidden mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <select class="itemMedicamentoSustituto p-2 border border-gray-300 rounded-md">
+                        <option value="">-- Seleccione medicamento alternativo --</option>
+                        ${medicamentosFarmaciaCache
+                .filter(m => m.id !== it.medicamentoId)
+                .map(m => `<option value="${m.id}">${m.nombre}</option>`).join('')}
+                    </select>
+                    <input type="text" placeholder="Razón de la sustitución" class="itemRazonSustitucion p-2 border border-gray-300 rounded-md">
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function toggleSustitucionFarmacia(checkbox) {
+        const box = checkbox.closest('div[data-medicamento-id]').querySelector('.itemSustitucionBox');
+        box.classList.toggle('hidden', !checkbox.checked);
+    }
+
+    // Botón "Comprar" de un ítem de receta: valida y lo agrega al carrito
+    function agregarRecetaItemAlCarrito(boton, medicamentoId, nombreMedicamento, precioUnitario) {
+        const bloque = boton.closest('div[data-medicamento-id]');
+        const cantidad = Number(bloque.querySelector('.itemCantidad').value);
+        const sustituido = bloque.querySelector('.itemSustituido').checked;
+
+        if (!cantidad || cantidad <= 0) {
+            mostrarMensajeDetalleFarmacia('Ingrese una cantidad válida.', 'error');
+            return;
+        }
+
+        let medicamentoSustitutoId = null;
+        let razonSustitucion = null;
+        let nombreSustituto = null;
+        if (sustituido) {
+            const selectSustituto = bloque.querySelector('.itemMedicamentoSustituto');
+            medicamentoSustitutoId = Number(selectSustituto.value) || null;
+            razonSustitucion = bloque.querySelector('.itemRazonSustitucion').value.trim();
+            nombreSustituto = selectSustituto.selectedOptions[0]?.text || null;
+            if (!medicamentoSustitutoId || !razonSustitucion) {
+                mostrarMensajeDetalleFarmacia('Debe seleccionar el medicamento alternativo e ingresar la razón de sustitución.', 'error');
+                return;
+            }
+        }
+
+        carritoFarmacia.push({
+            origen: 'RECETA',
+            recetaId: recetaFarmaciaActualId,
+            medicamentoId,
+            nombreMedicamento,
+            cantidad,
+            precioUnitario,
+            sustituido,
+            medicamentoSustitutoId,
+            razonSustitucion,
+            nombreSustituto
+        });
+        actualizarContadorCarritoFarmacia();
+        mostrarMensajeDetalleFarmacia(`${nombreMedicamento} agregado al carrito.`, 'exito');
+    }
+
+    async function cancelarDespachoFarmacia() {
+        try {
+            const data = await apiFetch(`/api/farmacia/recetas/${recetaFarmaciaActualId}/cancelar`, { method: 'POST' });
+            mostrarMensajeDetalleFarmacia(data.mensaje, 'info');
+            setTimeout(cerrarDetalleRecetaFarmacia, 3500);
+        } catch (e) {
+            mostrarMensajeDetalleFarmacia(e.message, 'error');
+        }
+    }
+
+    function cerrarDetalleRecetaFarmacia() {
+        recetaFarmaciaActualId = null;
+        document.getElementById('detalleRecetaFarmaciaContainer').classList.add('hidden');
+        document.getElementById('valorBusquedaFarmacia').value = '';
+        document.getElementById('resultadoFarmacia').innerHTML = '';
+    }
+
+    // ------------------------------------------------------------
+    // Búsqueda de medicamentos (catálogo / historial, sin receta)
+    // ------------------------------------------------------------
+    async function buscarMedicamentosFarmacia() {
+        const nombre = document.getElementById('valorBusquedaMedicamento').value.trim();
+        const idSucursal = document.getElementById('farmaciaSucursalId').value;
+        document.getElementById('mensajesMedicamentoFarmacia').innerHTML = '';
+
+        try {
+            const query = new URLSearchParams();
+            if (nombre) query.set('nombre', nombre);
+            if (idSucursal) query.set('idSucursal', idSucursal);
+            const data = await apiFetch(`/api/farmacia/medicamentos/buscar?${query.toString()}`);
+            ultimaBusquedaMedicamentos = data;
+            renderTablaMedicamentosFarmacia(data);
+            if (!idSucursal) {
+                mostrarMensajeMedicamentoFarmacia('Seleccione una sucursal para ver el stock disponible.', 'info');
+            } else if (data.length === 0) {
+                mostrarMensajeMedicamentoFarmacia('No se encontraron medicamentos para el criterio ingresado.', 'info');
+            }
+        } catch (e) {
+            mostrarMensajeMedicamentoFarmacia(e.message, 'error');
+        }
+    }
+
+    function renderTablaMedicamentosFarmacia(medicamentos) {
+        document.getElementById('tablaMedicamentosFarmaciaBody').innerHTML = medicamentos.map(m => {
+            const stockHtml = m.stockDisponible === null || m.stockDisponible === undefined
+                ? `<span class="text-red-600 font-semibold">Sin inventario</span>`
+                : m.stockBajo
+                    ? `<span class="text-orange-600 font-semibold">${m.stockDisponible} (bajo)</span>`
+                    : `<span class="text-green-600 font-semibold">${m.stockDisponible}</span>`;
+            const sinStock = m.stockDisponible === null || m.stockDisponible === undefined || m.stockDisponible <= 0;
+            return `
+            <tr class="border-b border-gray-100">
+                <td class="px-3 py-2">
+                    <p class="font-semibold text-brand-black">${m.nombre}</p>
+                    ${m.esControlado ? '<span class="text-xs text-red-600 font-semibold">Controlado</span>' : ''}
+                    <p class="text-xs text-gray-500">${m.descripcion || ''}</p>
+                </td>
+                <td class="px-3 py-2">${m.unidad}</td>
+                <td class="px-3 py-2">Q${Number(m.precio).toFixed(2)}</td>
+                <td class="px-3 py-2">${stockHtml}</td>
+                <td class="px-3 py-2">
+                    <input type="number" min="1" value="1" class="w-16 p-1 border border-gray-300 rounded-md" id="cantidadMed_${m.id}">
+                </td>
+                <td class="px-3 py-2 whitespace-nowrap">
+                    <button ${sinStock ? 'disabled' : ''} onclick="agregarMedicamentoLibreAlCarrito(${m.id}, '${m.nombre.replace(/'/g, "\\'")}', ${m.precio})"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg shadow transition disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-cart-plus"></i> Agregar
+                    </button>
+                    ${(rolActual === 'Administrador' || rolActual === 'Administrador General' || rolActual === 'Farmacéutico') ? `
+                    <button onclick="abrirModalAjustarStock(${m.id}, '${m.nombre.replace(/'/g, "\\'")}')"
+                            class="ml-1 bg-white border border-gray-300 hover:bg-gray-50 text-brand-black font-semibold px-3 py-1.5 rounded-lg transition"
+                            title="Ajustar stock">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </button>` : ''}
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function agregarMedicamentoLibreAlCarrito(medicamentoId, nombreMedicamento, precioUnitario) {
+        const cantidad = Number(document.getElementById(`cantidadMed_${medicamentoId}`).value);
+        if (!cantidad || cantidad <= 0) {
+            mostrarMensajeMedicamentoFarmacia('Ingrese una cantidad válida.', 'error');
+            return;
+        }
+        carritoFarmacia.push({
+            origen: 'LIBRE',
+            recetaId: null,
+            medicamentoId,
+            nombreMedicamento,
+            cantidad,
+            precioUnitario,
+            sustituido: false,
+            medicamentoSustitutoId: null,
+            razonSustitucion: null,
+            nombreSustituto: null
+        });
+        actualizarContadorCarritoFarmacia();
+        mostrarMensajeMedicamentoFarmacia(`${nombreMedicamento} agregado al carrito.`, 'exito');
+    }
+
+    // ------------------------------------------------------------
+    // Carrito y pago
+    // ------------------------------------------------------------
+    function actualizarContadorCarritoFarmacia() {
+        const contador = document.getElementById('carritoContadorFarmacia');
+        if (carritoFarmacia.length > 0) {
+            contador.innerText = carritoFarmacia.length;
+            contador.classList.remove('hidden');
+        } else {
+            contador.classList.add('hidden');
+        }
+    }
+
+    function totalCarritoFarmacia() {
+        return carritoFarmacia.reduce((acc, it) => acc + (it.precioUnitario * it.cantidad), 0);
+    }
+
+    function abrirCarritoFarmacia() {
+        document.getElementById('mensajesCarritoFarmacia').innerHTML = '';
+        renderCarritoFarmacia();
+        document.getElementById('modalCarritoFarmacia').classList.remove('hidden');
+    }
+
+    function cerrarCarritoFarmacia() {
+        document.getElementById('modalCarritoFarmacia').classList.add('hidden');
+    }
+
+    function renderCarritoFarmacia() {
+        const lista = document.getElementById('listaCarritoFarmacia');
+        const vacio = document.getElementById('carritoVacioFarmacia');
+        const resumen = document.getElementById('carritoResumenPagoFarmacia');
+
+        if (carritoFarmacia.length === 0) {
+            lista.innerHTML = '';
+            vacio.classList.remove('hidden');
+            resumen.classList.add('hidden');
+            return;
+        }
+        vacio.classList.add('hidden');
+        resumen.classList.remove('hidden');
+
+        lista.innerHTML = carritoFarmacia.map((it, idx) => `
+            <div class="py-3 flex justify-between items-center gap-2">
+                <div>
+                    <p class="font-semibold text-brand-black">${it.nombreMedicamento} <span class="text-xs text-gray-500">x${it.cantidad}</span></p>
+                    <p class="text-xs text-gray-500">
+                        ${it.origen === 'RECETA' ? `Receta #${it.recetaId}` : 'Venta libre'}
+                        ${it.sustituido ? ` · Sustituido por ${it.nombreSustituto}` : ''}
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <p class="font-semibold text-brand-black">Q${(it.precioUnitario * it.cantidad).toFixed(2)}</p>
+                    <button onclick="quitarDelCarritoFarmacia(${idx})" class="text-red-500 hover:text-red-700">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        document.getElementById('totalCarritoFarmacia').innerText = `Q${totalCarritoFarmacia().toFixed(2)}`;
+        calcularCambioFarmacia();
+    }
+
+    function quitarDelCarritoFarmacia(idx) {
+        carritoFarmacia.splice(idx, 1);
+        actualizarContadorCarritoFarmacia();
+        renderCarritoFarmacia();
+    }
+
+    function cambiarMetodoPagoFarmacia() {
+        const metodo = document.getElementById('carritoMetodoPago').value;
+        document.getElementById('carritoPagoEfectivo').classList.toggle('hidden', metodo !== 'EFECTIVO');
+        document.getElementById('carritoPagoTarjeta').classList.toggle('hidden', metodo === 'EFECTIVO');
+    }
+
+    function calcularCambioFarmacia() {
+        const total = totalCarritoFarmacia();
+        const recibido = Number(document.getElementById('carritoMontoRecibido').value) || 0;
+        const cambio = recibido - total;
+        document.getElementById('carritoCambioFarmacia').innerText = `Q${(cambio > 0 ? cambio : 0).toFixed(2)}`;
+    }
+
+    async function confirmarPagoCarritoFarmacia() {
+        if (carritoFarmacia.length === 0) {
+            mostrarMensajeCarritoFarmacia('El carrito está vacío.', 'error');
+            return;
+        }
+        const idSucursal = Number(document.getElementById('farmaciaSucursalId').value);
+        if (!idSucursal) {
+            mostrarMensajeCarritoFarmacia('Debe seleccionar la sucursal antes de pagar.', 'error');
+            return;
+        }
+
+        const idFarmaceutico = Number(sessionStorage.getItem('usuarioId'));
+        const metodoPago = document.getElementById('carritoMetodoPago').value;
+        const idPacienteInput = document.getElementById('carritoIdPaciente').value.trim();
+        const idPaciente = idPacienteInput ? Number(idPacienteInput) : null;
+
+        const body = {
+            idFarmaceutico,
+            idSucursal,
+            idPaciente,
+            metodoPago,
+            montoRecibido: metodoPago === 'EFECTIVO' ? (Number(document.getElementById('carritoMontoRecibido').value) || null) : null,
+            ultimosCuatroDigitos: metodoPago !== 'EFECTIVO' ? document.getElementById('carritoUltimosDigitos').value.trim() : null,
+            uuidIdempotencia: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
+            items: carritoFarmacia.map(it => ({
+                origen: it.origen,
+                recetaId: it.recetaId,
+                medicamentoId: it.medicamentoId,
+                cantidad: it.cantidad,
+                sustituido: it.sustituido,
+                medicamentoSustitutoId: it.medicamentoSustitutoId,
+                razonSustitucion: it.razonSustitucion
+            }))
+        };
+
+        try {
+            const data = await apiFetch('/api/farmacia/carrito/pagar', { method: 'POST', body: JSON.stringify(body) });
+            let html = `<div class="p-3 rounded-md mb-3 bg-green-50 text-green-700 border border-green-200">
+                ${data.mensaje} Transacción: ${data.numeroTransaccion}.
+                ${data.metodoPago === 'EFECTIVO' ? ` Cambio: Q${Number(data.cambioDevuelto).toFixed(2)}.` : ''}
+            </div>`;
+            if (data.alertas && data.alertas.length) {
+                html += `<div class="p-3 rounded-md mb-3 bg-yellow-50 text-yellow-800 border border-yellow-200">${data.alertas.join('<br>')}</div>`;
+            }
+            document.getElementById('mensajesCarritoFarmacia').innerHTML = html;
+
+            carritoFarmacia = [];
+            actualizarContadorCarritoFarmacia();
+            document.getElementById('carritoIdPaciente').value = '';
+            document.getElementById('carritoMontoRecibido').value = '';
+            document.getElementById('carritoUltimosDigitos').value = '';
+            renderCarritoFarmacia();
+            setTimeout(cerrarCarritoFarmacia, 4000);
+
+            // refresca stock visible si el catálogo estaba abierto
+            if (tabFarmaciaActual === 'MEDICAMENTO') buscarMedicamentosFarmacia();
+        } catch (e) {
+            mostrarMensajeCarritoFarmacia(e.message, 'error');
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Administración de Farmacia (solo rol Administrador):
+    // alta de medicamentos y ajuste/carga de stock
+    // ------------------------------------------------------------
+    let medicamentoAjusteActualId = null;
+
+    function actualizarBotonesAdminFarmacia() {
+        const esAdmin = rolActual === 'Administrador' || rolActual === 'Administrador General';
+        const btnNuevo = document.getElementById('btnNuevoMedicamentoFarmacia');
+        if (btnNuevo) btnNuevo.classList.toggle('hidden', !esAdmin);
+    }
+
+    function abrirModalNuevoMedicamento() {
+        document.getElementById('mensajesNuevoMedicamento').innerHTML = '';
+        document.getElementById('nmNombre').value = '';
+        document.getElementById('nmDescripcion').value = '';
+        document.getElementById('nmPrecio').value = '';
+        document.getElementById('nmUnidad').value = '';
+        document.getElementById('nmStockMinimo').value = '';
+        document.getElementById('nmEsControlado').checked = false;
+        document.getElementById('modalNuevoMedicamento').classList.remove('hidden');
+    }
+
+    function cerrarModalNuevoMedicamento() {
+        document.getElementById('modalNuevoMedicamento').classList.add('hidden');
+    }
+
+    async function guardarNuevoMedicamento() {
+        const body = {
+            nombre: document.getElementById('nmNombre').value.trim(),
+            descripcion: document.getElementById('nmDescripcion').value.trim(),
+            precio: Number(document.getElementById('nmPrecio').value),
+            unidad: document.getElementById('nmUnidad').value.trim(),
+            esControlado: document.getElementById('nmEsControlado').checked,
+            stockMinimo: document.getElementById('nmStockMinimo').value
+                ? Number(document.getElementById('nmStockMinimo').value) : null
+        };
+        try {
+            await apiFetch('/api/medicamentos', { method: 'POST', body: JSON.stringify(body) });
+            cerrarModalNuevoMedicamento();
+            medicamentosFarmaciaCache = []; // refresca el cache usado en el select de sustitución
+            mostrarMensajeMedicamentoFarmacia('Medicamento creado correctamente.', 'exito');
+            buscarMedicamentosFarmacia();
+        } catch (e) {
+            document.getElementById('mensajesNuevoMedicamento').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    function abrirModalAjustarStock(medicamentoId, nombre) {
+        const idSucursal = document.getElementById('farmaciaSucursalId').value;
+        if (!idSucursal) { mostrarMensajeMedicamentoFarmacia('Seleccione una sucursal antes de ajustar el stock.', 'error'); return; }
+
+        medicamentoAjusteActualId = medicamentoId;
+        document.getElementById('mensajesAjustarStock').innerHTML = '';
+        document.getElementById('tituloAjustarStock').innerText = `Ajustar Stock — ${nombre}`;
+        const sucursal = sucursalesFarmaciaCache.find(s => String(s.id) === String(idSucursal));
+        document.getElementById('ajusteStockSucursalNombre').innerText = sucursal ? sucursal.nombre : '';
+        document.getElementById('asTipoMovimiento').value = 'COMPRA';
+        document.getElementById('asCantidad').value = '';
+        document.getElementById('asCostoUnitario').value = '';
+        document.getElementById('asMotivo').value = '';
+        cambiarTipoMovimientoStock();
+        document.getElementById('modalAjustarStock').classList.remove('hidden');
+    }
+
+    function cerrarModalAjustarStock() {
+        document.getElementById('modalAjustarStock').classList.add('hidden');
+        medicamentoAjusteActualId = null;
+    }
+
+    function cambiarTipoMovimientoStock() {
+        const tipo = document.getElementById('asTipoMovimiento').value;
+        document.getElementById('asCostoUnitarioBox').classList.toggle('hidden', tipo !== 'COMPRA');
+        document.getElementById('asMotivoBox').classList.toggle('hidden', tipo === 'COMPRA');
+    }
+
+    async function guardarAjusteStock() {
+        const idSucursal = Number(document.getElementById('farmaciaSucursalId').value);
+        const tipoMovimiento = document.getElementById('asTipoMovimiento').value;
+        const cantidad = Number(document.getElementById('asCantidad').value);
+
+        if (!cantidad || cantidad <= 0) {
+            document.getElementById('mensajesAjustarStock').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">La cantidad debe ser un número entero positivo.</div>`;
+            return;
+        }
+
+        const body = {
+            idUsuario: Number(sessionStorage.getItem('usuarioId')),
+            medicamentoId: medicamentoAjusteActualId,
+            sucursalId: idSucursal,
+            tipoMovimiento,
+            cantidad,
+            costoUnitario: tipoMovimiento === 'COMPRA' ? (Number(document.getElementById('asCostoUnitario').value) || null) : null,
+            motivo: tipoMovimiento !== 'COMPRA' ? document.getElementById('asMotivo').value.trim() : null
+        };
+
+        try {
+            const data = await apiFetch('/api/farmacia/inventario/ajustar', { method: 'POST', body: JSON.stringify(body) });
+            cerrarModalAjustarStock();
+            mostrarMensajeMedicamentoFarmacia(data.mensaje, 'exito');
+            buscarMedicamentosFarmacia();
+        } catch (e) {
+            document.getElementById('mensajesAjustarStock').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+
+    // Carga inicial / estado por defecto de los controles: solo si el
+    // usuario tiene acceso a este módulo (de lo contrario esos
+    // elementos del DOM ya fueron reemplazados por protegerPagina()).
+    if (tieneAccesoFarmacia) {
+        cambiarTabFarmacia('RECETA');
+        cambiarTipoBusquedaFarmacia('RECETA');
+        cambiarMetodoPagoFarmacia();
+        actualizarBotonesAdminFarmacia();
+        cargarSucursalesFarmacia();
+    }
+</script>
+</body>
+</html>

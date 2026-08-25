@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora de Movimientos de Inventario - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Bitácora de Movimientos de Inventario</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-bitacora-inv" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <h2 class="text-lg font-bold text-brand-black">Bitácora de Movimientos de Inventario</h2>
+                    <button onclick="abrirModalMovimiento()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
+                        + Nuevo Movimiento
+                    </button>
+                </div>
+
+                <!-- Filtros (RN-CU13-01 / FA01) -->
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-2 mb-4">
+                    <select id="fMovTipo" onchange="renderTablaMovimientos()" class="p-2 border border-gray-300 rounded-md text-sm col-span-1">
+                        <option value="">Tipo: Todos</option>
+                        <option value="0">Compra</option>
+                        <option value="1">Devolución</option>
+                        <option value="2">Venta</option>
+                        <option value="3">Reclamo</option>
+                        <option value="4">Ajuste+</option>
+                        <option value="5">Ajuste-</option>
+                        <option value="6">Despacho</option>
+                    </select>
+                    <input id="fMovMedicamento" oninput="renderTablaMovimientos()" placeholder="Medicamento..."
+                           class="p-2 border border-gray-300 rounded-md text-sm col-span-1">
+                    <input id="fMovSucursal" oninput="renderTablaMovimientos()" placeholder="Sucursal..."
+                           class="p-2 border border-gray-300 rounded-md text-sm col-span-1">
+                    <input id="fMovReferencia" oninput="renderTablaMovimientos()" placeholder="No. Referencia..."
+                           class="p-2 border border-gray-300 rounded-md text-sm col-span-1">
+                    <input id="fMovUsuario" oninput="renderTablaMovimientos()" placeholder="Usuario..."
+                           class="p-2 border border-gray-300 rounded-md text-sm col-span-1">
+                    <div class="flex gap-1 col-span-1">
+                        <input id="fMovDesde" type="date" onchange="renderTablaMovimientos()"
+                               class="p-2 border border-gray-300 rounded-md text-xs w-1/2" title="Desde">
+                        <input id="fMovHasta" type="date" onchange="renderTablaMovimientos()"
+                               class="p-2 border border-gray-300 rounded-md text-xs w-1/2" title="Hasta">
+                    </div>
+                </div>
+
+                <div id="mensajesMovimientos"></div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-3 py-2">Tipo</th>
+                            <th class="px-3 py-2">Medicamento</th>
+                            <th class="px-3 py-2">Sucursal</th>
+                            <th class="px-3 py-2">Cantidad</th>
+                            <th class="px-3 py-2">Stock Ant.</th>
+                            <th class="px-3 py-2">Stock Nvo.</th>
+                            <th class="px-3 py-2">Costo</th>
+                            <th class="px-3 py-2">Referencia</th>
+                            <th class="px-3 py-2">Usuario</th>
+                            <th class="px-3 py-2">Fecha</th>
+                            <th class="px-3 py-2">Estado</th>
+                            <th class="px-3 py-2">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablaMovimientosBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+                    <span id="conteoMovimientos"></span>
+                    <div class="flex gap-2 items-center">
+                        <button onclick="cambiarPaginaMovimientos(-1)" class="px-2 py-1 border rounded-md">‹</button>
+                        <span id="paginaMovimientosLabel"></span>
+                        <button onclick="cambiarPaginaMovimientos(1)" class="px-2 py-1 border rounded-md">›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal: Nuevo Movimiento -->
+        <div id="modalMovimiento" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                <h3 class="text-lg font-bold text-brand-black mb-4">Nuevo Movimiento de Inventario</h3>
+                <div id="mensajesModalMovimiento"></div>
+
+                <div class="space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Medicamento</label>
+                            <select id="movMedicamentoId" onchange="actualizarPanelStockMovimiento()"
+                                    class="w-full p-2 border border-gray-300 rounded-md"></select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Sucursal</label>
+                            <select id="movSucursalId" onchange="actualizarPanelStockMovimiento()"
+                                    class="w-full p-2 border border-gray-300 rounded-md"></select>
+                        </div>
+                    </div>
+
+                    <div id="panelStockMovimiento" class="hidden text-sm bg-brand-lightgray border border-gray-200 rounded-md p-3"></div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tipo de Movimiento</label>
+                            <select id="movTipoMovimiento" onchange="cambiarTipoMovimientoModal()"
+                                    class="w-full p-2 border border-gray-300 rounded-md">
+                                <option value="0">Compra</option>
+                                <option value="1">Devolución</option>
+                                <option value="2">Venta</option>
+                                <option value="3">Reclamo</option>
+                                <option value="4">Ajuste+</option>
+                                <option value="5">Ajuste-</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Cantidad</label>
+                            <input id="movCantidad" type="number" min="1" step="1"
+                                   oninput="actualizarPanelStockMovimiento()"
+                                   class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+
+                    <div id="movCostoBox">
+                        <label class="block text-sm font-medium text-gray-700">Costo Unitario (Q)</label>
+                        <input id="movCostoUnitario" type="number" min="0.01" step="0.01"
+                               class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+
+                    <div>
+                        <label id="movReferenciaLabel" class="block text-sm font-medium text-gray-700">Factura</label>
+                        <input id="movNumeroReferencia" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+
+                    <div id="movMotivoBox">
+                        <label id="movMotivoLabel" class="block text-sm font-medium text-gray-700">Notas (opcional)</label>
+                        <textarea id="movMotivo" rows="2" maxlength="500"
+                                  class="w-full p-2 border border-gray-300 rounded-md"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-4">
+                    <button onclick="cerrarModalMovimiento()"
+                            class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button onclick="guardarMovimiento()"
+                            class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Registrar Movimiento</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Ver detalle de movimiento -->
+        <div id="modalVerMovimiento" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold text-brand-black mb-4">Detalle del Movimiento</h3>
+                <div id="detalleMovimientoBody" class="space-y-1 text-sm text-gray-700"></div>
+                <div class="pt-4">
+                    <button onclick="cerrarModalVerMovimiento()"
+                            class="w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. MANTENIMIENTO DE CATÁLOGOS DEL SISTEMA (CU-14) -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: bitacora-inv
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoBitacora = protegerPagina();
+
+    // CU-13/15: Bitácora de Movimientos de Inventario
+    // ============================================================
+    const TIPOS_MOV_LABEL = {0: 'Compra', 1: 'Devolución', 2: 'Venta', 3: 'Reclamo', 4: 'Ajuste+', 5: 'Ajuste-', 6: 'Despacho'};
+    const TIPOS_MOV_ENTRADA = [0, 1, 4]; // Compra, Devolución, Ajuste+
+    const TIPOS_MOV_SALIDA = [2, 3, 5];  // Venta, Reclamo, Ajuste-
+
+    let movimientosCache = [];
+    let paginaMovimientosActual = 1;
+    const movimientosPorPagina = 10;
+    let medicamentosMovCache = [];
+    let sucursalesMovCache = [];
+
+    function mostrarMensajeMovimientos(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200'
+        };
+        document.getElementById('mensajesMovimientos').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    // El controller solo pagina (Pageable), sin filtros server-side todavía,
+    // así que traemos un lote grande una vez y filtramos/paginamos en cliente
+    // (mismo patrón que Especialidades por Sede).
+    async function cargarMovimientos() {
+        try {
+            const data = await apiFetch('/api/movimientos-inventario?page=0&size=1000&sort=creadoEn,desc');
+            movimientosCache = data.contenido || [];
+            paginaMovimientosActual = 1;
+            renderTablaMovimientos();
+        } catch (e) {
+            mostrarMensajeMovimientos(e.message, 'error');
+        }
+    }
+
+    function renderTablaMovimientos() {
+        const tipo = document.getElementById('fMovTipo').value;
+        const medicamento = document.getElementById('fMovMedicamento').value.trim().toLowerCase();
+        const sucursal = document.getElementById('fMovSucursal').value.trim().toLowerCase();
+        const referencia = document.getElementById('fMovReferencia').value.trim().toLowerCase();
+        const usuario = document.getElementById('fMovUsuario').value.trim().toLowerCase();
+        const desde = document.getElementById('fMovDesde').value;
+        const hasta = document.getElementById('fMovHasta').value;
+
+        let filtrados = movimientosCache.filter(m => {
+            if (tipo !== '' && String(m.tipoMovimiento) !== tipo) return false;
+            if (medicamento && !(m.medicamentoNombre || '').toLowerCase().includes(medicamento)) return false;
+            if (sucursal && !(m.sucursalNombre || '').toLowerCase().includes(sucursal)) return false;
+            if (referencia && !(m.numeroReferencia || '').toLowerCase().includes(referencia)) return false;
+            if (usuario && !(m.usuarioNombre || '').toLowerCase().includes(usuario)) return false;
+            if (desde && m.creadoEn < desde) return false;
+            if (hasta && m.creadoEn > hasta + 'T23:59:59') return false;
+            return true;
+        });
+
+        const totalPaginas = Math.max(1, Math.ceil(filtrados.length / movimientosPorPagina));
+        if (paginaMovimientosActual > totalPaginas) paginaMovimientosActual = totalPaginas;
+        const inicio = (paginaMovimientosActual - 1) * movimientosPorPagina;
+        const pagina = filtrados.slice(inicio, inicio + movimientosPorPagina);
+
+        const tbody = document.getElementById('tablaMovimientosBody');
+        if (pagina.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="12" class="text-center text-gray-400 py-4">No se encontraron resultados.</td></tr>`;
+        } else {
+            tbody.innerHTML = pagina.map(m => `
+            <tr class="border-t border-gray-100">
+                <td class="px-3 py-2">${m.tipoMovimientoNombre || TIPOS_MOV_LABEL[m.tipoMovimiento] || m.tipoMovimiento}</td>
+                <td class="px-3 py-2">${m.medicamentoNombre || ''}</td>
+                <td class="px-3 py-2">${m.sucursalNombre || ''}</td>
+                <td class="px-3 py-2">${m.cantidad}</td>
+                <td class="px-3 py-2">${m.stockAnterior}</td>
+                <td class="px-3 py-2">${m.stockNuevo}</td>
+                <td class="px-3 py-2">${m.costoUnitario != null ? 'Q' + Number(m.costoUnitario).toFixed(2) : '-'}</td>
+                <td class="px-3 py-2">${m.numeroReferencia || '-'}</td>
+                <td class="px-3 py-2">${m.usuarioNombre || ''}</td>
+                <td class="px-3 py-2">${m.creadoEn ? new Date(m.creadoEn).toLocaleString('es-GT') : ''}</td>
+                <td class="px-3 py-2">
+                    <span class="px-2 py-1 rounded-full text-xs font-bold ${m.activo ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}">
+                        ${m.activo ? 'Activo' : 'Inactivo'}
+                    </span>
+                </td>
+                <td class="px-3 py-2 whitespace-nowrap">
+                    <button onclick="abrirModalVerMovimiento(${m.id})" class="text-blue-600 hover:underline mr-2">Ver</button>
+                    <button onclick="toggleEstadoMovimiento(${m.id}, ${!m.activo})" class="text-orange-600 hover:underline">
+                        ${m.activo ? 'Desactivar' : 'Activar'}
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+        }
+
+        document.getElementById('conteoMovimientos').innerText = `${filtrados.length} registro(s)`;
+        document.getElementById('paginaMovimientosLabel').innerText = `${paginaMovimientosActual} / ${totalPaginas}`;
+    }
+
+    function cambiarPaginaMovimientos(delta) {
+        paginaMovimientosActual = Math.max(1, paginaMovimientosActual + delta);
+        renderTablaMovimientos();
+    }
+
+    async function abrirModalMovimiento() {
+        document.getElementById('mensajesModalMovimiento').innerHTML = '';
+        document.getElementById('movMedicamentoId').innerHTML = '<option value="">Cargando...</option>';
+        document.getElementById('movSucursalId').innerHTML = '<option value="">Cargando...</option>';
+        document.getElementById('movTipoMovimiento').value = '0';
+        document.getElementById('movCantidad').value = '';
+        document.getElementById('movCostoUnitario').value = '';
+        document.getElementById('movNumeroReferencia').value = '';
+        document.getElementById('movMotivo').value = '';
+        document.getElementById('panelStockMovimiento').classList.add('hidden');
+
+        try {
+            if (medicamentosMovCache.length === 0) medicamentosMovCache = await apiFetchCached('/api/medicamentos');
+            if (sucursalesMovCache.length === 0) sucursalesMovCache = await apiFetchCached('/api/sucursales');
+            document.getElementById('movMedicamentoId').innerHTML =
+                '<option value="">-- Seleccione --</option>' +
+                medicamentosMovCache.map(m => `<option value="${m.id}">${m.nombre}</option>`).join('');
+
+            // Administrador de Sede y Farmacéutico: ambos quedan atados a su
+            // propia sucursal (el backend ya lo valida vía
+            // AuthUsuario.sucursalScopeOrNull()); aquí solo acotamos el combo.
+            let sucursalesParaModal = sucursalesMovCache;
+            const miSucursalId = sessionStorage.getItem('sucursalId');
+            const esUsuarioAcotadoASede = (rolActual === 'Administrador' || rolActual === 'Farmacéutico');
+            if (esUsuarioAcotadoASede && miSucursalId) {
+                sucursalesParaModal = sucursalesMovCache.filter(s => String(s.id) === String(miSucursalId));
+            }
+
+            document.getElementById('movSucursalId').innerHTML =
+                '<option value="">-- Seleccione --</option>' +
+                sucursalesParaModal.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+
+            if (esUsuarioAcotadoASede && miSucursalId) {
+                const selectSucursal = document.getElementById('movSucursalId');
+                selectSucursal.value = miSucursalId;
+                selectSucursal.disabled = true;
+            }
+        } catch (e) {
+            document.getElementById('mensajesModalMovimiento').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+
+        cambiarTipoMovimientoModal();
+        document.getElementById('modalMovimiento').classList.remove('hidden');
+    }
+
+    function cerrarModalMovimiento() {
+        document.getElementById('modalMovimiento').classList.add('hidden');
+    }
+
+    // RN-CU13-01: etiqueta de referencia y campo de motivo/notas dinámicos según el tipo
+    function cambiarTipoMovimientoModal() {
+        const tipo = Number(document.getElementById('movTipoMovimiento').value);
+
+        document.getElementById('movCostoBox').classList.toggle('hidden', tipo !== 0);
+
+        const etiquetasReferencia = {0: 'Factura', 1: 'Devolución', 2: 'Venta', 3: 'Reclamo'};
+        const refBox = document.getElementById('movReferenciaLabel').closest('div');
+        if (etiquetasReferencia[tipo]) {
+            refBox.classList.remove('hidden');
+            document.getElementById('movReferenciaLabel').innerText = etiquetasReferencia[tipo];
+        } else {
+            refBox.classList.remove('hidden');
+            document.getElementById('movReferenciaLabel').innerText = 'Referencia (opcional)';
+        }
+
+        const motivoBox = document.getElementById('movMotivoBox');
+        const motivoLabel = document.getElementById('movMotivoLabel');
+        if (tipo === 2) { // Venta: el campo no se muestra
+            motivoBox.classList.add('hidden');
+        } else {
+            motivoBox.classList.remove('hidden');
+            if (tipo === 0) motivoLabel.innerText = 'Notas (opcional)';
+            else if (tipo === 1) motivoLabel.innerText = 'Motivo de Devolución';
+            else if (tipo === 3) motivoLabel.innerText = 'Motivo del Reclamo';
+            else motivoLabel.innerText = 'Notas / Justificación';
+        }
+
+        actualizarPanelStockMovimiento();
+    }
+
+    // RN-CU13-03: panel informativo de inventario en tiempo real
+    async function actualizarPanelStockMovimiento() {
+        const medicamentoId = document.getElementById('movMedicamentoId').value;
+        const sucursalId = document.getElementById('movSucursalId').value;
+        const panel = document.getElementById('panelStockMovimiento');
+
+        if (!medicamentoId || !sucursalId) {
+            panel.classList.add('hidden');
+            return;
+        }
+
+        try {
+            const disponibles = await apiFetch(`/api/farmacia/medicamentos/buscar?idSucursal=${sucursalId}`);
+            const info = disponibles.find(m => String(m.id) === String(medicamentoId));
+            const stockActual = info?.stockDisponible ?? 0;
+            const stockMinimo = info?.stockMinimo ?? null;
+
+            const tipo = Number(document.getElementById('movTipoMovimiento').value);
+            const cantidad = Number(document.getElementById('movCantidad').value) || 0;
+            let proyectado = stockActual;
+            let operacion = '—';
+            if (TIPOS_MOV_ENTRADA.includes(tipo)) { proyectado = stockActual + cantidad; operacion = 'Entrada'; }
+            else if (TIPOS_MOV_SALIDA.includes(tipo)) { proyectado = stockActual - cantidad; operacion = 'Salida'; }
+
+            let alerta = '';
+            if (stockMinimo != null && proyectado <= stockMinimo) {
+                alerta = `<p class="text-red-600 font-semibold mt-1">⚠ Stock bajo — disponible: ${proyectado} (mínimo: ${stockMinimo})</p>`;
+            }
+
+            panel.classList.remove('hidden');
+            panel.innerHTML = `
+                <p><strong>Stock actual:</strong> ${stockActual} ${stockMinimo != null ? `(mínimo: ${stockMinimo})` : ''}</p>
+                <p><strong>Tipo de operación:</strong> ${operacion}</p>
+                <p><strong>Stock proyectado:</strong> ${proyectado}</p>
+                ${alerta}
+            `;
+        } catch (e) {
+            panel.classList.add('hidden');
+        }
+    }
+
+    async function guardarMovimiento() {
+        const medicamentoId = document.getElementById('movMedicamentoId').value;
+        const sucursalId = document.getElementById('movSucursalId').value;
+        const tipoMovimiento = Number(document.getElementById('movTipoMovimiento').value);
+        const cantidad = Number(document.getElementById('movCantidad').value);
+        const costoUnitario = document.getElementById('movCostoUnitario').value;
+        const numeroReferencia = document.getElementById('movNumeroReferencia').value.trim();
+        const motivo = document.getElementById('movMotivo').value.trim();
+
+        const errorBox = document.getElementById('mensajesModalMovimiento');
+        const mostrarErrorModal = (msg) => {
+            errorBox.innerHTML = `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${msg}</div>`;
+        };
+        errorBox.innerHTML = '';
+
+        if (!medicamentoId) return mostrarErrorModal('Debe seleccionar un medicamento.');
+        if (!sucursalId) return mostrarErrorModal('Debe seleccionar una sucursal.');
+        if (!cantidad || cantidad <= 0) return mostrarErrorModal('La cantidad debe ser un número entero positivo.');
+        if (tipoMovimiento === 0 && (!costoUnitario || Number(costoUnitario) <= 0)) {
+            return mostrarErrorModal('El costo unitario es obligatorio para compras y debe ser mayor a 0.');
+        }
+        if ([1, 3, 4, 5].includes(tipoMovimiento) && motivo.length < 10) {
+            return mostrarErrorModal('El motivo debe contener entre 10 y 500 caracteres.');
+        }
+
+        const body = {
+            medicamentoId: Number(medicamentoId),
+            sucursalId: Number(sucursalId),
+            tipoMovimiento: tipoMovimiento,
+            cantidad: cantidad,
+            costoUnitario: tipoMovimiento === 0 ? Number(costoUnitario) : null,
+            numeroReferencia: numeroReferencia || null,
+            motivo: tipoMovimiento === 2 ? null : (motivo || null)
+        };
+
+        try {
+            const data = await apiFetch('/api/movimientos-inventario', { method: 'POST', body: JSON.stringify(body) });
+            cerrarModalMovimiento();
+            mostrarMensajeMovimientos(
+                `Movimiento registrado exitosamente. Medicamento: ${data.medicamentoNombre}. Tipo: ${data.tipoMovimientoNombre || TIPOS_MOV_LABEL[data.tipoMovimiento]}. Cantidad: ${data.cantidad}. Stock actualizado: ${data.stockNuevo}.`,
+                'exito'
+            );
+            cargarMovimientos();
+        } catch (e) {
+            mostrarErrorModal(e.message);
+        }
+    }
+
+    function abrirModalVerMovimiento(id) {
+        const m = movimientosCache.find(x => x.id === id);
+        if (!m) return;
+        document.getElementById('detalleMovimientoBody').innerHTML = `
+            <p><strong>Tipo:</strong> ${m.tipoMovimientoNombre || TIPOS_MOV_LABEL[m.tipoMovimiento]}</p>
+            <p><strong>Medicamento:</strong> ${m.medicamentoNombre}</p>
+            <p><strong>Sucursal:</strong> ${m.sucursalNombre}</p>
+            <p><strong>Cantidad:</strong> ${m.cantidad}</p>
+            <p><strong>Stock Anterior:</strong> ${m.stockAnterior}</p>
+            <p><strong>Stock Nuevo:</strong> ${m.stockNuevo}</p>
+            <p><strong>Costo Unitario:</strong> ${m.costoUnitario != null ? 'Q' + Number(m.costoUnitario).toFixed(2) : '-'}</p>
+            <p><strong>No. Referencia:</strong> ${m.numeroReferencia || '-'}</p>
+            <p><strong>Motivo / Notas:</strong> ${m.motivo || '-'}</p>
+            <p><strong>Usuario:</strong> ${m.usuarioNombre || ''}</p>
+            <p><strong>Fecha:</strong> ${m.creadoEn ? new Date(m.creadoEn).toLocaleString('es-GT') : ''}</p>
+            <p><strong>Estado:</strong> ${m.activo ? 'Activo' : 'Inactivo'}</p>
+        `;
+        document.getElementById('modalVerMovimiento').classList.remove('hidden');
+    }
+
+    function cerrarModalVerMovimiento() {
+        document.getElementById('modalVerMovimiento').classList.add('hidden');
+    }
+
+    async function toggleEstadoMovimiento(id, nuevoEstado) {
+        try {
+            await apiFetch(`/api/movimientos-inventario/${id}/estado?activo=${nuevoEstado}`, { method: 'PATCH' });
+            mostrarMensajeMovimientos(`Movimiento ${nuevoEstado ? 'activado' : 'desactivado'} correctamente.`, 'exito');
+            cargarMovimientos();
+        } catch (e) {
+            mostrarMensajeMovimientos(e.message, 'error');
+        }
+    }
+
+
+    // Carga inicial de datos de este módulo: solo si el usuario tiene
+    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    if (tieneAccesoBitacora) {
+        cargarMovimientos();
+    }
+</script>
+</body>
+</html>

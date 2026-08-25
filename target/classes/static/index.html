@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital - Portal de Citas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased">
+
+<header class="bg-brand-black text-white">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="register.html" class="text-sm text-gray-300 hover:text-brand-yellow">
+                <i class="fa-solid fa-user-plus mr-1"></i> Crear cuenta
+            </a>
+            <a href="login.html" class="text-sm text-gray-300 hover:text-brand-yellow">
+                <i class="fa-solid fa-right-to-bracket mr-1"></i> Ya tengo cuenta
+            </a>
+        </div>
+    </div>
+</header>
+
+<section class="bg-brand-black text-white">
+    <div class="max-w-6xl mx-auto px-6 py-16 text-center">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-4">Cuidamos tu salud, cuando la necesites</h1>
+        <p class="text-gray-300 max-w-2xl mx-auto mb-8">
+            Agenda tu cita médica en línea, elige la especialidad y la sucursal que prefieras,
+            y confirma tu horario en minutos.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+            <button onclick="abrirModalVerificarDpi()"
+                    class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-8 py-3 rounded-lg shadow transition text-lg">
+                Agendar Cita
+            </button>
+            <a href="register.html"
+               class="border border-gray-500 hover:border-brand-yellow hover:text-brand-yellow text-white font-semibold px-8 py-3 rounded-lg transition text-lg">
+                Crear Cuenta
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-6 py-14">
+    <h2 class="text-2xl font-bold text-brand-black mb-6 text-center">Especialidades disponibles</h2>
+    <div id="listaEspecialidades" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <p class="text-gray-400 col-span-4 text-center">Cargando especialidades...</p>
+    </div>
+</section>
+
+<section class="bg-white border-t border-gray-200">
+    <div class="max-w-6xl mx-auto px-6 py-14">
+        <h2 class="text-2xl font-bold text-brand-black mb-6 text-center">Nuestras sedes</h2>
+        <div id="listaSucursales" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <p class="text-gray-400 col-span-2 text-center">Cargando sucursales...</p>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-6">
+            <i class="fa-regular fa-clock mr-1"></i> Horario de atención: Lunes a Viernes, 8:00 a.m. - 5:00 p.m.
+        </p>
+    </div>
+</section>
+
+<footer class="bg-brand-black text-gray-400 text-center py-6 text-sm">
+    Sistema Informático Hospitalario &copy; 2026
+</footer>
+
+<!-- MODAL: Verificar Registro -->
+<div id="modalVerificarDpi" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl p-6 w-full max-w-sm">
+        <h3 class="text-lg font-bold text-brand-black mb-2">Verificar Registro</h3>
+        <p class="text-sm text-gray-600 mb-4">
+            Ingrese su número de DPI para verificar si está registrado en el sistema.
+        </p>
+
+        <div id="mensajeModalDpi" class="hidden p-3 rounded-md text-sm mb-3"></div>
+
+        <input id="dpiVerificar" maxlength="13" inputmode="numeric"
+               class="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow"
+               placeholder="Ingrese su DPI">
+        <p class="text-xs text-gray-400 mt-1 mb-4"><span id="dpiVerificarContador">0</span>/13 dígitos</p>
+
+        <div class="flex gap-2">
+            <button onclick="cerrarModalVerificarDpi()"
+                    class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+            <button id="btnVerificarDpi" onclick="verificarDpi()"
+                    class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">
+                Verificar DPI
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function cargarPortal() {
+        try {
+            const especialidades = await fetch('/api/especialidades').then(r => r.json());
+            document.getElementById('listaEspecialidades').innerHTML = especialidades.length
+                ? especialidades.map(e => `
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 text-center shadow-sm">
+                        <i class="fa-solid fa-stethoscope text-brand-yellow text-2xl mb-2"></i>
+                        <p class="font-semibold text-brand-black text-sm">${e.nombre}</p>
+                    </div>`).join('')
+                : '<p class="text-gray-400 col-span-4 text-center">No hay especialidades configuradas todavía.</p>';
+        } catch (e) {
+            document.getElementById('listaEspecialidades').innerHTML =
+                '<p class="text-red-500 col-span-4 text-center">No se pudieron cargar las especialidades.</p>';
+        }
+
+        try {
+            const sucursales = await fetch('/api/sucursales').then(r => r.json());
+            document.getElementById('listaSucursales').innerHTML = sucursales.length
+                ? sucursales.map(s => `
+                    <div class="bg-brand-lightgray border border-gray-200 rounded-xl p-4 flex items-center gap-3">
+                        <i class="fa-solid fa-location-dot text-brand-yellow text-xl"></i>
+                        <p class="font-semibold text-brand-black text-sm">${s.nombre}</p>
+                    </div>`).join('')
+                : '<p class="text-gray-400 col-span-2 text-center">No hay sucursales configuradas todavía.</p>';
+        } catch (e) {
+            document.getElementById('listaSucursales').innerHTML =
+                '<p class="text-red-500 col-span-2 text-center">No se pudieron cargar las sucursales.</p>';
+        }
+    }
+    cargarPortal();
+
+    function abrirModalVerificarDpi() {
+        document.getElementById('dpiVerificar').value = '';
+        document.getElementById('dpiVerificarContador').textContent = '0';
+        document.getElementById('mensajeModalDpi').classList.add('hidden');
+        document.getElementById('modalVerificarDpi').classList.remove('hidden');
+    }
+
+    // FA02: cancelar
+    function cerrarModalVerificarDpi() {
+        document.getElementById('modalVerificarDpi').classList.add('hidden');
+    }
+
+    document.getElementById('dpiVerificar').addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        document.getElementById('dpiVerificarContador').textContent = e.target.value.length;
+    });
+
+    function mostrarMensajeModalDpi(texto, tipo) {
+        const el = document.getElementById('mensajeModalDpi');
+        el.textContent = texto;
+        el.className = 'p-3 rounded-md text-sm mb-3 ' + (
+            tipo === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
+            tipo === 'exito' ? 'bg-green-50 text-green-700 border border-green-200' :
+            'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        );
+        el.classList.remove('hidden');
+    }
+
+    async function verificarDpi() {
+        const dpi = document.getElementById('dpiVerificar').value.trim();
+        document.getElementById('mensajeModalDpi').classList.add('hidden');
+
+        if (!dpi) {
+            mostrarMensajeModalDpi('El campo DPI es obligatorio. Por favor, ingrese su número de DPI.', 'error');
+            return;
+        }
+        if (dpi.length !== 13) {
+            mostrarMensajeModalDpi(`El DPI debe contener exactamente 13 dígitos. Usted ingresó ${dpi.length} dígitos.`, 'error');
+            return;
+        }
+
+        const btn = document.getElementById('btnVerificarDpi');
+        btn.disabled = true;
+        btn.textContent = 'Verificando...';
+
+        try {
+            const resp = await fetch('/api/verify-dpi', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dpi })
+            });
+            const data = await resp.json().catch(() => ({}));
+
+            if (!resp.ok) {
+                mostrarMensajeModalDpi(data.mensaje || data.message || 'El DPI ingresado no es válido.', 'error');
+                return;
+            }
+
+            if (!data.registrado) {
+                // FA03
+                mostrarMensajeModalDpi(data.mensaje, 'info');
+                setTimeout(() => { window.location.href = 'register.html'; }, 2000);
+            } else if (!data.esPaciente) {
+                // FA04
+                mostrarMensajeModalDpi(data.mensaje, 'error');
+            } else {
+                // RN-CU00-01
+                mostrarMensajeModalDpi(data.mensaje, 'exito');
+                setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+            }
+
+        } catch (e) {
+            // FA05
+            mostrarMensajeModalDpi('No se pudo conectar con el servidor. Intente de nuevo más tarde.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Verificar DPI';
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Laboratorio - Sistema Informático Hospitalario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#121212',
+                            dark: '#1E1E1E',
+                            gray: '#2A2A2A',
+                            lightgray: '#F4F4F5',
+                            yellow: '#FACC15',
+                            yellowhover: '#EAB308'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
+      data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General">
+
+<!-- BARRA LATERAL -->
+<aside class="w-64 bg-brand-black text-white flex flex-col shrink-0 shadow-xl overflow-y-auto">
+    <div>
+        <div class="h-16 flex items-center px-6 bg-brand-dark border-b border-gray-800 gap-3">
+            <i class="fa-solid fa-hospital text-brand-yellow text-2xl"></i>
+            <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
+        </div>
+
+        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
+             "*" significa: todos los roles internos autenticados. -->
+        <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
+            </a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
+            </a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
+            </a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
+            </a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-flask w-6"></i> Laboratorio
+            </a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
+            </a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-pills w-6"></i> Farmacia
+            </a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
+            </a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
+            </a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
+            </a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
+            </a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
+               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
+                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<!-- ÁREA PRINCIPAL -->
+<main class="flex-1 flex flex-col overflow-y-auto">
+    <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
+        <h1 id="page-title" class="text-xl font-bold text-brand-black">Gestión de Laboratorio</h1>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
+                    --
+                </div>
+                <div class="text-right leading-tight">
+                    <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
+                    <p id="rolUsuario" class="text-xs text-gray-500"></p>
+                </div>
+                <button onclick="cerrarSesion()" title="Cerrar sesión" class="text-gray-400 hover:text-red-500 ml-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+            <span class="text-sm font-medium bg-gray-100 text-gray-800 px-3 py-1 rounded-full border border-gray-300">
+                <i class="fa-regular fa-clock text-brand-yellow mr-1"></i> Sistema Activo
+            </span>
+        </div>
+    </header>
+
+    <div class="p-8" id="main-content">
+        <section id="section-laboratorio" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <h2 class="text-lg font-bold text-brand-black">Órdenes de Laboratorio</h2>
+                    <div class="flex gap-2">
+                        <select id="filtroEstadoLab" onchange="cargarOrdenesLab()" class="p-2 border border-gray-300 rounded-md text-sm">
+                            <option value="">Todos los estados</option>
+                            <option value="0">Pendiente</option>
+                            <option value="1">En proceso</option>
+                            <option value="2">Completada</option>
+                            <option value="3">Cancelada</option>
+                        </select>
+                        <button onclick="cargarOrdenesLab()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="mensajesLab"></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-3 py-2">No. Orden</th>
+                            <th class="px-3 py-2">Paciente</th>
+                            <th class="px-3 py-2">Médico</th>
+                            <th class="px-3 py-2">Exámenes</th>
+                            <th class="px-3 py-2">Monto</th>
+                            <th class="px-3 py-2">Estado</th>
+                            <th class="px-3 py-2">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tablaOrdenesLabBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Detalle de orden -->
+            <div id="detalleOrdenLabContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="tituloDetalleOrdenLab" class="text-lg font-bold text-brand-black"></h2>
+                    <button onclick="cerrarDetalleOrdenLab()" class="text-sm text-gray-500 hover:text-brand-black">Volver</button>
+                </div>
+                <div id="mensajesDetalleLab"></div>
+                <div id="infoOrdenLab" class="text-sm text-gray-600 mb-4"></div>
+                <div id="listaExamenesOrdenLab" class="space-y-4"></div>
+            </div>
+        </section>
+
+        <!-- pagos -->
+
+    </div>
+</main>
+
+<script src="common.js"></script>
+<script>
+    // ============================================================
+    // Página: laboratorio
+    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
+    // del HTML deben quedar declaradas en el nivel superior del
+    // <script>, nunca dentro de un bloque if/else (una función async
+    // declarada dentro de un bloque no queda expuesta en el ámbito
+    // global y el onclick del HTML no la encuentra). Por eso
+    // protegerPagina() solo decide si se ejecutan las llamadas
+    // iniciales que tocan el DOM, nunca si se declaran las funciones.
+    // ============================================================
+    const tieneAccesoLaboratorio = protegerPagina();
+
+    // CU-09: Gestión de Laboratorio
+    // ============================================================
+    let ordenLabActualId = null;
+
+    function mostrarMensajeLab(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            exito: 'bg-green-50 text-green-700 border border-green-200',
+            info: 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+        };
+        document.getElementById('mensajesLab').innerHTML =
+            `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
+    }
+
+    async function cargarOrdenesLab() {
+        const estado = document.getElementById('filtroEstadoLab').value;
+        try {
+            const url = '/api/laboratorio/ordenes' + (estado !== '' ? `?estado=${estado}` : '');
+            const ordenes = await apiFetch(url);
+            renderTablaOrdenesLab(ordenes);
+        } catch (e) {
+            mostrarMensajeLab(e.message, 'error');
+        }
+    }
+
+    function renderTablaOrdenesLab(ordenes) {
+        const tbody = document.getElementById('tablaOrdenesLabBody');
+        if (!ordenes.length) {
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-gray-400 py-4">No se encontraron resultados.</td></tr>`;
+            return;
+        }
+        const coloresEstado = {
+            'Pendiente': 'bg-gray-200 text-gray-700',
+            'En proceso': 'bg-yellow-100 text-yellow-800',
+            'Completada': 'bg-green-100 text-green-700',
+            'Cancelada': 'bg-red-100 text-red-700'
+        };
+        tbody.innerHTML = ordenes.map(o => `
+            <tr class="border-t border-gray-100">
+                <td class="px-3 py-2">${o.id}</td>
+                <td class="px-3 py-2">${o.nombrePaciente}</td>
+                <td class="px-3 py-2">${o.nombreMedico}</td>
+                <td class="px-3 py-2">${o.cantidadExamenes}</td>
+                <td class="px-3 py-2">Q${Number(o.montoTotal).toFixed(2)}</td>
+                <td class="px-3 py-2"><span class="px-2 py-1 rounded-full text-xs font-bold ${coloresEstado[o.estado] || ''}">${o.estado}${o.esExterna ? ' · Externa' : ''}</span></td>
+                <td class="px-3 py-2"><button onclick="verDetalleOrdenLab(${o.id})" class="text-blue-600 hover:underline">Ver</button></td>
+            </tr>`).join('');
+    }
+
+    async function verDetalleOrdenLab(idOrden) {
+        ordenLabActualId = idOrden;
+        document.getElementById('mensajesDetalleLab').innerHTML = '';
+        try {
+            const o = await apiFetch(`/api/laboratorio/ordenes/${idOrden}`);
+            document.getElementById('tituloDetalleOrdenLab').innerText = `Orden #${o.id} — ${o.nombrePaciente}`;
+            document.getElementById('infoOrdenLab').innerHTML = `
+                Médico: ${o.nombreMedico} · Estado: <strong>${o.estado}</strong>${o.esExterna ? ' (Externa)' : ''} ·
+                Monto total: Q${Number(o.montoTotal).toFixed(2)} ${o.notas ? '· Notas: ' + o.notas : ''}`;
+
+            if (o.estadoCodigo === 0) {
+                document.getElementById('mensajesDetalleLab').innerHTML =
+                    '<div class="p-3 rounded-md mb-3 bg-yellow-50 text-yellow-800 border border-yellow-200">El pago debe estar completado antes de proceder con la toma de muestras (ver módulo de Caja).</div>';
+            }
+
+            document.getElementById('listaExamenesOrdenLab').innerHTML = o.examenes.map(ex => `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-semibold">${ex.nombreExamen} ${ex.publicado ? '<span class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-bold">Publicado</span>' : ''}</p>
+                            <p class="text-xs text-gray-500">Rango de referencia: ${ex.rangoReferencia || 'N/A'} · Q${Number(ex.precioUnitario).toFixed(2)}</p>
+                        </div>
+                        ${ex.fueraDeRango ? '<span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">Fuera de rango</span>' : ''}
+                    </div>
+                    <div id="formResultado-${ex.id}" class="mt-3 ${ex.publicado ? 'hidden' : ''}">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input id="valorResultado-${ex.id}" placeholder="Valor del resultado" value="${ex.valorResultado || ''}"
+                                   class="p-2 border border-gray-300 rounded-md text-sm">
+                            <input id="unidadResultado-${ex.id}" placeholder="Unidad" value="${ex.unidad || ''}"
+                                   class="p-2 border border-gray-300 rounded-md text-sm">
+                        </div>
+                        <textarea id="notasResultado-${ex.id}" rows="2" placeholder="Notas del resultado (opcional)"
+                                  class="w-full mt-2 p-2 border border-gray-300 rounded-md text-sm">${ex.notasResultado || ''}</textarea>
+                        <div class="mt-2 flex items-center gap-2">
+                            <input id="fueraRango-${ex.id}" type="checkbox" ${ex.fueraDeRango ? 'checked' : ''} class="w-4 h-4">
+                            <label for="fueraRango-${ex.id}" class="text-sm text-gray-700">Fuera de Rango</label>
+                        </div>
+                        <div class="mt-3 flex gap-2">
+                            <button onclick="guardarResultadoExamen(${ex.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-1.5 rounded-lg text-sm">Guardar Resultado</button>
+                            <button onclick="publicarResultadoExamen(${ex.id})" ${!ex.valorResultado ? 'disabled' : ''}
+                                    class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-sm disabled:opacity-40">
+                                Publicar resultado
+                            </button>
+                        </div>
+                    </div>
+                </div>`).join('');
+
+            document.getElementById('detalleOrdenLabContainer').classList.remove('hidden');
+            document.getElementById('detalleOrdenLabContainer').scrollIntoView({ behavior: 'smooth' });
+        } catch (e) {
+            mostrarMensajeLab(e.message, 'error');
+        }
+    }
+
+    function cerrarDetalleOrdenLab() {
+        ordenLabActualId = null;
+        document.getElementById('detalleOrdenLabContainer').classList.add('hidden');
+    }
+
+    async function guardarResultadoExamen(idDetalle) {
+        const body = {
+            valorResultado: document.getElementById(`valorResultado-${idDetalle}`).value.trim(),
+            unidad: document.getElementById(`unidadResultado-${idDetalle}`).value.trim(),
+            fueraDeRango: document.getElementById(`fueraRango-${idDetalle}`).checked,
+            notasResultado: document.getElementById(`notasResultado-${idDetalle}`).value.trim()
+        };
+        try {
+            const data = await apiFetch(`/api/laboratorio/ordenes/${ordenLabActualId}/examenes/${idDetalle}/resultado`, {
+                method: 'PUT', body: JSON.stringify(body)
+            });
+            mostrarMensajeLab(data.mensaje, 'exito');
+            verDetalleOrdenLab(ordenLabActualId);
+        } catch (e) {
+            mostrarMensajeLab(e.message, 'error');
+        }
+    }
+
+    async function publicarResultadoExamen(idDetalle) {
+        try {
+            const data = await apiFetch(`/api/laboratorio/ordenes/${ordenLabActualId}/examenes/${idDetalle}/publicar`, { method: 'POST' });
+            mostrarMensajeLab(data.mensaje + (data.ordenCompletada ? ' La orden ha quedado Completada.' : ''), 'exito');
+            verDetalleOrdenLab(ordenLabActualId);
+            cargarOrdenesLab();
+        } catch (e) {
+            mostrarMensajeLab(e.message, 'error');
+        }
+    }
+
+
+
+    // Carga inicial de datos de este módulo: solo si el usuario tiene
+    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    if (tieneAccesoLaboratorio) {
+        cargarOrdenesLab();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "id": 2,
+  "nombreCompleto": "Juan Pérez López",
+  "correoElectronico": "juan.perez@hospital.com",
+  "nombreUsuario": "jperez01",
+  "dpi": null,
+  "telefono": null,
+  "rolNombre": "Médico",
+  "sucursalNombre": "Sede Central",
+  "especialidadNombre": null,
+  "estado": 1
+}
