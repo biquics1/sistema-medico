@@ -17,17 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-// CORREGIDO: faltaba @EnableMethodSecurity. Sin esta anotación, Spring Security
-// IGNORA POR COMPLETO todas las anotaciones @PreAuthorize de los controllers
-// (TareaMedicoController, AgendaMedicaController, EventoAgendaController,
-// RolController, EspecialidadController, SucursalController, EstadoCitaController,
-// ExamenLaboratorioController, LaboratorioCatalogoController,
-// InventarioMedicamentoController, MovimientoInventarioController, etc.).
-// Esto es la causa raíz de que "algunas funciones no funcionen y otras sí
-// según el rol": esos endpoints, al no tener ninguna restricción de ruta en
-// este mismo archivo, quedaban expuestos a CUALQUIER usuario autenticado
-// (demasiado permisivo) mientras el frontend sí ocultaba/mostraba botones
-// según el rol, generando la sensación de comportamiento inconsistente.
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -38,10 +27,6 @@ public class SecurityConfig {
     // Nombres de rol tal como están en la tabla `rol` (JwtAuthFilter arma
     // la autoridad como "ROLE_" + rol.toUpperCase()).
     private static final String ROLE_ADMIN = "ROLE_ADMINISTRADOR";
-    // NUEVO: Administrador General ve TODO (todas las sedes). El ROLE_ADMIN
-    // "de toda la vida" ahora representa al Administrador DE SEDE, acotado
-    // a su propia sucursal (el filtrado real por sucursal_id ocurre en los
-    // services, ej. UsuarioService/AdminService, usando AuthUsuario.sucursalScopeOrNull()).
     private static final String ROLE_ADMIN_GENERAL = "ROLE_ADMINISTRADOR GENERAL";
     private static final String ROLE_MEDICO = "ROLE_MÉDICO";
     private static final String ROLE_ENFERMERO = "ROLE_ENFERMERO";
@@ -58,9 +43,6 @@ public class SecurityConfig {
                         // Front-end estático de prueba
                         .requestMatchers("/", "/*.html", "/*.css", "/*.js", "/favicon.ico").permitAll()
 
-                        // Necesario: si Spring reenvía internamente a /error (ej. un 404),
-                        // sin este permitAll el AuthenticationEntryPoint personalizado
-                        // intercepta y muestra "NO AUTENTICADO" en vez del error real.
                         .requestMatchers("/error").permitAll()
 
                         // CU-00 / CU-02: acceso público antes de iniciar sesión
