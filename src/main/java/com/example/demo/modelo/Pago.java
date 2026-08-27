@@ -1,3 +1,10 @@
+// ============================================================
+// ENTIDAD JPA: Pago -> tabla "pago"
+// Registro de cualquier transacción de pago del sistema:
+// consultas (CU-04/CU-06), laboratorio (CU-16) o farmacia.
+// Algunos campos solo los usa un caso de uso específico
+// (ver comentarios en cada campo).
+// ============================================================
 package com.example.demo.modelo;
 
 import jakarta.persistence.*;
@@ -14,27 +21,27 @@ import java.time.LocalDateTime;
 public class Pago {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // PK autoincremental
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "cita_id")
+    @JoinColumn(name = "cita_id") // FK -> cita pagada (opcional, puede ser pago de lab/farmacia)
     private Cita cita;
 
     // Ahora es opcional: tu PagoService (CU-04) todavía no lo asigna.
     // Si más adelante quieres registrarlo ahí también, agrega en CU-04:
     // pago.setPaciente(cita.getPaciente());
     @ManyToOne
-    @JoinColumn(name = "paciente_id")
+    @JoinColumn(name = "paciente_id") // FK -> usuario (paciente)
     private Usuario paciente;
 
     // Solo lo usa CU-06 (quién cobró en caja)
     @ManyToOne
-    @JoinColumn(name = "cajero_id")
+    @JoinColumn(name = "cajero_id") // FK -> usuario (cajero que procesó el cobro)
     private Usuario cajero;
 
     @Column(name = "numero_transaccion", nullable = false, unique = true, length = 100)
-    private String numeroTransaccion;
+    private String numeroTransaccion; // Identificador único de la transacción (para el comprobante)
 
     @Column(name = "monto_total", nullable = false)
     private BigDecimal monto;
@@ -52,7 +59,7 @@ public class Pago {
     private String metodoPago;
 
     @Column(name = "ultimos_cuatro_digitos", length = 4)
-    private String ultimos4Tarjeta;
+    private String ultimos4Tarjeta; // Enmascarado por seguridad [RNF-012]
 
     // Solo lo usa CU-04
     @Column(name = "nombre_titular", length = 100)
@@ -63,7 +70,7 @@ public class Pago {
     private String estado;
 
     @Column(name = "uuid_idempotencia", unique = true, length = 100)
-    private String idempotencyKey;
+    private String idempotencyKey; // Evita cobros duplicados por doble clic/reintento [RNF-016]
 
     @Column(name = "creado_en", nullable = false)
     private LocalDateTime creadoEn = LocalDateTime.now();

@@ -4,10 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="segunda prueba">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/config/CacheConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/config/CacheConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/BranchSpecialty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/BranchSpecialty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cie10.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cie10.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/CitaSeguimiento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/CitaSeguimiento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ConsultaMedica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ConsultaMedica.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DespachoMedicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DespachoMedicamento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleDespachoMedicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleDespachoMedicamento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleOrdenLaboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleOrdenLaboratorio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleRecetaMedica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleRecetaMedica.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Especialidad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Especialidad.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EstadoCita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EstadoCita.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EventoAgenda.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EventoAgenda.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ExamenLaboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ExamenLaboratorio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/InventarioMedicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/InventarioMedicamento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Laboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Laboratorio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Medicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Medicamento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MetodoPago.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MetodoPago.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MovimientoInventario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MovimientoInventario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/OrdenLaboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/OrdenLaboratorio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Pago.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Pago.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ReasignacionMedico.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ReasignacionMedico.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/RecetaMedica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/RecetaMedica.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Rol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Rol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/SignosVitales.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/SignosVitales.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Sucursal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Sucursal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/TareaMedico.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/TareaMedico.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Usuario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/config/CacheConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/config/CacheConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +47,7 @@
     </colors>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="199" />
+    <option name="cachedIndexableFilesCount" value="202" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -33,18 +60,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "biquics1"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;biquics1&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/biquics1/sistema-medico.git",
-    "accountId": "fbe995b5-197e-4c7f-96f6-3cd8f1cad6b5"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/biquics1/sistema-medico.git&quot;,
+    &quot;accountId&quot;: &quot;fbe995b5-197e-4c7f-96f6-3cd8f1cad6b5&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/FarmaciaController.java" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DespachoMedicamento.java" root0="SKIP_HIGHLIGHTING" />
@@ -67,23 +94,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.1073206795587716" />
-      <entry key="MS500" value="1.6484978265864192" />
-      <entry key="S2" value="2.7405062922019665" />
-      <entry key="S5" value="4.666906689823289" />
-      <entry key="S10" value="6.2378517698703675" />
-      <entry key="S30" value="7.892881211710591" />
-      <entry key="S60" value="8.418520448761326" />
-      <entry key="M2" value="8.701872253234246" />
-      <entry key="M5" value="8.879080489452235" />
-      <entry key="M10" value="8.97419529895247" />
-      <entry key="M15" value="9.19399347413176" />
-      <entry key="M30" value="10.838628179245427" />
-      <entry key="H1" value="15.222783800546482" />
-      <entry key="H2" value="21.942856945748865" />
-      <entry key="H4" value="28.800802876660793" />
-      <entry key="D1" value="38.41270397477701" />
-      <entry key="W1" value="40.61337482227801" />
+      <entry key="MS100" value="1.194807678660319" />
+      <entry key="MS500" value="2.002640419780488" />
+      <entry key="S2" value="3.650355239719691" />
+      <entry key="S5" value="5.436062901950943" />
+      <entry key="S10" value="6.508796616331647" />
+      <entry key="S30" value="7.446459539795543" />
+      <entry key="S60" value="7.715431127178197" />
+      <entry key="M2" value="7.855741868812004" />
+      <entry key="M5" value="8.00450786061001" />
+      <entry key="M10" value="8.725038823869578" />
+      <entry key="M15" value="9.744561943894608" />
+      <entry key="M30" value="12.737875402668806" />
+      <entry key="H1" value="18.070123184570818" />
+      <entry key="H2" value="25.848811791372842" />
+      <entry key="H4" value="33.97598003952195" />
+      <entry key="D1" value="45.75755212003859" />
+      <entry key="W1" value="48.51369080418908" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -91,37 +118,37 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="1.5306028073569931E-140" />
-      <entry key="S60" value="1.2371753341208318E-70" />
-      <entry key="M2" value="1.1122838370311931E-35" />
-      <entry key="M5" value="1.0434850962337141E-14" />
-      <entry key="M10" value="1.0215111826278335E-7" />
-      <entry key="M15" value="2.1852212586980853E-5" />
-      <entry key="M30" value="0.004674635021793777" />
-      <entry key="H1" value="0.0683713026188164" />
-      <entry key="H2" value="0.26147906726699255" />
-      <entry key="H4" value="0.5113502393340518" />
-      <entry key="D1" value="0.8942379100261156" />
-      <entry key="W1" value="0.984157769339229" />
+      <entry key="S30" value="4.731238991943359E-162" />
+      <entry key="S60" value="2.175141142993565E-81" />
+      <entry key="M2" value="4.663840845262162E-41" />
+      <entry key="M5" value="7.370509132373129E-17" />
+      <entry key="M10" value="8.585166936276274E-9" />
+      <entry key="M15" value="4.1927518851357105E-6" />
+      <entry key="M30" value="0.0020476210306440315" />
+      <entry key="H1" value="0.04525064674282598" />
+      <entry key="H2" value="0.212721994027007" />
+      <entry key="H4" value="0.4612179463409967" />
+      <entry key="D1" value="0.8789908743736731" />
+      <entry key="W1" value="0.9817428943281634" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.049722589956235" />
-      <entry key="MS500" value="1.6329526175581817" />
-      <entry key="S2" value="2.730616623982651" />
-      <entry key="S5" value="4.648530463891629" />
-      <entry key="S10" value="6.219667877111209" />
-      <entry key="S30" value="7.883083691661345" />
-      <entry key="S60" value="8.412984215973843" />
-      <entry key="M2" value="8.698928683192575" />
-      <entry key="M5" value="8.877858702765202" />
-      <entry key="M10" value="8.973571952403692" />
-      <entry key="M15" value="9.193567757405805" />
-      <entry key="M30" value="10.842882856949188" />
-      <entry key="H1" value="15.29060571005965" />
-      <entry key="H2" value="22.203784068139395" />
-      <entry key="H4" value="29.3117394169867" />
-      <entry key="D1" value="39.30684240203808" />
-      <entry key="W1" value="41.59751741697238" />
+      <entry key="MS100" value="0.37148438289600616" />
+      <entry key="MS500" value="1.7053880289549594" />
+      <entry key="S2" value="3.5589511573970287" />
+      <entry key="S5" value="5.394702543950922" />
+      <entry key="S10" value="6.486748800775529" />
+      <entry key="S30" value="7.438718052593413" />
+      <entry key="S60" value="7.711504503223382" />
+      <entry key="M2" value="7.8537640006278355" />
+      <entry key="M5" value="8.003704521643195" />
+      <entry key="M10" value="8.724588480020765" />
+      <entry key="M15" value="9.744214824602812" />
+      <entry key="M30" value="12.739606284678715" />
+      <entry key="H1" value="18.114943812933795" />
+      <entry key="H2" value="26.06105155062847" />
+      <entry key="H4" value="34.43680823991407" />
+      <entry key="D1" value="46.63644244011344" />
+      <entry key="W1" value="49.49541816571128" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -133,43 +160,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "HTTP Request.requests | Crear usuario.executor": "Run",
-    "HTTP Request.requests | Eliminar usuario.executor": "Run",
-    "HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor": "Run",
-    "HTTP Request.requests | Obtener usuario por id.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.DemoApplication.executor": "Run",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HTTP Request.requests | Crear usuario.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.requests | Eliminar usuario.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.requests | Obtener usuario por id.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunDashboard">
     <option name="configurationStatuses">
       <map>
@@ -239,7 +266,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="primer commit" />
     <MESSAGE value="segunda prueba" />
-    <option name="LAST_COMMIT_MESSAGE" value="segunda prueba" />
+    <MESSAGE value="cambios //" />
+    <option name="LAST_COMMIT_MESSAGE" value="cambios //" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

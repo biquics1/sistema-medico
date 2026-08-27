@@ -1,3 +1,9 @@
+// ============================================================
+// ENTIDAD JPA: SignosVitales -> tabla "signos_vitales"
+// Registro de los signos vitales tomados por enfermería antes
+// de la consulta médica. Relación 1:1 con Cita. CU-07.
+// Rangos de captura definidos en RN-CU07-01 a RN-CU07-05.
+// ============================================================
 package com.example.demo.modelo;
 
 import jakarta.persistence.*;
@@ -14,16 +20,16 @@ import java.time.LocalDateTime;
 public class SignosVitales {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // PK autoincremental
     private Integer id;
 
     // Una cita solo puede tener un registro de signos vitales (UNIQUE en BD)
     @OneToOne
-    @JoinColumn(name = "cita_id", nullable = false, unique = true)
+    @JoinColumn(name = "cita_id", nullable = false, unique = true) // FK -> cita asociada
     private Cita cita;
 
     @ManyToOne
-    @JoinColumn(name = "enfermero_id", nullable = false)
+    @JoinColumn(name = "enfermero_id", nullable = false) // FK -> usuario (enfermero que tomó los signos)
     private Usuario enfermero;
 
     // RN-CU07-01: 60-250 mmHg
@@ -51,7 +57,7 @@ public class SignosVitales {
     private Integer frecuenciaCardiaca;
 
     @Column(name = "es_emergencia", nullable = false)
-    private boolean esEmergencia = false;
+    private boolean esEmergencia = false; // Marca si el paciente pasa directo a consulta médica (FA01)
 
     @Column(name = "creado_en", nullable = false)
     private LocalDateTime creadoEn = LocalDateTime.now();
