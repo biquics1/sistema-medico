@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+// Configuración de la capa de caché (Spring Cache + Caffeine) usada por los
+// catálogos de solo lectura (especialidades, sucursales, roles, etc.), para
+// evitar golpear la base de datos en cada consulta de dropdowns/listados.
 @Configuration
 @EnableCaching
 public class CacheConfig {

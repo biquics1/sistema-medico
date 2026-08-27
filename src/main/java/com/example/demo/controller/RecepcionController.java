@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Recepción y Verificación de Cita (CU-05): búsqueda de cita/paciente, registro
+// de llegada y reasignación de médico (FA07).
 @RestController
 @RequestMapping("/api/recepcion")
 @RequiredArgsConstructor
@@ -22,14 +24,14 @@ public class RecepcionController {
     // GET /api/recepcion/citas/buscar?tipo=CITA&valor=1
     @GetMapping("/citas/buscar")
     public BusquedaResultadoDTO buscar(@RequestParam String tipo, @RequestParam String valor,
-                                        @AuthenticationPrincipal AuthUsuario usuario) {
+                                       @AuthenticationPrincipal AuthUsuario usuario) {
         return recepcionService.buscarCita(tipo, valor, usuario.sucursalScopeOrNull());
     }
 
     // Paso 6 FB
     @PostMapping("/citas/{idCita}/registrar-llegada")
     public RegistrarLlegadaResponseDTO registrarLlegada(@PathVariable Integer idCita,
-                                                         @AuthenticationPrincipal AuthUsuario usuario) {
+                                                        @AuthenticationPrincipal AuthUsuario usuario) {
         return recepcionService.registrarLlegada(idCita, usuario.sucursalScopeOrNull());
     }
 

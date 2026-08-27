@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Mantenimiento de Usuarios internos (CU-01): listado, búsqueda con filtros y
+// paginación, obtención por ID, creación, edición y eliminación.
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -48,20 +50,20 @@ public class UsuarioController {
     // NUEVO — necesario para precargar el formulario de "Editar Usuario"
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> obtenerPorId(@PathVariable Integer id,
-                                                            @AuthenticationPrincipal AuthUsuario admin) {
+                                                           @AuthenticationPrincipal AuthUsuario admin) {
         return ResponseEntity.ok(usuarioService.obtenerPorId(id, admin.sucursalScopeOrNull()));
     }
 
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> crear(@Valid @RequestBody UsuarioCreateDTO dto,
-                                                      @AuthenticationPrincipal AuthUsuario admin) {
+                                                    @AuthenticationPrincipal AuthUsuario admin) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crear(dto, admin.sucursalScopeOrNull()));
     }
 
     // NUEVO — CU-01 FA04 (Editar usuario)
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody UsuarioUpdateDTO dto,
-                                                           @AuthenticationPrincipal AuthUsuario admin) {
+                                                         @AuthenticationPrincipal AuthUsuario admin) {
         return ResponseEntity.ok(usuarioService.actualizar(id, dto, admin.sucursalScopeOrNull()));
     }
 

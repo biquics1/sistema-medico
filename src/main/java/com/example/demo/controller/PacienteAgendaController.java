@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+// Portal del paciente, sección "Mis Citas": listado resumido y detalle completo
+// de las citas propias (incluye consulta, orden de laboratorio y recetas).
 @RestController
 @RequestMapping("/api/mis-citas")
 @RequiredArgsConstructor

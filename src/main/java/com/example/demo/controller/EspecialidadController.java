@@ -19,6 +19,8 @@ import java.util.List;
 
 import static com.example.demo.config.CacheConfig.CACHE_ESPECIALIDADES;
 
+// Catálogo "Especialidades" (CU-15): listado simple para dropdowns (cacheado,
+// usado por CU-00/01/03/04/07) y CRUD paginado para la administración del catálogo.
 @RestController
 @RequestMapping("/api/especialidades")
 @RequiredArgsConstructor
@@ -58,7 +60,7 @@ public class EspecialidadController {
     @PreAuthorize("hasRole('ADMINISTRADOR GENERAL')")
     @CacheEvict(value = CACHE_ESPECIALIDADES, allEntries = true)
     public ResponseEntity<EspecialidadDTO.ResponseDTO> actualizar(@PathVariable Integer id,
-                                                                    @Valid @RequestBody EspecialidadDTO.CreateDTO dto) {
+                                                                  @Valid @RequestBody EspecialidadDTO.CreateDTO dto) {
         return ResponseEntity.ok(especialidadService.actualizar(id, dto));
     }
 

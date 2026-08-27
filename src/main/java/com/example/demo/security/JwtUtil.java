@@ -10,6 +10,9 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+// Utilidad para generar y leer JWT: crea el token al hacer login (con id, rol y
+// sucursalId como claims) y provee los métodos para extraer esos datos y
+// validar el token en cada request (usado por JwtAuthFilter).
 @Component
 public class JwtUtil {
 

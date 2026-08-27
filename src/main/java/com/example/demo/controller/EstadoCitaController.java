@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.demo.config.CacheConfig.CACHE_ESTADOS_CITA;
 
+// Catálogo "Estados de Cita" (CU-15): CRUD paginado, restringido a Administrador
+// General (define el ciclo de vida de las citas usado en CU-03/CU-05).
 @RestController
 @RequestMapping("/api/estados-cita")
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class EstadoCitaController {
     @PreAuthorize("hasRole('ADMINISTRADOR GENERAL')")
     @CacheEvict(value = CACHE_ESTADOS_CITA, allEntries = true)
     public ResponseEntity<EstadoCitaDTO.ResponseDTO> actualizar(@PathVariable Integer id,
-                                                                 @Valid @RequestBody EstadoCitaDTO.CreateDTO dto) {
+                                                                @Valid @RequestBody EstadoCitaDTO.CreateDTO dto) {
         return ResponseEntity.ok(service.actualizar(id, dto));
     }
 

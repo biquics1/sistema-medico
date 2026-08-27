@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Eventos personales del médico en su Agenda Médica (CU-14): CRUD de eventos
+// (reunión, descanso, capacitación, etc.) que se pintan en violeta en el calendario.
 @RestController
 @RequestMapping("/api/agenda-medica/eventos")
 @RequiredArgsConstructor

@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Módulo de Farmacia (CU-10 Despacho de Medicamentos): búsqueda de recetas
+// vigentes, carrito de despacho (recetados + venta libre) con cobro integrado,
+// y ajuste de stock de medicamentos.
 @RestController
 @RequestMapping("/api/farmacia")
 @RequiredArgsConstructor
@@ -21,15 +24,15 @@ public class FarmaciaController {
     // Administrador de Sede: solo ve recetas de citas de su propia sede.
     @GetMapping("/recetas/buscar")
     public List<RecetaBusquedaDTO> buscarRecetas(@RequestParam String tipo, @RequestParam String valor,
-                                                  @AuthenticationPrincipal AuthUsuario usuario) {
+                                                 @AuthenticationPrincipal AuthUsuario usuario) {
         return farmaciaService.buscarRecetas(tipo, valor, usuario.sucursalScopeOrNull());
     }
 
     // Detalle de receta + disponibilidad de inventario en la sucursal indicada
     @GetMapping("/recetas/{idReceta}")
     public RecetaDetalleDTO obtenerDetalle(@PathVariable Integer idReceta,
-                                            @RequestParam(required = false) Integer idSucursal,
-                                            @AuthenticationPrincipal AuthUsuario usuario) {
+                                           @RequestParam(required = false) Integer idSucursal,
+                                           @AuthenticationPrincipal AuthUsuario usuario) {
         return farmaciaService.obtenerDetalleReceta(idReceta, idSucursal, usuario.sucursalScopeOrNull());
     }
 
@@ -37,8 +40,8 @@ public class FarmaciaController {
     // GET /api/farmacia/medicamentos/buscar?nombre=para&idSucursal=1
     @GetMapping("/medicamentos/buscar")
     public List<MedicamentoCatalogoDTO> buscarMedicamentos(@RequestParam(required = false) String nombre,
-                                                             @RequestParam(required = false) Integer idSucursal,
-                                                             @AuthenticationPrincipal AuthUsuario usuario) {
+                                                           @RequestParam(required = false) Integer idSucursal,
+                                                           @AuthenticationPrincipal AuthUsuario usuario) {
         return farmaciaService.buscarMedicamentos(nombre, idSucursal, usuario.sucursalScopeOrNull());
     }
 
@@ -46,14 +49,14 @@ public class FarmaciaController {
     // idFarmaceutico ya no viaja en el body: sale del JWT (rol Farmacéutico/Administrador).
     @PostMapping("/carrito/pagar")
     public ConfirmarCarritoResponseDTO confirmarCarrito(@RequestBody ConfirmarCarritoRequestDTO request,
-                                                         @AuthenticationPrincipal AuthUsuario usuario) {
+                                                        @AuthenticationPrincipal AuthUsuario usuario) {
         return farmaciaService.confirmarCarrito(request, usuario.getId(), usuario.sucursalScopeOrNull());
     }
 
     // FA03: el paciente no desea adquirir los medicamentos de una receta
     @PostMapping("/recetas/{idReceta}/cancelar")
     public CancelarDespachoResponseDTO cancelarDespacho(@PathVariable Integer idReceta,
-                                                         @AuthenticationPrincipal AuthUsuario usuario) {
+                                                        @AuthenticationPrincipal AuthUsuario usuario) {
         return farmaciaService.cancelarDespacho(idReceta, usuario.sucursalScopeOrNull());
     }
 
@@ -61,7 +64,7 @@ public class FarmaciaController {
     // idUsuario ya no viaja en el body: sale del JWT.
     @PostMapping("/inventario/ajustar")
     public AjustarStockResponseDTO ajustarStock(@RequestBody AjustarStockRequestDTO request,
-                                                 @AuthenticationPrincipal AuthUsuario usuario) {
+                                                @AuthenticationPrincipal AuthUsuario usuario) {
         return farmaciaService.ajustarStock(request, usuario.getId(), usuario.sucursalScopeOrNull());
     }
 }

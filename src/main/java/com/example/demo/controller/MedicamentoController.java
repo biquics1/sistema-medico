@@ -14,6 +14,8 @@ import java.util.List;
 
 import static com.example.demo.config.CacheConfig.CACHE_MEDICAMENTOS;
 
+// Catálogo "Medicamentos" (CU-15): listado simple cacheado para dropdowns
+// (ej. "medicamento sustituto" en Farmacia) y alta de nuevos medicamentos.
 @RestController
 @RequestMapping("/api/medicamentos")
 @RequiredArgsConstructor

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.YearMonth;
 import java.util.List;
 
+// Catálogo "Inventario de Medicamentos" (CU-15): consulta de stock por sucursal,
+// alta de stock inicial, alertas de stock bajo (RN-CU10-03) y resumen mensual.
 @RestController
 @RequestMapping("/api/inventario-medicamentos")
 @RequiredArgsConstructor

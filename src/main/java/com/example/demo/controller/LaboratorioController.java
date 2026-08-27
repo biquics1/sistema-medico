@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Gestión de Laboratorio (CU-09): listado/detalle de órdenes, registro de
+// resultados por examen (RN-CU09-02) y publicación individual de resultados.
 @RestController
 @RequestMapping("/api/laboratorio")
 @RequiredArgsConstructor
@@ -21,9 +23,9 @@ public class LaboratorioController {
     // solicitante es de su sede. Administrador General: sin restricción.
     @GetMapping("/ordenes")
     public List<OrdenListaDTO> listarOrdenes(@RequestParam(required = false) Short estado,
-                                              @RequestParam(required = false) Integer pacienteId,
-                                              @RequestParam(required = false) Integer medicoId,
-                                              @AuthenticationPrincipal AuthUsuario usuario) {
+                                             @RequestParam(required = false) Integer pacienteId,
+                                             @RequestParam(required = false) Integer medicoId,
+                                             @AuthenticationPrincipal AuthUsuario usuario) {
         return laboratorioService.listarOrdenes(estado, pacienteId, medicoId, usuario.sucursalScopeOrNull());
     }
 
@@ -36,16 +38,16 @@ public class LaboratorioController {
     // Pasos 9-10 FB (RN-CU09-02)
     @PutMapping("/ordenes/{idOrden}/examenes/{idDetalle}/resultado")
     public ResultadoResponseDTO registrarResultado(@PathVariable Integer idOrden,
-                                                    @PathVariable Integer idDetalle,
-                                                    @RequestBody ResultadoRequestDTO request,
-                                                    @AuthenticationPrincipal AuthUsuario usuario) {
+                                                   @PathVariable Integer idDetalle,
+                                                   @RequestBody ResultadoRequestDTO request,
+                                                   @AuthenticationPrincipal AuthUsuario usuario) {
         return laboratorioService.registrarResultado(idOrden, idDetalle, request, usuario.sucursalScopeOrNull());
     }
 
     // Pasos 11-13 FB
     @PostMapping("/ordenes/{idOrden}/examenes/{idDetalle}/publicar")
     public PublicarResponseDTO publicar(@PathVariable Integer idOrden, @PathVariable Integer idDetalle,
-                                         @AuthenticationPrincipal AuthUsuario usuario) {
+                                        @AuthenticationPrincipal AuthUsuario usuario) {
         return laboratorioService.publicarResultado(idOrden, idDetalle, usuario.sucursalScopeOrNull());
     }
 }

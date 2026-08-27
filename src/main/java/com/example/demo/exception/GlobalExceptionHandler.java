@@ -8,9 +8,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+// Manejador global de excepciones: centraliza cómo se convierten los distintos
+// tipos de error en respuestas HTTP consistentes (siempre con la clave
+// "mensaje" que el frontend espera leer en apiFetch de common.js).
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Errores de validación @Valid en los DTOs de entrada (ej. campos
+    // obligatorios vacíos, formatos inválidos). Junta todos los mensajes de
+    // campo en un solo "mensaje" legible, además de conservar el detalle por campo.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> errores = new HashMap<>();
@@ -36,6 +42,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje", ex.getMessage()));
     }
 
+    // Reglas de negocio violadas (ej. duplicados, estados inválidos, stock insuficiente).
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Map<String, String>> handleBusinessValidation(ValidationException ex) {
         return ResponseEntity.badRequest().body(Map.of("mensaje", ex.getMessage()));

@@ -17,6 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+// Configuración central de Spring Security: define qué rutas son públicas, qué
+// rol(es) puede acceder a cada módulo (autorización a nivel de ruta), registra
+// el filtro JWT y expone el encoder de contraseñas (BCrypt). La autorización más
+// fina (@PreAuthorize) y el filtrado por sede se resuelven en cada controller/service.
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -100,7 +104,7 @@ public class SecurityConfig {
                         // vuelven a tener acceso, acotado a su propia sucursal (InventarioMedicamentoService /
                         // MovimientoInventarioService). El @PreAuthorize de cada endpoint valida el rol exacto.
                         .requestMatchers("/api/inventario-medicamentos/**", "/api/movimientos-inventario/**")
-                                .hasAnyAuthority(ROLE_ADMIN, ROLE_ADMIN_GENERAL, ROLE_FARMACEUTICO)
+                        .hasAnyAuthority(ROLE_ADMIN, ROLE_ADMIN_GENERAL, ROLE_FARMACEUTICO)
 
                         // Todo lo demás requiere sesión válida
                         .anyRequest().authenticated()

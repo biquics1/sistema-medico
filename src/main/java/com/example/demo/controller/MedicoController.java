@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Panel del médico: Consulta Médica (CU-08) y Agendamiento de Cita de
+// Seguimiento (CU-11). Cubre desde iniciar consulta hasta generar órdenes de
+// laboratorio, recetas y agendar seguimientos.
 // El médico actuante ya no viaja como @RequestParam medicoId: sale del JWT
 // (rol Médico/Administrador) vía @AuthenticationPrincipal.
 @RestController
@@ -30,36 +33,36 @@ public class MedicoController {
     // Paso 2 FB
     @PostMapping("/citas/{idCita}/iniciar-consulta")
     public IniciarConsultaResponseDTO iniciarConsulta(@PathVariable Integer idCita,
-                                                        @AuthenticationPrincipal AuthUsuario usuario) {
+                                                      @AuthenticationPrincipal AuthUsuario usuario) {
         return consultaMedicaService.iniciarConsulta(idCita, usuario.getId());
     }
 
     // Paso 3 FB: contexto para abrir/reabrir el formulario
     @GetMapping("/citas/{idCita}/consulta")
     public ConsultaContextoDTO contexto(@PathVariable Integer idCita,
-                                         @AuthenticationPrincipal AuthUsuario usuario) {
+                                        @AuthenticationPrincipal AuthUsuario usuario) {
         return consultaMedicaService.obtenerContexto(idCita, usuario.getId());
     }
 
     // Pasos 4-9 FB: guardar borrador o finalizar
     @PutMapping("/citas/{idCita}/consulta")
     public GuardarConsultaResponseDTO guardarConsulta(@PathVariable Integer idCita,
-                                                       @RequestBody GuardarConsultaRequestDTO request,
-                                                       @AuthenticationPrincipal AuthUsuario usuario) {
+                                                      @RequestBody GuardarConsultaRequestDTO request,
+                                                      @AuthenticationPrincipal AuthUsuario usuario) {
         return consultaMedicaService.guardarConsulta(idCita, usuario.getId(), request);
     }
 
     // FA06
     @PostMapping("/citas/{idCita}/no-asistio")
     public AccionCitaResponseDTO noAsistio(@PathVariable Integer idCita,
-                                            @AuthenticationPrincipal AuthUsuario usuario) {
+                                           @AuthenticationPrincipal AuthUsuario usuario) {
         return consultaMedicaService.marcarNoAsistio(idCita, usuario.getId());
     }
 
     // Sección "Evaluados"
     @PostMapping("/citas/{idCita}/finalizar-atencion")
     public AccionCitaResponseDTO finalizarAtencion(@PathVariable Integer idCita,
-                                                     @AuthenticationPrincipal AuthUsuario usuario) {
+                                                   @AuthenticationPrincipal AuthUsuario usuario) {
         return consultaMedicaService.finalizarAtencion(idCita, usuario.getId());
     }
 
@@ -97,22 +100,22 @@ public class MedicoController {
         return consultaMedicaService.generarReceta(idConsulta, usuario.getId(), request);
     }
 
-    // ===================== CU-12: Agendamiento de Cita de Seguimiento =====================
+    //  Agendamiento de Cita de Seguimiento
 
     // Paso 2-3 FB: banner con los datos precargados (paciente, médico, especialidad, sucursal).
     // El calendario de disponibilidad (paso 5) reutiliza el mismo endpoint de CU-03:
     // GET /api/doctors/{medicoId}/available-slots?date=YYYY-MM-DD
     @GetMapping("/consultas/{idConsulta}/seguimiento/contexto")
     public ContextoSeguimientoDTO contextoSeguimiento(@PathVariable Integer idConsulta,
-                                                        @AuthenticationPrincipal AuthUsuario usuario) {
+                                                      @AuthenticationPrincipal AuthUsuario usuario) {
         return seguimientoService.obtenerContexto(idConsulta, usuario.getId());
     }
 
     // Paso 7 FB: confirmar el agendamiento de la cita de seguimiento
     @PostMapping("/consultas/{idConsulta}/seguimiento")
     public SeguimientoResponseDTO crearSeguimiento(@PathVariable Integer idConsulta,
-                                                    @RequestBody CrearSeguimientoRequestDTO request,
-                                                    @AuthenticationPrincipal AuthUsuario usuario) {
+                                                   @RequestBody CrearSeguimientoRequestDTO request,
+                                                   @AuthenticationPrincipal AuthUsuario usuario) {
         return seguimientoService.crearSeguimiento(idConsulta, usuario.getId(), request);
     }
 }

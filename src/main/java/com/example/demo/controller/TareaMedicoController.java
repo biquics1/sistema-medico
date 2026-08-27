@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Panel lateral de tareas (TaskPanel) del médico en su Agenda Médica (CU-14):
+// CRUD de tareas/recordatorios con prioridad y estado completada/pendiente.
 @RestController
 @RequestMapping("/api/agenda-medica/tareas")
 @RequiredArgsConstructor

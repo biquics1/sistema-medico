@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+// Módulo de Enfermería (CU-07 Toma de Signos Vitales): cola de pacientes,
+// llamado por altavoz (TTS) y registro de signos vitales con alertas clínicas.
 @RestController
 @RequestMapping("/api/enfermeria")
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class EnfermeriaController {
     // Paso 1 FB: POST /api/enfermeria/citas/{idCita}/llamar
     @PostMapping("/citas/{idCita}/llamar")
     public LlamarPacienteResponseDTO llamar(@PathVariable Integer idCita,
-                                             @AuthenticationPrincipal AuthUsuario usuario) {
+                                            @AuthenticationPrincipal AuthUsuario usuario) {
         return enfermeriaService.llamarPaciente(idCita, usuario.sucursalScopeOrNull());
     }
 
@@ -31,8 +33,8 @@ public class EnfermeriaController {
     // idEnfermero ya no viaja en el body: sale del JWT (rol Enfermero/Administrador).
     @PostMapping("/citas/{idCita}/signos-vitales")
     public SignosVitalesResponseDTO registrarSignos(@PathVariable Integer idCita,
-                                                     @RequestBody RegistrarSignosVitalesRequestDTO request,
-                                                     @AuthenticationPrincipal AuthUsuario usuario) {
+                                                    @RequestBody RegistrarSignosVitalesRequestDTO request,
+                                                    @AuthenticationPrincipal AuthUsuario usuario) {
         return enfermeriaService.registrarSignosVitales(idCita, request, usuario.getId(), usuario.sucursalScopeOrNull());
     }
 }

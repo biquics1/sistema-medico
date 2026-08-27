@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// Autenticación y registro (CU-00, CU-01, CU-02): verificación de DPI en el
+// portal, login (interno y paciente) y alta de pacientes desde el portal público.
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor

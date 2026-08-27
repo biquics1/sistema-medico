@@ -23,6 +23,9 @@ import java.util.Map;
 
 import static com.example.demo.config.CacheConfig.CACHE_BRANCH_SPECIALTY;
 
+// Catálogo "Sucursal-Especialidad" (CU-12 / CU-15): asigna qué especialidades
+// están disponibles en cada sede. Solo permite crear y eliminar (sin edición),
+// y alimenta el paso 2 del wizard de citas (CU-03).
 @RestController
 @RequestMapping("/api/branch-specialty")
 @RequiredArgsConstructor

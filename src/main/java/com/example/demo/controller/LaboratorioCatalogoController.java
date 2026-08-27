@@ -63,7 +63,7 @@ public class LaboratorioCatalogoController {
     @PreAuthorize("hasRole('ADMINISTRADOR GENERAL')")
     @CacheEvict(value = CACHE_LABORATORIOS, allEntries = true)
     public ResponseEntity<LaboratorioCatalogoDTO.ResponseDTO> actualizar(@PathVariable Integer id,
-                                                                          @Valid @RequestBody LaboratorioCatalogoDTO.CreateDTO dto) {
+                                                                         @Valid @RequestBody LaboratorioCatalogoDTO.CreateDTO dto) {
         return ResponseEntity.ok(laboratorioCatalogoService.actualizar(id, dto));
     }
 

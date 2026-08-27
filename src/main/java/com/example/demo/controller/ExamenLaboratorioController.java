@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.demo.config.CacheConfig.CACHE_EXAMENES_LABORATORIO;
 
+// Catálogo "Exámenes de Laboratorio" (CU-15): CRUD paginado, restringido a
+// Administrador General; alimenta el catálogo de exámenes usado en CU-08/CU-09.
 @RestController
 @RequestMapping("/api/examenes-laboratorio")
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class ExamenLaboratorioController {
     @PreAuthorize("hasRole('ADMINISTRADOR GENERAL')")
     @CacheEvict(value = CACHE_EXAMENES_LABORATORIO, allEntries = true)
     public ResponseEntity<ExamenLaboratorioDTO.ResponseDTO> actualizar(@PathVariable Integer id,
-                                                                        @Valid @RequestBody ExamenLaboratorioDTO.CreateDTO dto) {
+                                                                       @Valid @RequestBody ExamenLaboratorioDTO.CreateDTO dto) {
         return ResponseEntity.ok(service.actualizar(id, dto));
     }
 

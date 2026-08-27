@@ -19,6 +19,8 @@ import java.util.List;
 
 import static com.example.demo.config.CacheConfig.CACHE_SUCURSALES;
 
+// Catálogo "Sucursales" (CU-15): listado simple cacheado para dropdowns y CRUD
+// paginado para la administración del catálogo.
 @RestController
 @RequestMapping("/api/sucursales")
 @RequiredArgsConstructor
@@ -58,7 +60,7 @@ public class SucursalController {
     @PreAuthorize("hasRole('ADMINISTRADOR GENERAL')")
     @CacheEvict(value = CACHE_SUCURSALES, allEntries = true)
     public ResponseEntity<SucursalDTO.ResponseDTO> actualizar(@PathVariable Integer id,
-                                                                @Valid @RequestBody SucursalDTO.CreateDTO dto) {
+                                                              @Valid @RequestBody SucursalDTO.CreateDTO dto) {
         return ResponseEntity.ok(sucursalService.actualizar(id, dto));
     }
 

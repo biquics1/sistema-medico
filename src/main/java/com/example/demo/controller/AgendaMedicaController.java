@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Expone el calendario de Agenda Médica del médico autenticado (CU-14): trae las
+// citas dentro de un rango de fechas para pintarlas junto a los eventos personales.
 @RestController
 @RequestMapping("/api/agenda-medica")
 @RequiredArgsConstructor

@@ -19,6 +19,8 @@ import java.util.List;
 
 import static com.example.demo.config.CacheConfig.CACHE_ROLES;
 
+// Catálogo "Roles" (CU-01 / CU-15): listado simple cacheado para dropdowns y
+// CRUD paginado para la administración del catálogo.
 @RestController
 @RequestMapping("/api/roles")
 @RequiredArgsConstructor
@@ -58,7 +60,7 @@ public class RolController {
     @PreAuthorize("hasRole('ADMINISTRADOR GENERAL')")
     @CacheEvict(value = CACHE_ROLES, allEntries = true)
     public ResponseEntity<RolDTO.ResponseDTO> actualizar(@PathVariable Integer id,
-                                                           @Valid @RequestBody RolDTO.CreateDTO dto) {
+                                                         @Valid @RequestBody RolDTO.CreateDTO dto) {
         return ResponseEntity.ok(rolService.actualizar(id, dto));
     }
 

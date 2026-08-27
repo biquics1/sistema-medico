@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+// Módulo de Caja (CU-06 Cobro de Consulta y CU-10 Cobro de Laboratorio en Caja):
+// búsqueda de citas/órdenes pendientes de pago y registro del cobro con comprobante.
 @RestController
 @RequestMapping("/api/caja")
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class CajaController {
     // ve/cobra citas de cualquier sucursal.
     @GetMapping("/citas/buscar")
     public BusquedaCobroResultadoDTO buscar(@RequestParam String tipo, @RequestParam String valor,
-                                             @AuthenticationPrincipal AuthUsuario usuario) {
+                                            @AuthenticationPrincipal AuthUsuario usuario) {
         return cajaService.buscarCitaParaCobro(tipo, valor, usuario.sucursalScopeOrNull());
     }
 
@@ -29,8 +31,8 @@ public class CajaController {
     // idCajero ya no viaja en el body: sale del JWT (rol Cajero/Administrador).
     @PostMapping("/citas/{idCita}/cobrar")
     public ComprobantePagoDTO cobrar(@PathVariable Integer idCita,
-                                      @RequestBody CobrarRequestDTO request,
-                                      @AuthenticationPrincipal AuthUsuario usuario) {
+                                     @RequestBody CobrarRequestDTO request,
+                                     @AuthenticationPrincipal AuthUsuario usuario) {
         return cajaService.cobrar(idCita, request, usuario.getId(), usuario.sucursalScopeOrNull());
     }
 
@@ -38,15 +40,15 @@ public class CajaController {
     // GET /api/caja/laboratorio/buscar?tipo=DPI&valor=...  |  tipo=ORDEN&valor=1
     @GetMapping("/laboratorio/buscar")
     public BusquedaCobroLabResultadoDTO buscarOrdenLab(@RequestParam String tipo, @RequestParam String valor,
-                                                        @AuthenticationPrincipal AuthUsuario usuario) {
+                                                       @AuthenticationPrincipal AuthUsuario usuario) {
         return cajaService.buscarOrdenLabParaCobro(tipo, valor, usuario.sucursalScopeOrNull());
     }
 
     // POST /api/caja/laboratorio/{idOrden}/cobrar
     @PostMapping("/laboratorio/{idOrden}/cobrar")
     public ComprobantePagoDTO cobrarLaboratorio(@PathVariable Integer idOrden,
-                                                 @RequestBody CobrarRequestDTO request,
-                                                 @AuthenticationPrincipal AuthUsuario usuario) {
+                                                @RequestBody CobrarRequestDTO request,
+                                                @AuthenticationPrincipal AuthUsuario usuario) {
         return cajaService.cobrarLaboratorio(idOrden, request, usuario.getId(), usuario.sucursalScopeOrNull());
     }
 }

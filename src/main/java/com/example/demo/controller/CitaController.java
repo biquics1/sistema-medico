@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+// Wizard de agendamiento de citas (CU-03): expone sucursales, especialidades por
+// sede, médicos disponibles, horarios libres y la creación/consulta de la cita.
 @RestController
 @RequiredArgsConstructor
 public class CitaController {

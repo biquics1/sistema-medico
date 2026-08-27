@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+// Bitácora de Movimientos de Inventario (CU-13): listado paginado, registro
+// manual de movimientos (Compra, Devolución, Venta, Reclamo, Ajuste+/-) y
+// activar/desactivar registros.
 @RestController
 @RequestMapping("/api/movimientos-inventario")
 @RequiredArgsConstructor

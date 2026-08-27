@@ -6,6 +6,8 @@ import com.example.demo.service.PagoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+// Pago en línea con tarjeta (CU-04): recibe los datos de la tarjeta y delega en
+// PagoService el procesamiento contra la pasarela y la confirmación de la cita.
 @RestController
 @RequiredArgsConstructor
 public class PagoController {
