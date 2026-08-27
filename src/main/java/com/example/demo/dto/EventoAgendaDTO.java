@@ -5,8 +5,10 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+// Contenedor de DTOs para eventos personales del médico en su Agenda Médica (CU-14).
 public class EventoAgendaDTO {
 
+    // Body para crear/editar un evento (título, tipo, rango de fechas, todo el día).
     @Data
     public static class CreateDTO {
         @NotBlank(message = "El título es obligatorio.")
@@ -31,6 +33,7 @@ public class EventoAgendaDTO {
         private Boolean todoElDia;
     }
 
+    // Datos del evento para pintarlo en el calendario (color violeta fijo, RN-CU14-01).
     @Data
     public static class ResponseDTO {
         private Integer id;

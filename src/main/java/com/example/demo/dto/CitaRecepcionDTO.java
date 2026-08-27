@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+// Datos de una cita tal como se muestran en la pantalla de Recepción (CU-05):
+// incluye estado, emergencia, hora de llegada y médico asignado.
 @Data
 @Builder
 @AllArgsConstructor

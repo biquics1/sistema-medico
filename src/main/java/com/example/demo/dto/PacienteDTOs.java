@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Contenedor de DTOs para el portal del paciente ("Mis Citas"): resumen y detalle
+// de citas propias, incluyendo consulta médica, orden de laboratorio y recetas
+// asociadas (solo se exponen resultados de laboratorio ya publicados).
 public class PacienteDTOs {
 
     // Fila de la lista "Mis Citas"
@@ -41,6 +44,7 @@ public class PacienteDTOs {
         private List<RecetaResumenDTO> recetas;
     }
 
+    // Resumen de la consulta médica asociada a la cita (visible para el paciente).
     @Data
     public static class ConsultaResumenDTO {
         private String motivoVisita;
@@ -50,6 +54,7 @@ public class PacienteDTOs {
         private boolean finalizada;
     }
 
+    // Resumen de la orden de laboratorio asociada, con los exámenes y sus resultados publicados.
     @Data
     public static class OrdenLaboratorioResumenDTO {
         private Integer id;
@@ -59,6 +64,7 @@ public class PacienteDTOs {
         private List<ExamenResultadoDTO> examenes;
     }
 
+    // Resultado de un examen visible para el paciente (solo si publicado = true).
     @Data
     public static class ExamenResultadoDTO {
         private String nombreExamen;
@@ -71,6 +77,7 @@ public class PacienteDTOs {
         private boolean fueraDeRango;
     }
 
+    // Resumen de una receta médica asociada a la cita, con sus medicamentos.
     @Data
     public static class RecetaResumenDTO {
         private Integer id;
@@ -78,6 +85,7 @@ public class PacienteDTOs {
         private List<MedicamentoRecetaDTO> medicamentos;
     }
 
+    // Detalle de un medicamento recetado (dosis, frecuencia, duración, indicaciones).
     @Data
     public static class MedicamentoRecetaDTO {
         private String nombreMedicamento;

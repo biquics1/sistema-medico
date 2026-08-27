@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Contenedor de todos los DTOs del módulo de Gestión de Laboratorio (CU-09):
+// listado y detalle de órdenes, exámenes dentro de una orden, y registro/publicación
+// de resultados (publicación individual por examen, no masiva).
 public class LaboratorioDTOs {
 
     // Paso 1 FB: fila de la tabla "Órdenes de Laboratorio"

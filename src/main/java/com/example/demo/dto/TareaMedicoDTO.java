@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public class TareaMedicoDTO {
 
+    // Body para crear una tarea/recordatorio en el TaskPanel del médico (CU-14).
     @Data
     public static class CreateDTO {
         @NotBlank(message = "El título es obligatorio.")
@@ -26,6 +27,7 @@ public class TareaMedicoDTO {
         private LocalDate fechaLimite;
     }
 
+    // Datos de la tarea para el TaskPanel (con filtros Pendientes/Completadas/Todas).
     @Data
     public static class ResponseDTO {
         private Integer id;

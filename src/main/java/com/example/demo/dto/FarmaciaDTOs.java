@@ -8,6 +8,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Contenedor de todos los DTOs del módulo de Farmacia (CU-10 Despacho de
+// Medicamentos): búsqueda de recetas vigentes, carrito de despacho (recetados +
+// venta libre), confirmación de despacho con cobro integrado, y gestión de
+// catálogo/stock de medicamentos por el Administrador.
 public class FarmaciaDTOs {
 
     // ---------------------------------------------------------------
@@ -78,6 +82,7 @@ public class FarmaciaDTOs {
     // ---------------------------------------------------------------
     // Carrito de compra (mezcla ítems con receta y sin receta) + pago
     // ---------------------------------------------------------------
+    // Un ítem individual del carrito de despacho (puede venir de una receta o ser venta libre).
     @Data
     public static class CarritoItemDTO {
         private String origen;                  // "RECETA" o "LIBRE"
@@ -89,6 +94,7 @@ public class FarmaciaDTOs {
         private String razonSustitucion;        // obligatorio si sustituido = true
     }
 
+    // Body que envía farmacia al confirmar todo el carrito (paso "Confirmar Despacho").
     @Data
     public static class ConfirmarCarritoRequestDTO {
         private Integer idSucursal;
@@ -100,6 +106,7 @@ public class FarmaciaDTOs {
         private List<CarritoItemDTO> items;
     }
 
+    // Ítem ya despachado, para el resumen final del comprobante.
     @Data
     @Builder
     @AllArgsConstructor

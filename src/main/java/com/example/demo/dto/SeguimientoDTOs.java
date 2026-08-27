@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+// Contenedor de DTOs del Agendamiento de Cita de Seguimiento (CU-11): banner
+// precargado desde la consulta padre y confirmación del nuevo agendamiento.
 public class SeguimientoDTOs {
 
     // Paso 2-3 FB: banner con los datos precargados desde la consulta padre

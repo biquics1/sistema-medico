@@ -3,6 +3,7 @@ package com.example.demo.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+// Body del login de usuarios internos y pacientes (CU-00 / CU-01 / RN-GLOBAL-007).
 @Data
 public class LoginRequestDTO {
 

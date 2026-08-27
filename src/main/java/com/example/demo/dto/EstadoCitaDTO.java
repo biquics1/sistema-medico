@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+// Contenedor de DTOs del catálogo "Estados de Cita" (CU-15).
 public class EstadoCitaDTO {
 
+    // Body para crear/actualizar un estado de cita.
     @Data
     public static class CreateDTO {
         @NotBlank(message = "El nombre es obligatorio.")
@@ -20,6 +22,7 @@ public class EstadoCitaDTO {
         private Short estado;
     }
 
+    // Datos de un estado de cita para el listado.
     @Data
     public static class ResponseDTO {
         private Integer id;

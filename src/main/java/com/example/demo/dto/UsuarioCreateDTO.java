@@ -3,6 +3,8 @@ package com.example.demo.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+// Body para crear un usuario interno (CU-01, FA01). Las validaciones de cada
+// campo referencian su regla de negocio correspondiente (RN-CU01-xx).
 @Data
 public class UsuarioCreateDTO {
 

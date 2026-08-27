@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Datos de un usuario interno para el listado de "Usuarios" (CU-01), con rol,
+// sucursal y especialidad ya resueltos a nombre legible.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

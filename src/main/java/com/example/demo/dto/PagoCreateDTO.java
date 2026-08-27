@@ -2,6 +2,8 @@ package com.example.demo.dto;
 
 import lombok.Data;
 
+// Body del pago en línea con tarjeta (CU-04): datos de la tarjeta más la
+// idempotencyKey para evitar cobros duplicados por doble clic (RNF-016).
 @Data
 public class PagoCreateDTO {
     private Integer citaId;

@@ -6,8 +6,12 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+// Contenedor de DTOs de la Bitácora de Movimientos de Inventario (CU-13):
+// registro manual de movimientos (Compra, Devolución, Venta, Reclamo, Ajuste+/-)
+// y su respuesta con el detalle ya resuelto para la tabla.
 public class MovimientoInventarioDTO {
 
+    // Body para registrar un movimiento manual (el tipo 6=Despacho es automático y no se expone aquí).
     @Data
     public static class CreateDTO {
         @NotNull(message = "Debe seleccionar un medicamento.")
@@ -35,6 +39,7 @@ public class MovimientoInventarioDTO {
         private String motivo;
     }
 
+    // Datos del movimiento para la tabla de la bitácora (stock anterior/nuevo, usuario, fecha).
     @Data
     public static class ResponseDTO {
         private Integer id;

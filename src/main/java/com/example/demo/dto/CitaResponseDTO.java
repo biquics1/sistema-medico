@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+// Representación general de una cita para listados/consultas (ej. CU-03, CU-16),
+// con los nombres de paciente, médico, sucursal y especialidad ya resueltos.
 @Data
 @AllArgsConstructor
 public class CitaResponseDTO {

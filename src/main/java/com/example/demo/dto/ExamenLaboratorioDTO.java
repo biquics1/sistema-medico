@@ -5,8 +5,11 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+// Contenedor de DTOs del catálogo "Exámenes de Laboratorio" (CU-15).
 public class ExamenLaboratorioDTO {
 
+    // Body para crear/actualizar un examen de laboratorio (precio, rango de
+    // referencia, unidad y laboratorio al que pertenece).
     @Data
     public static class CreateDTO {
         @Size(max = 20, message = "El código no puede exceder los 20 caracteres.")
@@ -33,6 +36,7 @@ public class ExamenLaboratorioDTO {
         private Short estado;
     }
 
+    // Datos del examen para el listado, con el nombre del laboratorio ya resuelto.
     @Data
     public static class ResponseDTO {
         private Integer id;

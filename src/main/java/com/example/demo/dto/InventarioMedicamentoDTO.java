@@ -4,8 +4,11 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+// Contenedor de DTOs del catálogo "Inventario de Medicamentos" (CU-15): stock
+// inicial por sucursal, alertas de stock bajo y resumen mensual de movimientos.
 public class InventarioMedicamentoDTO {
 
+    // Body para registrar el stock inicial de un medicamento en una sucursal.
     @Data
     public static class CreateDTO {
         @NotNull(message = "Debe seleccionar un medicamento.")
@@ -19,6 +22,7 @@ public class InventarioMedicamentoDTO {
         private Integer stockActual;
     }
 
+    // Datos del inventario de un medicamento en una sucursal, con indicador de stock bajo.
     @Data
     public static class ResponseDTO {
         private Integer id;
@@ -32,6 +36,7 @@ public class InventarioMedicamentoDTO {
         private Integer version;
     }
 
+    // Alerta de stock mínimo alcanzado (RN-CU10-03), mostrada en el panel de inventario.
     @Data
     public static class LowStockAlertDTO {
         private Integer medicamentoId;
@@ -43,6 +48,8 @@ public class InventarioMedicamentoDTO {
         private String mensaje;
     }
 
+    // Resumen mensual de entradas/salidas de un medicamento en una sucursal
+    // (usado en la bitácora embebida de MedicineInventoryPage).
     @Data
     public static class SummaryDTO {
         private Integer medicamentoId;

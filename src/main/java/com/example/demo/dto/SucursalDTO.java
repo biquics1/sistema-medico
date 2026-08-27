@@ -8,6 +8,8 @@ import lombok.Data;
 
 public class SucursalDTO {
 
+    // Body para crear/actualizar una sucursal (RN-CU15-04: teléfono opcional pero
+    // si se ingresa debe tener exactamente 8 dígitos).
     @Data
     public static class CreateDTO {
         @NotBlank(message = "El nombre es obligatorio.")
@@ -30,6 +32,7 @@ public class SucursalDTO {
         private Short estado;
     }
 
+    // Datos de la sucursal para el listado y para poblar dropdowns de sede.
     @Data
     public static class ResponseDTO {
         private Integer id;

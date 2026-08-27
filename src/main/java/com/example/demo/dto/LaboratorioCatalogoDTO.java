@@ -9,6 +9,7 @@ import lombok.Data;
 // para las órdenes de laboratorio (CU-09). Este es solo el catálogo de laboratorios.
 public class LaboratorioCatalogoDTO {
 
+    // Body para crear/actualizar un laboratorio del catálogo.
     @Data
     public static class CreateDTO {
         @NotBlank(message = "El nombre es obligatorio.")
@@ -22,6 +23,7 @@ public class LaboratorioCatalogoDTO {
         private Short estado;
     }
 
+    // Datos del laboratorio para el listado.
     @Data
     public static class ResponseDTO {
         private Integer id;

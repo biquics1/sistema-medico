@@ -3,6 +3,8 @@ package com.example.demo.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+// Body del formulario de registro de usuarios externos / pacientes (CU-02).
+// Cada campo referencia la regla de negocio que valida (RN-CU02-xx / RN-GLOBAL-xx).
 @Data
 public class RegistroPacienteDTO {
 

@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Contenedor de todos los DTOs del módulo de Consulta Médica (CU-08): panel del
+// médico agrupado por estado, formulario de consulta, catálogo CIE-10, generación
+// de órdenes de laboratorio y recetas, y acciones de cierre de la cita.
 public class ConsultaMedicaDTOs {
 
     // Tarjeta de cita en el panel del médico

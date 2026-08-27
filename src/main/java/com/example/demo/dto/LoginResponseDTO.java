@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// Respuesta del login: incluye el JWT y los datos básicos de sesión (rol y sede)
+// que el frontend usa para pintar el header y aplicar el scope de sucursal.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

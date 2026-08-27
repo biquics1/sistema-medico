@@ -3,6 +3,8 @@ package com.example.demo.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+// Body para editar un usuario interno existente (CU-01, FA04). A diferencia de
+// UsuarioCreateDTO, la contraseña es opcional (solo se cambia si se envía).
 @Data
 public class UsuarioUpdateDTO {
 

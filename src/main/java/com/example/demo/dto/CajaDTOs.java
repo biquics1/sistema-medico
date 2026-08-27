@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Contenedor de todos los DTOs usados en el módulo de Caja (CU-06 Cobro de Consulta
+// y CU-10 Cobro de Laboratorio en Caja): búsqueda de citas/órdenes pendientes de
+// pago, solicitud de cobro y comprobante de pago generado.
 public class CajaDTOs {
 
     // Cita mostrada al cajero antes de cobrar

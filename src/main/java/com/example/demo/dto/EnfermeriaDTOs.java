@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Contenedor de todos los DTOs del módulo de Enfermería (CU-07 Toma de Signos
+// Vitales): cola de pacientes (presentes / en proceso), llamado por altavoz (TTS)
+// y registro de signos vitales con alertas clínicas en tiempo real.
 public class EnfermeriaDTOs {
 
     // Tarjeta de paciente en la cola (tanto "Paciente Presente" como "Signos Vitales")
