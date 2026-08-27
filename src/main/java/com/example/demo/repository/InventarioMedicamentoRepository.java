@@ -1,3 +1,9 @@
+// ============================================================
+// REPOSITORY: InventarioMedicamentoRepository
+// Acceso a datos del stock de medicamentos por sucursal.
+// Incluye bloqueos (locks) para proteger operaciones
+// concurrentes de descuento de stock (CU-11/CU-13, RNF-025).
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.InventarioMedicamento;
@@ -14,8 +20,10 @@ import java.util.Optional;
 public interface InventarioMedicamentoRepository extends JpaRepository<InventarioMedicamento, Integer>,
         JpaSpecificationExecutor<InventarioMedicamento> {
 
+    // Busca el registro de stock de un medicamento en una sucursal específica
     Optional<InventarioMedicamento> findByMedicamentoIdAndSucursalId(Integer medicamentoId, Integer sucursalId);
 
+    // Lock OPTIMISTA: se apoya en el campo @Version de la entidad (control de concurrencia)
     @Lock(LockModeType.OPTIMISTIC)
     @Query("SELECT i FROM InventarioMedicamento i WHERE i.id = :id")
     Optional<InventarioMedicamento> findByIdForUpdate(@Param("id") Integer id);
@@ -29,6 +37,7 @@ public interface InventarioMedicamentoRepository extends JpaRepository<Inventari
     Optional<InventarioMedicamento> findForUpdate(@Param("medicamentoId") Integer medicamentoId,
                                                   @Param("sucursalId") Integer sucursalId);
 
+    // Todos los medicamentos cuyo stock actual ya llegó al mínimo configurado (alerta de reorden)
     @Query("SELECT i FROM InventarioMedicamento i " +
             "WHERE i.medicamento.stockMinimo IS NOT NULL " +
             "AND i.stockActual <= i.medicamento.stockMinimo")

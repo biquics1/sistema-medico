@@ -1,3 +1,7 @@
+// ============================================================
+// REPOSITORY: RecetaMedicaRepository
+// Acceso a datos de las recetas médicas (CU-08/CU-11).
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.RecetaMedica;

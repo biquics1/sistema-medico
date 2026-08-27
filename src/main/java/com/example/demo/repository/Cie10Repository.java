@@ -1,3 +1,8 @@
+// ============================================================
+// REPOSITORY: Cie10Repository
+// Acceso a datos del catálogo CIE-10. Provee el autocompletado
+// usado en el formulario de Consulta Médica (CU-08, paso 6).
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.Cie10;
@@ -12,6 +17,7 @@ import java.util.List;
 public interface Cie10Repository extends JpaRepository<Cie10, Integer> {
 
     // CU-08, paso 6: autocompletado por código o descripción
+    // JPQL personalizado: busca coincidencias parciales (LIKE) sin distinguir mayúsculas/minúsculas
     @Query("""
             SELECT c FROM Cie10 c
             WHERE UPPER(c.codigo) LIKE UPPER(CONCAT('%', :texto, '%'))

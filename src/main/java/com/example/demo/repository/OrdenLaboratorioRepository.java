@@ -1,3 +1,7 @@
+// ============================================================
+// REPOSITORY: OrdenLaboratorioRepository
+// Acceso a datos de las órdenes de laboratorio (CU-08/CU-09/CU-16).
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.OrdenLaboratorio;

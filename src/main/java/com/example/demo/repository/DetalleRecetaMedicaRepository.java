@@ -1,3 +1,7 @@
+// ============================================================
+// REPOSITORY: DetalleRecetaMedicaRepository
+// Acceso a datos de las líneas (medicamentos) de una receta médica.
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.DetalleRecetaMedica;

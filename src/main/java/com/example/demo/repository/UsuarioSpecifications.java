@@ -1,3 +1,9 @@
+// ============================================================
+// SPECIFICATION: UsuarioSpecifications
+// Filtros dinámicos reutilizables para el listado/búsqueda de
+// Usuarios (CU-01, RN-CU01-01), combinables entre sí y con el
+// filtro de sede del Administrador de Sede.
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.Usuario;
@@ -13,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 public final class UsuarioSpecifications {
 
     private UsuarioSpecifications() {
+        // Clase de utilidad: no se instancia
     }
 
     // Si sucursalId es null, no restringe nada (caso Administrador General).
@@ -27,22 +34,27 @@ public final class UsuarioSpecifications {
         return (root, query, cb) -> cb.equal(root.get("id"), id);
     }
 
+    // Búsqueda parcial (LIKE) e insensible a mayúsculas por nombre completo
     public static Specification<Usuario> nombreCompletoContiene(String texto) {
         return (root, query, cb) -> cb.like(cb.lower(root.get("nombreCompleto")), "%" + texto.toLowerCase() + "%");
     }
 
+    // Búsqueda parcial por correo electrónico
     public static Specification<Usuario> correoContiene(String texto) {
         return (root, query, cb) -> cb.like(cb.lower(root.get("correoElectronico")), "%" + texto.toLowerCase() + "%");
     }
 
+    // Búsqueda parcial por nombre de usuario
     public static Specification<Usuario> nombreUsuarioContiene(String texto) {
         return (root, query, cb) -> cb.like(cb.lower(root.get("nombreUsuario")), "%" + texto.toLowerCase() + "%");
     }
 
+    // Búsqueda parcial por DPI
     public static Specification<Usuario> dpiContiene(String texto) {
         return (root, query, cb) -> cb.like(cb.lower(root.get("dpi")), "%" + texto.toLowerCase() + "%");
     }
 
+    // Búsqueda parcial por nombre de rol (join implícito Usuario -> Rol)
     public static Specification<Usuario> rolNombreContiene(String texto) {
         return (root, query, cb) -> cb.like(cb.lower(root.get("rol").get("nombre")), "%" + texto.toLowerCase() + "%");
     }

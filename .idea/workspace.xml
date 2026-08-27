@@ -4,37 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="agregando comentarios a carpeta modelo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/BranchSpecialty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/BranchSpecialty.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cie10.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cie10.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/CitaSeguimiento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/CitaSeguimiento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ConsultaMedica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ConsultaMedica.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DespachoMedicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DespachoMedicamento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleDespachoMedicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleDespachoMedicamento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleOrdenLaboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleOrdenLaboratorio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleRecetaMedica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleRecetaMedica.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Especialidad.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Especialidad.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EstadoCita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EstadoCita.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EventoAgenda.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/EventoAgenda.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ExamenLaboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ExamenLaboratorio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/InventarioMedicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/InventarioMedicamento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Laboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Laboratorio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Medicamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Medicamento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MetodoPago.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MetodoPago.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MovimientoInventario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/MovimientoInventario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/OrdenLaboratorio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/OrdenLaboratorio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Pago.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Pago.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ReasignacionMedico.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/ReasignacionMedico.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/RecetaMedica.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/RecetaMedica.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Rol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Rol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/SignosVitales.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/SignosVitales.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Sucursal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Sucursal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/TareaMedico.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/TareaMedico.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Usuario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/config/CacheConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/config/CacheConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/BranchSpecialtyRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/BranchSpecialtyRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/Cie10Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/Cie10Repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaSeguimientoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaSeguimientoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/ConsultaMedicaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/ConsultaMedicaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DespachoMedicamentoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DespachoMedicamentoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DetalleDespachoMedicamentoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DetalleDespachoMedicamentoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DetalleOrdenLaboratorioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DetalleOrdenLaboratorioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DetalleRecetaMedicaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/DetalleRecetaMedicaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/EspecialidadRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/EspecialidadRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/EstadoCitaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/EstadoCitaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/EventoAgendaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/EventoAgendaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/ExamenLaboratorioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/ExamenLaboratorioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/InventarioMedicamentoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/InventarioMedicamentoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/InventarioMedicamentoSpecifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/InventarioMedicamentoSpecifications.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LaboratorioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/LaboratorioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/MedicamentoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/MedicamentoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/MovimientoInventarioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/MovimientoInventarioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/MovimientoInventarioSpecifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/MovimientoInventarioSpecifications.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/OrdenLaboratorioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/OrdenLaboratorioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/PagoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/PagoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/ReasignacionMedicoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/ReasignacionMedicoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/RecetaMedicaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/RecetaMedicaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/RolRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/RolRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/SignosVitalesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/SignosVitalesRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/SucursalRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/SucursalRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/TareaMedicoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/TareaMedicoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/UsuarioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/UsuarioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/UsuarioSpecifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/UsuarioSpecifications.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,23 +94,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.194807678660319" />
-      <entry key="MS500" value="2.002640419780488" />
-      <entry key="S2" value="3.650355239719691" />
-      <entry key="S5" value="5.436062901950943" />
-      <entry key="S10" value="6.508796616331647" />
-      <entry key="S30" value="7.446459539795543" />
-      <entry key="S60" value="7.715431127178197" />
-      <entry key="M2" value="7.855741868812004" />
-      <entry key="M5" value="8.00450786061001" />
-      <entry key="M10" value="8.725038823869578" />
-      <entry key="M15" value="9.744561943894608" />
-      <entry key="M30" value="12.737875402668806" />
-      <entry key="H1" value="18.070123184570818" />
-      <entry key="H2" value="25.848811791372842" />
-      <entry key="H4" value="33.97598003952195" />
-      <entry key="D1" value="45.75755212003859" />
-      <entry key="W1" value="48.51369080418908" />
+      <entry key="MS100" value="1.039014061708875" />
+      <entry key="MS500" value="1.7687384777895474" />
+      <entry key="S2" value="3.028396759424235" />
+      <entry key="S5" value="4.27335758970747" />
+      <entry key="S10" value="5.84963183121132" />
+      <entry key="S30" value="8.134719627414075" />
+      <entry key="S60" value="9.015706991059892" />
+      <entry key="M2" value="9.944024013605105" />
+      <entry key="M5" value="12.382105730015388" />
+      <entry key="M10" value="14.862145152536735" />
+      <entry key="M15" value="16.624297060475463" />
+      <entry key="M30" value="20.52344036968177" />
+      <entry key="H1" value="26.434688492193583" />
+      <entry key="H2" value="34.65592549767482" />
+      <entry key="H4" value="43.18433233924153" />
+      <entry key="D1" value="55.57839383370294" />
+      <entry key="W1" value="58.48651646449581" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -118,37 +118,37 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="4.731238991943359E-162" />
-      <entry key="S60" value="2.175141142993565E-81" />
-      <entry key="M2" value="4.663840845262162E-41" />
-      <entry key="M5" value="7.370509132373129E-17" />
-      <entry key="M10" value="8.585166936276274E-9" />
-      <entry key="M15" value="4.1927518851357105E-6" />
-      <entry key="M30" value="0.0020476210306440315" />
-      <entry key="H1" value="0.04525064674282598" />
-      <entry key="H2" value="0.212721994027007" />
-      <entry key="H4" value="0.4612179463409967" />
-      <entry key="D1" value="0.8789908743736731" />
-      <entry key="W1" value="0.9817428943281634" />
+      <entry key="S30" value="6.1534344144936016E-167" />
+      <entry key="S60" value="7.844382967763361E-84" />
+      <entry key="M2" value="2.8007825634567507E-42" />
+      <entry key="M5" value="2.3928295184747757E-17" />
+      <entry key="M10" value="4.8916556690703185E-9" />
+      <entry key="M15" value="2.881623601655593E-6" />
+      <entry key="M30" value="0.001697534565673289" />
+      <entry key="H1" value="0.04120114762568254" />
+      <entry key="H2" value="0.20298065825512185" />
+      <entry key="H4" value="0.4505337481866606" />
+      <entry key="D1" value="0.8755639826422025" />
+      <entry key="W1" value="0.9811951945871542" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.37148438289600616" />
-      <entry key="MS500" value="1.7053880289549594" />
-      <entry key="S2" value="3.5589511573970287" />
-      <entry key="S5" value="5.394702543950922" />
-      <entry key="S10" value="6.486748800775529" />
-      <entry key="S30" value="7.438718052593413" />
-      <entry key="S60" value="7.711504503223382" />
-      <entry key="M2" value="7.8537640006278355" />
-      <entry key="M5" value="8.003704521643195" />
-      <entry key="M10" value="8.724588480020765" />
-      <entry key="M15" value="9.744214824602812" />
-      <entry key="M30" value="12.739606284678715" />
-      <entry key="H1" value="18.114943812933795" />
-      <entry key="H2" value="26.06105155062847" />
-      <entry key="H4" value="34.43680823991407" />
-      <entry key="D1" value="46.63644244011344" />
-      <entry key="W1" value="49.49541816571128" />
+      <entry key="MS100" value="0.9185930291925379" />
+      <entry key="MS500" value="1.7298332359643616" />
+      <entry key="S2" value="3.011920778789047" />
+      <entry key="S5" value="4.2574950736932164" />
+      <entry key="S10" value="5.83163325654353" />
+      <entry key="S30" value="8.12284649351443" />
+      <entry key="S60" value="9.008571453135499" />
+      <entry key="M2" value="9.940000253402498" />
+      <entry key="M5" value="12.380193357076182" />
+      <entry key="M10" value="14.861047226327742" />
+      <entry key="M15" value="16.623494102441978" />
+      <entry key="M30" value="20.524591362591057" />
+      <entry key="H1" value="26.475355682985498" />
+      <entry key="H2" value="34.8583746830082" />
+      <entry key="H4" value="43.63444968148927" />
+      <entry key="D1" value="56.453851702124325" />
+      <entry key="W1" value="59.46769528456938" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -267,7 +267,8 @@
     <MESSAGE value="primer commit" />
     <MESSAGE value="segunda prueba" />
     <MESSAGE value="cambios //" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambios //" />
+    <MESSAGE value="agregando comentarios a carpeta modelo" />
+    <option name="LAST_COMMIT_MESSAGE" value="agregando comentarios a carpeta modelo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

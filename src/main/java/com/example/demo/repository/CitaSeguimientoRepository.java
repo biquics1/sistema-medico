@@ -1,3 +1,7 @@
+// ============================================================
+// REPOSITORY: CitaSeguimientoRepository
+// Acceso a datos de las citas de seguimiento (CU-11).
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.CitaSeguimiento;
@@ -11,8 +15,10 @@ import java.util.Optional;
 @Repository
 public interface CitaSeguimientoRepository extends JpaRepository<CitaSeguimiento, Integer> {
 
+    // Obtiene el registro de seguimiento a partir de la cita nueva generada
     Optional<CitaSeguimiento> findByCitaNueva_Id(Integer citaId);
 
+    // Verifica si una consulta ya generó una cita de seguimiento
     boolean existsByConsultaOrigen_Id(Integer consultaId);
 
     // RN-CU11-05: recordatorio 1-2 días antes, una sola vez, sobrevive a reinicios (RNF-020)

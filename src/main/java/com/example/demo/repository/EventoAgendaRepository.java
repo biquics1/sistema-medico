@@ -1,3 +1,8 @@
+// ============================================================
+// REPOSITORY: EventoAgendaRepository
+// Acceso a datos de los eventos personales del médico en su
+// calendario (CU-14).
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.EventoAgenda;

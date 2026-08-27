@@ -1,3 +1,7 @@
+// ============================================================
+// REPOSITORY: MedicamentoRepository
+// Acceso a datos del catálogo de Medicamentos (CU-10/CU-11/CU-13/CU-15).
+// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.Medicamento;
@@ -9,6 +13,7 @@ import java.util.List;
 @Repository
 public interface MedicamentoRepository extends JpaRepository<Medicamento, Integer> {
 
+    // Medicamentos activos (para dropdowns/catálogos)
     List<Medicamento> findByEstado(Short estado);
 
     // CU-11 (extensión): catálogo/búsqueda de medicamentos en Farmacia (venta libre)
