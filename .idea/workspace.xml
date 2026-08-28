@@ -4,39 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="agregando comentarios a carpeta DTO">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="agregando comentarios a carpeta controller, excepcion y config">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/MetodoPagoDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/config/CacheConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/config/CacheConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AgendaMedicaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AgendaMedicaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/BranchSpecialtyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/BranchSpecialtyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/CajaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/CajaController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/CitaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/CitaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EnfermeriaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EnfermeriaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EspecialidadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EspecialidadController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EstadoCitaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EstadoCitaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EventoAgendaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EventoAgendaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/ExamenLaboratorioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/ExamenLaboratorioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/FarmaciaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/FarmaciaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/InventarioMedicamentoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/InventarioMedicamentoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/LaboratorioCatalogoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/LaboratorioCatalogoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/LaboratorioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/LaboratorioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicamentoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicamentoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MovimientoInventarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MovimientoInventarioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/PacienteAgendaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/PacienteAgendaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/PagoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/PagoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/RecepcionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/RecepcionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/RolController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/RolController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/SucursalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/SucursalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/TareaMedicoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/TareaMedicoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UsuarioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/ResourceNotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/ResourceNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/ValidationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/ValidationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtAuthFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,23 +70,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.000000000092899" />
-      <entry key="S60" value="1.0000136312293453" />
-      <entry key="M2" value="1.0053037733841697" />
-      <entry key="M5" value="1.3001791462508137" />
-      <entry key="M10" value="3.040605665763367" />
-      <entry key="M15" value="5.398750879177603" />
-      <entry key="M30" value="11.75401803878131" />
-      <entry key="H1" value="20.53871715111775" />
-      <entry key="H2" value="31.32784262345059" />
-      <entry key="H4" value="42.07623814489277" />
-      <entry key="D1" value="57.66616986964766" />
-      <entry key="W1" value="61.34855503096702" />
+      <entry key="MS100" value="1.0075463775697253" />
+      <entry key="MS500" value="1.3765336439521887" />
+      <entry key="S2" value="1.9570140396801308" />
+      <entry key="S5" value="2.850991309742361" />
+      <entry key="S10" value="3.9849529467538205" />
+      <entry key="S30" value="5.961946564156195" />
+      <entry key="S60" value="6.842509912966687" />
+      <entry key="M2" value="7.386974360544729" />
+      <entry key="M5" value="7.91198536362805" />
+      <entry key="M10" value="8.969410940758337" />
+      <entry key="M15" value="10.65396924537335" />
+      <entry key="M30" value="16.332194104375823" />
+      <entry key="H1" value="25.31617206987353" />
+      <entry key="H2" value="36.77264289397574" />
+      <entry key="H4" value="48.326024138722964" />
+      <entry key="D1" value="65.25966336114502" />
+      <entry key="W1" value="69.28659614147227" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -120,37 +94,37 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="2.924088704585843E-187" />
-      <entry key="S60" value="5.407484354656829E-94" />
-      <entry key="M2" value="2.325399826837706E-47" />
-      <entry key="M5" value="2.2212582524628274E-19" />
-      <entry key="M10" value="4.713022652675064E-10" />
-      <entry key="M15" value="6.056192691452669E-7" />
-      <entry key="M30" value="7.782154387733956E-4" />
-      <entry key="H1" value="0.02789651302176303" />
-      <entry key="H2" value="0.16702249256241822" />
-      <entry key="H4" value="0.4086838540515367" />
-      <entry key="D1" value="0.8614523235069673" />
-      <entry key="W1" value="0.9789202692014528" />
+      <entry key="S30" value="4.34384692622156E-196" />
+      <entry key="S60" value="2.0841897529307537E-98" />
+      <entry key="M2" value="1.4436723149422637E-49" />
+      <entry key="M5" value="2.9092929280308546E-20" />
+      <entry key="M10" value="1.7056649518679978E-10" />
+      <entry key="M15" value="3.0755950299033316E-7" />
+      <entry key="M30" value="5.545804747647845E-4" />
+      <entry key="H1" value="0.023549532368282475" />
+      <entry key="H2" value="0.1534585688981964" />
+      <entry key="H4" value="0.3917378828990067" />
+      <entry key="D1" value="0.8553934662250546" />
+      <entry key="W1" value="0.977933713566323" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9592641193252643" />
-      <entry key="MS500" value="0.9917167307382933" />
-      <entry key="S2" value="0.9979227189990506" />
-      <entry key="S5" value="0.999168569213607" />
-      <entry key="S10" value="0.9995841981612189" />
-      <entry key="S30" value="0.9998613802653689" />
-      <entry key="S60" value="0.9999443163929883" />
-      <entry key="M2" value="1.005268600622893" />
-      <entry key="M5" value="1.300140682801663" />
-      <entry key="M10" value="3.0404817003361346" />
-      <entry key="M15" value="5.3985663529766" />
-      <entry key="M30" value="11.754535099173701" />
-      <entry key="H1" value="20.566245923691127" />
-      <entry key="H2" value="31.494424426364017" />
-      <entry key="H4" value="42.48454251813145" />
-      <entry key="D1" value="58.527517486455956" />
-      <entry key="W1" value="62.32745892011195" />
+      <entry key="MS100" value="0.9533469669719771" />
+      <entry key="MS500" value="1.3629036524690121" />
+      <entry key="S2" value="1.9525868863223748" />
+      <entry key="S5" value="2.848572838771912" />
+      <entry key="S10" value="3.9832833057427766" />
+      <entry key="S30" value="5.961085526234432" />
+      <entry key="S60" value="6.842007005338776" />
+      <entry key="M2" value="7.386700107523898" />
+      <entry key="M5" value="7.911864589889432" />
+      <entry key="M10" value="8.969307123888683" />
+      <entry key="M15" value="10.653835986694462" />
+      <entry key="M30" value="16.332542679099067" />
+      <entry key="H1" value="25.33940118441348" />
+      <entry key="H2" value="36.92569156352618" />
+      <entry key="H4" value="48.71739577482509" />
+      <entry key="D1" value="66.11495243998853" />
+      <entry key="W1" value="70.264513431895" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -272,7 +246,8 @@
     <MESSAGE value="agregando comentarios a carpeta modelo" />
     <MESSAGE value="agregando comentarios a carpeta repository" />
     <MESSAGE value="agregando comentarios a carpeta DTO" />
-    <option name="LAST_COMMIT_MESSAGE" value="agregando comentarios a carpeta DTO" />
+    <MESSAGE value="agregando comentarios a carpeta controller, excepcion y config" />
+    <option name="LAST_COMMIT_MESSAGE" value="agregando comentarios a carpeta controller, excepcion y config" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

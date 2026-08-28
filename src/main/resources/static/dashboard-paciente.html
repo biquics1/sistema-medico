@@ -101,9 +101,14 @@
                     <span class="ml-2 text-xs font-semibold hidden md:inline">Fecha/Hora</span>
                     <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
                 </div>
-                <div class="flex items-center" id="pasoIndicador5">
+                <div class="flex-1 flex items-center" id="pasoIndicador5">
                     <div class="pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">5</div>
                     <span class="ml-2 text-xs font-semibold hidden md:inline">Confirmar</span>
+                    <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+                </div>
+                <div class="flex items-center" id="pasoIndicador6">
+                    <div class="pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">6</div>
+                    <span class="ml-2 text-xs font-semibold hidden md:inline">Pago</span>
                 </div>
             </div>
 
@@ -163,6 +168,118 @@
                             class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">
                         Confirmar Cita
                     </button>
+                </div>
+            </div>
+
+            <!-- Paso 6: Método de pago (NUEVO) -->
+            <div id="wizardPaso6" class="hidden space-y-4">
+                <h2 class="font-bold text-brand-black">¿Cómo deseas pagar tu cita?</h2>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800">
+                    <i class="fa-solid fa-circle-check mr-1"></i>
+                    Tu cita fue registrada correctamente con estado <strong>Pendiente de pago</strong>.
+                    Monto a pagar: <strong>Q<span id="montoPagoMetodo">0.00</span></strong>.
+                </div>
+
+                <div id="mensajesMetodoPago"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="elegirPagoCaja()" id="btnPagarCaja"
+                            class="text-left p-5 border-2 border-gray-200 rounded-lg hover:border-brand-yellow hover:bg-brand-lightgray transition">
+                        <i class="fa-solid fa-cash-register text-2xl text-brand-yellow mb-2 block"></i>
+                        <p class="font-bold text-brand-black">Pagar en caja</p>
+                        <p class="text-xs text-gray-500 mt-1">Acércate a la ventanilla de caja de la clínica para
+                            realizar el pago antes de tu cita.</p>
+                    </button>
+                    <button onclick="elegirPagoEnLinea()" id="btnPagarLinea"
+                            class="text-left p-5 border-2 border-gray-200 rounded-lg hover:border-brand-yellow hover:bg-brand-lightgray transition">
+                        <i class="fa-solid fa-credit-card text-2xl text-brand-yellow mb-2 block"></i>
+                        <p class="font-bold text-brand-black">Pagar en línea</p>
+                        <p class="text-xs text-gray-500 mt-1">Paga ahora mismo con tarjeta. Tendrás
+                            <strong>5 minutos</strong> para completar el pago.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Paso "Pago en línea" (fuera del indicador numerado de 6 pasos). -->
+            <div id="wizardPasoPagoLinea" class="hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-bold text-brand-black">Pago en línea con tarjeta</h2>
+                    <span id="contadorPagoLinea"
+                          class="px-3 py-1 rounded-full text-sm font-bold bg-red-100 text-red-700">05:00</span>
+                </div>
+
+                <div class="bg-brand-lightgray border border-gray-200 rounded-lg p-4 text-sm space-y-1">
+                    <p><strong>Especialidad:</strong> <span id="resumenPagoEspecialidad"></span></p>
+                    <p><strong>Médico:</strong> <span id="resumenPagoMedico"></span></p>
+                    <p><strong>Fecha y hora:</strong> <span id="resumenPagoFechaHora"></span></p>
+                    <p><strong>Total a pagar:</strong> Q<span id="resumenPagoMonto"></span></p>
+                </div>
+
+                <div id="mensajesPagoLinea"></div>
+
+                <!-- Formulario de tarjeta -->
+                <div id="formPagoLinea" class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Número de tarjeta</label>
+                        <input id="pagoNumeroTarjeta" type="text" inputmode="numeric" maxlength="23"
+                               placeholder="4111 1111 1111 1111"
+                               oninput="formatearNumeroTarjeta()"
+                               onfocus="restaurarNumeroTarjeta()"
+                               onblur="enmascararNumeroTarjeta()"
+                               class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Nombre del titular</label>
+                        <input id="pagoNombreTitular" type="text" maxlength="100"
+                               placeholder="Como aparece en la tarjeta"
+                               oninput="this.value = this.value.toUpperCase()"
+                               class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">Vencimiento (MM/AA)</label>
+                            <input id="pagoVencimiento" type="text" maxlength="5" placeholder="MM/AA"
+                                   oninput="formatearVencimiento()"
+                                   class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">CVV</label>
+                            <input id="pagoCvv" type="password" maxlength="4" placeholder="•••"
+                                   oninput="this.value = this.value.replace(/\\D/g,'').slice(0,4)"
+                                   class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400">
+                        <i class="fa-solid fa-lock mr-1"></i>
+                        Tu información de pago está protegida. El CVV nunca se almacena.
+                    </p>
+
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="volverDesdeLinea()"
+                                class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> Volver
+                        </button>
+                        <button id="btnPagarTarjeta" onclick="pagarConTarjeta()"
+                                class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">
+                            Pagar Q<span id="montoBotonPagar">0.00</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirmación de pago exitoso -->
+                <div id="confirmacionPagoLinea" class="hidden text-center space-y-3 py-4">
+                    <i class="fa-solid fa-circle-check text-5xl text-green-500"></i>
+                    <h3 class="text-lg font-bold text-brand-black">¡Pago Exitoso!</h3>
+                    <p class="text-sm text-gray-600">Número de transacción:
+                        <span id="txnPagoLinea" class="font-semibold"></span></p>
+                    <p class="text-sm text-gray-600">Tu cita ha sido confirmada. Preséntate en recepción a la
+                        hora de tu cita.</p>
+                    <div class="flex gap-2 justify-center pt-2">
+                        <button onclick="cancelarWizard()"
+                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">
+                            Volver a Mis Citas
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -335,9 +452,9 @@
                                 <div class="text-sm bg-gray-50 rounded-md p-2">
                                     <p class="font-semibold">${e.nombreExamen}</p>
                                     ${e.publicado
-                                        ? `<p>Resultado: ${e.valorResultado || '-'} ${e.unidad || ''} ${e.fueraDeRango ? '<span class="text-red-600 font-bold">(Fuera de rango)</span>' : ''}</p>
+                    ? `<p>Resultado: ${e.valorResultado || '-'} ${e.unidad || ''} ${e.fueraDeRango ? '<span class="text-red-600 font-bold">(Fuera de rango)</span>' : ''}</p>
                                            ${e.rangoReferencia ? `<p class="text-gray-500 text-xs">Rango de referencia: ${e.rangoReferencia}</p>` : ''}`
-                                        : `<p class="text-gray-400 text-xs">Resultado pendiente de publicación.</p>`}
+                    : `<p class="text-gray-400 text-xs">Resultado pendiente de publicación.</p>`}
                                 </div>
                             `).join('')}
                         </div>
@@ -379,6 +496,9 @@
 
     let wizardPasoActual = 1;
     let wizardSeleccion = { sucursalId: null, sucursalNombre: '', especialidadId: null, especialidadNombre: '', medicoId: null, medicoNombre: '', fechaHora: null };
+    let citaCreada = null; // Cita ya registrada (Pendiente de pago), desde el paso 6 en adelante
+    let contadorPagoLineaInterval = null;
+    let pagoIdempotencyKey = null;
 
     function mostrarMensajeWizard(texto, tipo) {
         const colores = {
@@ -396,6 +516,8 @@
     }
 
     function cancelarWizard() {
+        if (typeof detenerContadorPagoLinea === 'function') detenerContadorPagoLinea();
+        citaCreada = null;
         document.getElementById('vistaWizard').classList.add('hidden');
         document.getElementById('vistaDashboard').classList.remove('hidden');
         cargarMisCitas();
@@ -404,7 +526,12 @@
     function irAPaso(n) {
         wizardPasoActual = n;
         document.getElementById('mensajesWizard').innerHTML = '';
-        for (let i = 1; i <= 5; i++) {
+        // Por si se venía del paso de pago en línea (Parte 3), lo ocultamos
+        // y detenemos su contador si existe.
+        document.getElementById('wizardPasoPagoLinea').classList.add('hidden');
+        if (typeof detenerContadorPagoLinea === 'function') detenerContadorPagoLinea();
+
+        for (let i = 1; i <= 6; i++) {
             document.getElementById(`wizardPaso${i}`).classList.toggle('hidden', i !== n);
             const circulo = document.querySelector(`#pasoIndicador${i} .pasoCirculo`);
             circulo.className = `pasoCirculo w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -541,7 +668,7 @@
         btn.innerText = 'Confirmando...';
 
         try {
-            await apiFetch('/api/appointments', {
+            const cita = await apiFetch('/api/appointments', {
                 method: 'POST',
                 body: JSON.stringify({
                     pacienteId: Number(ID_PACIENTE),
@@ -553,23 +680,283 @@
                 })
             });
 
-            document.getElementById('vistaWizard').classList.add('hidden');
-            document.getElementById('vistaDashboard').classList.remove('hidden');
-            mostrarMensajeDashboard(
-                'Su cita ha sido registrada exitosamente. Diríjase a caja para realizar el pago y confirmar su reserva.',
-                'exito'
-            );
-            cargarMisCitas();
+            // La cita ya quedó registrada como "Pendiente de pago". Ahora se
+            // le pregunta al paciente cómo desea pagar (paso 6, NUEVO).
+            citaCreada = cita;
+            document.getElementById('montoPagoMetodo').innerText = Number(cita.monto).toFixed(2);
+            document.getElementById('mensajesMetodoPago').innerHTML = '';
+            irAPaso(6);
         } catch (e) {
             // FA03: horario ya no disponible u otro error de validación
             mostrarMensajeWizard(e.message, 'error');
+        } finally {
             btn.disabled = false;
             btn.innerText = 'Confirmar Cita';
         }
     }
 
+    // ==================== Paso 6 (NUEVO): elegir método de pago ====================
+
+    function mostrarMensajeMetodoPago(texto, tipo) {
+        const colores = {
+            error: 'bg-red-50 text-red-700 border border-red-200',
+            info: 'bg-blue-50 text-blue-700 border border-blue-200'
+        };
+        document.getElementById('mensajesMetodoPago').innerHTML =
+            `<div class="p-3 rounded-md ${colores[tipo]}">${texto}</div>`;
+    }
+
+    function bloquearBotonesMetodoPago(bloquear) {
+        document.getElementById('btnPagarCaja').classList.toggle('opacity-50', bloquear);
+        document.getElementById('btnPagarCaja').classList.toggle('pointer-events-none', bloquear);
+        document.getElementById('btnPagarLinea').classList.toggle('opacity-50', bloquear);
+        document.getElementById('btnPagarLinea').classList.toggle('pointer-events-none', bloquear);
+    }
+
+    async function elegirPagoCaja() {
+        bloquearBotonesMetodoPago(true);
+        mostrarMensajeMetodoPago('Registrando tu elección...', 'info');
+        try {
+            await apiFetch(`/api/appointments/${citaCreada.id}/metodo-pago`, {
+                method: 'POST',
+                body: JSON.stringify({ metodoPago: 'CAJA' })
+            });
+
+            citaCreada = null;
+            document.getElementById('vistaWizard').classList.add('hidden');
+            document.getElementById('vistaDashboard').classList.remove('hidden');
+            mostrarMensajeDashboard(
+                'Tu cita ha sido registrada exitosamente. Acércate a caja para realizar el pago y confirmar tu reserva.',
+                'exito'
+            );
+            cargarMisCitas();
+        } catch (e) {
+            mostrarMensajeMetodoPago(e.message, 'error');
+            bloquearBotonesMetodoPago(false);
+        }
+    }
+
+    async function elegirPagoEnLinea() {
+        bloquearBotonesMetodoPago(true);
+        mostrarMensajeMetodoPago('Preparando el pago en línea...', 'info');
+        try {
+            // Al elegir "LINEA" el backend le pone 5 minutos de plazo (expiraEn)
+            // a la cita para completar el pago con tarjeta.
+            const cita = await apiFetch(`/api/appointments/${citaCreada.id}/metodo-pago`, {
+                method: 'POST',
+                body: JSON.stringify({ metodoPago: 'LINEA' })
+            });
+            citaCreada = cita;
+
+            if (typeof iniciarPagoEnLinea === 'function') {
+                // Función que se agrega en la Parte 3: pinta el formulario de
+                // tarjeta y arranca el contador regresivo de 5 minutos.
+                iniciarPagoEnLinea(cita);
+            } else {
+                mostrarMensajeMetodoPago(
+                    'La pantalla de pago en línea todavía no está agregada (Parte 3 pendiente).', 'error');
+                bloquearBotonesMetodoPago(false);
+            }
+        } catch (e) {
+            mostrarMensajeMetodoPago(e.message, 'error');
+            bloquearBotonesMetodoPago(false);
+        }
+    }
+
     // -------- Inicio --------
     cargarMisCitas();
+
+    // ==================== Pago en línea (NUEVO) — formulario + contador 5 min ====================
+
+    function iniciarPagoEnLinea(cita) {
+        document.getElementById('wizardPaso6').classList.add('hidden');
+        document.getElementById('wizardPasoPagoLinea').classList.remove('hidden');
+        document.getElementById('formPagoLinea').classList.remove('hidden');
+        document.getElementById('confirmacionPagoLinea').classList.add('hidden');
+        document.getElementById('mensajesPagoLinea').innerHTML = '';
+        bloquearBotonesMetodoPago(false);
+
+        document.getElementById('resumenPagoEspecialidad').innerText = wizardSeleccion.especialidadNombre;
+        document.getElementById('resumenPagoMedico').innerText = wizardSeleccion.medicoNombre;
+        document.getElementById('resumenPagoFechaHora').innerText = new Date(wizardSeleccion.fechaHora).toLocaleString('es-GT');
+        document.getElementById('resumenPagoMonto').innerText = Number(cita.monto).toFixed(2);
+        document.getElementById('montoBotonPagar').innerText = Number(cita.monto).toFixed(2);
+
+        const numeroInput = document.getElementById('pagoNumeroTarjeta');
+        numeroInput.value = '';
+        numeroInput.dataset.numeroCompleto = '';
+        document.getElementById('pagoNombreTitular').value = '';
+        document.getElementById('pagoVencimiento').value = '';
+        document.getElementById('pagoCvv').value = '';
+
+        const btn = document.getElementById('btnPagarTarjeta');
+        btn.disabled = false;
+        btn.innerHTML = `Pagar Q<span id="montoBotonPagar">${Number(cita.monto).toFixed(2)}</span>`;
+
+        pagoIdempotencyKey = null; // se genera al momento de pagar
+
+        // cita.expiraEn viene del servidor (ahora + 5 minutos, ver
+        // CitaService.elegirMetodoPago) — el contador se calcula contra esa
+        // hora real, no contra un contador local, para evitar desfaces.
+        iniciarContadorPagoLinea(cita.expiraEn);
+    }
+
+    function iniciarContadorPagoLinea(expiraEnISO) {
+        detenerContadorPagoLinea();
+        const expiraEnMs = new Date(expiraEnISO).getTime();
+
+        function actualizar() {
+            const restanteMs = expiraEnMs - Date.now();
+            const elemento = document.getElementById('contadorPagoLinea');
+            if (restanteMs <= 0) {
+                if (elemento) elemento.innerText = '00:00';
+                expirarPagoEnLinea();
+                return;
+            }
+            const totalSeg = Math.floor(restanteMs / 1000);
+            const min = String(Math.floor(totalSeg / 60)).padStart(2, '0');
+            const seg = String(totalSeg % 60).padStart(2, '0');
+            if (elemento) elemento.innerText = `${min}:${seg}`;
+        }
+
+        actualizar();
+        contadorPagoLineaInterval = setInterval(actualizar, 1000);
+    }
+
+    function detenerContadorPagoLinea() {
+        if (contadorPagoLineaInterval) {
+            clearInterval(contadorPagoLineaInterval);
+            contadorPagoLineaInterval = null;
+        }
+    }
+
+    // El contador llegó a 0 sin que se completara el pago: se cancela la
+    // cita de inmediato (no se genera cita para pagar después en caja) y se
+    // redirige al paciente, igual que el patrón de CU-04 FA02.
+    async function expirarPagoEnLinea() {
+        detenerContadorPagoLinea();
+        document.getElementById('formPagoLinea').classList.add('hidden');
+        document.getElementById('mensajesPagoLinea').innerHTML = `
+            <div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200 text-sm">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                El tiempo para confirmar tu cita ha expirado. La cita ha sido cancelada.
+                Serás redirigido en unos segundos...
+            </div>`;
+
+        try {
+            if (citaCreada) {
+                await apiFetch(`/api/appointments/${citaCreada.id}/cancelar-expirada`, { method: 'POST' });
+            }
+        } catch (e) {
+            // Si esta llamada falla por cualquier motivo, el job de fondo del
+            // servidor cancela la cita de todas formas en un máximo de 60s.
+        }
+
+        setTimeout(() => {
+            citaCreada = null;
+            document.getElementById('vistaWizard').classList.add('hidden');
+            document.getElementById('vistaDashboard').classList.remove('hidden');
+            mostrarMensajeDashboard(
+                'El tiempo para pagar en línea expiró y tu cita fue cancelada automáticamente. ' +
+                'Puedes agendar una nueva cita cuando quieras.',
+                'error'
+            );
+            cargarMisCitas();
+        }, 4000);
+    }
+
+    function volverDesdeLinea() {
+        detenerContadorPagoLinea();
+        document.getElementById('wizardPasoPagoLinea').classList.add('hidden');
+        document.getElementById('wizardPaso6').classList.remove('hidden');
+    }
+
+    // -------- Formateo de campos de tarjeta --------
+
+    function formatearNumeroTarjeta() {
+        const input = document.getElementById('pagoNumeroTarjeta');
+        const digitos = input.value.replace(/\D/g, '').slice(0, 19);
+        input.dataset.numeroCompleto = digitos;
+        input.value = digitos.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function restaurarNumeroTarjeta() {
+        const input = document.getElementById('pagoNumeroTarjeta');
+        const digitos = input.dataset.numeroCompleto || '';
+        input.value = digitos.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    // Al salir del campo se enmascara mostrando solo los últimos 4 dígitos
+    // (RN-CU04-01 / RNF-012), sin perder el número completo guardado en
+    // dataset.numeroCompleto para poder enviarlo al backend.
+    function enmascararNumeroTarjeta() {
+        const input = document.getElementById('pagoNumeroTarjeta');
+        const digitos = input.dataset.numeroCompleto || input.value.replace(/\D/g, '');
+        input.dataset.numeroCompleto = digitos;
+        if (digitos.length >= 4) {
+            input.value = '**** **** **** ' + digitos.slice(-4);
+        }
+    }
+
+    function formatearVencimiento() {
+        const input = document.getElementById('pagoVencimiento');
+        let valor = input.value.replace(/\D/g, '').slice(0, 4);
+        if (valor.length >= 3) {
+            valor = valor.slice(0, 2) + '/' + valor.slice(2);
+        }
+        input.value = valor;
+    }
+
+    // -------- Enviar el pago --------
+
+    async function pagarConTarjeta() {
+        const numeroInput = document.getElementById('pagoNumeroTarjeta');
+        const numeroTarjeta = (numeroInput.dataset.numeroCompleto || numeroInput.value).replace(/\D/g, '');
+        const nombreTitular = document.getElementById('pagoNombreTitular').value.trim();
+        const vencimiento = document.getElementById('pagoVencimiento').value.trim();
+        const cvv = document.getElementById('pagoCvv').value.trim();
+
+        document.getElementById('mensajesPagoLinea').innerHTML = '';
+
+        const btn = document.getElementById('btnPagarTarjeta');
+        const textoOriginal = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerText = 'Procesando pago...';
+
+        // Idempotencia (RNF-016): mismo UUID aunque el usuario haga doble clic
+        // o reintente tras un error; solo se regenera en un intento nuevo real.
+        if (!pagoIdempotencyKey) {
+            pagoIdempotencyKey = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
+        }
+
+        try {
+            const resultado = await apiFetch('/api/payments', {
+                method: 'POST',
+                body: JSON.stringify({
+                    citaId: citaCreada.id,
+                    numeroTarjeta,
+                    nombreTitular,
+                    vencimiento,
+                    cvv,
+                    idempotencyKey: pagoIdempotencyKey
+                })
+            });
+
+            detenerContadorPagoLinea();
+            document.getElementById('formPagoLinea').classList.add('hidden');
+            document.getElementById('txnPagoLinea').innerText = resultado.numeroTransaccion;
+            document.getElementById('confirmacionPagoLinea').classList.remove('hidden');
+            citaCreada = null;
+        } catch (e) {
+            // FA01/FA03 de CU-04: validación de campos o rechazo de la pasarela.
+            // El formulario permanece activo y el contador sigue corriendo,
+            // el paciente puede corregir los datos y reintentar sin perder la reserva.
+            document.getElementById('mensajesPagoLinea').innerHTML =
+                `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200 text-sm">${e.message}</div>`;
+            btn.disabled = false;
+            btn.innerHTML = textoOriginal;
+        }
+    }
 </script>
 </body>
 </html>

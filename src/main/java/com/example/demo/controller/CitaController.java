@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.*;
+import com.example.demo.security.AuthUsuario;
 import com.example.demo.service.CitaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -48,5 +50,22 @@ public class CitaController {
     @GetMapping("/api/appointments/{id}")
     public CitaResponseDTO obtener(@PathVariable Integer id) {
         return citaService.obtenerCita(id);
+    }
+
+    // NUEVO — paso "método de pago" del wizard (paso 6, tras confirmar la cita):
+    // el paciente elige "CAJA" o "LINEA". Ver CitaService.elegirMetodoPago.
+    @PostMapping("/api/appointments/{id}/metodo-pago")
+    public CitaResponseDTO elegirMetodoPago(@PathVariable Integer id,
+                                            @RequestBody MetodoPagoDTO dto,
+                                            @AuthenticationPrincipal AuthUsuario usuario) {
+        return citaService.elegirMetodoPago(id, usuario.getId(), dto.getMetodoPago());
+    }
+
+    // NUEVO — el frontend llama esto cuando el contador de pago en línea
+    // llega a 0, para cancelar la cita de inmediato sin esperar al job.
+    @PostMapping("/api/appointments/{id}/cancelar-expirada")
+    public CitaResponseDTO cancelarExpirada(@PathVariable Integer id,
+                                            @AuthenticationPrincipal AuthUsuario usuario) {
+        return citaService.cancelarPorExpiracionInmediata(id, usuario.getId());
     }
 }

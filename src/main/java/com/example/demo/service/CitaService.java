@@ -36,6 +36,13 @@ public class CitaService {
     @Value("${app.reserva.minutos:5}")
     private long minutosReserva;
 
+    // NUEVO: ventana de tiempo específica para el pago EN LÍNEA una vez que el
+    // paciente elige ese método tras confirmar la cita (más corta que la
+    // ventana genérica de arriba, que sigue aplicando mientras decide
+    // "caja" vs "línea"). Default documentado: 5 minutos.
+    @Value("${app.reserva.online.minutos:5}")
+    private long minutosReservaOnline;
+
     private static final LocalTime INICIO_JORNADA = LocalTime.of(8, 0);
     private static final LocalTime FIN_JORNADA = LocalTime.of(17, 0);
     private static final int DURACION_SLOT_MIN = 30;
@@ -152,6 +159,62 @@ public class CitaService {
     public CitaResponseDTO obtenerCita(Integer id) {
         Cita cita = citaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
+        return toDto(cita);
+    }
+
+    // ------------------------------------------------------------------
+    // NUEVO: paso "método de pago" tras confirmar la cita (wizard paso 6).
+    // El paciente elige pagar en caja (sin vencimiento automático, igual
+    // que el flujo actual) o en línea (se le da una ventana corta de
+    // app.reserva.online.minutos, default 5, para completar el pago con
+    // tarjeta antes de que la cita se cancele automáticamente).
+    // ------------------------------------------------------------------
+    @Transactional
+    public CitaResponseDTO elegirMetodoPago(Integer citaId, Integer pacienteId, String metodoPago) {
+        Cita cita = citaRepository.findByIdAndPaciente_Id(citaId, pacienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
+
+        if (!EstadoCita.PENDIENTE_PAGO.equals(cita.getEstadoCita().getNombre())) {
+            throw new ValidationException("Esta cita ya no está pendiente de pago.");
+        }
+        if (cita.getExpiraEn() != null && cita.getExpiraEn().isBefore(LocalDateTime.now())) {
+            throw new ValidationException(
+                    "El tiempo para confirmar su cita ha expirado. El horario seleccionado ha sido liberado. " +
+                            "Por favor, seleccione un nuevo horario.");
+        }
+
+        String metodo = metodoPago == null ? "" : metodoPago.trim().toUpperCase();
+        switch (metodo) {
+            case "LINEA" -> cita.setExpiraEn(LocalDateTime.now().plusMinutes(minutosReservaOnline));
+            case "CAJA" -> cita.setExpiraEn(null); // sin vencimiento automático: se paga físicamente en caja
+            default -> throw new ValidationException(
+                    "Debe seleccionar un método de pago válido: 'CAJA' o 'LINEA'.");
+        }
+
+        cita = citaRepository.save(cita);
+        return toDto(cita);
+    }
+
+    // NUEVO: cancelación inmediata disparada por el propio cliente cuando el
+    // contador regresivo de pago en línea llega a 0, para no tener que
+    // esperar hasta 60s a que corra el job programado cancelarCitasExpiradas().
+    // Es idempotente y segura: solo cancela si sigue "Pendiente de pago" Y
+    // realmente ya venció; en cualquier otro caso simplemente devuelve el
+    // estado actual de la cita sin tocar nada.
+    @Transactional
+    public CitaResponseDTO cancelarPorExpiracionInmediata(Integer citaId, Integer pacienteId) {
+        Cita cita = citaRepository.findByIdAndPaciente_Id(citaId, pacienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
+
+        boolean pendiente = EstadoCita.PENDIENTE_PAGO.equals(cita.getEstadoCita().getNombre());
+        boolean venciada = cita.getExpiraEn() != null && !cita.getExpiraEn().isAfter(LocalDateTime.now());
+
+        if (pendiente && venciada) {
+            EstadoCita cancelada = estadoCitaRepository.findByNombre(EstadoCita.CANCELADA)
+                    .orElseThrow(() -> new ResourceNotFoundException("Estado 'Cancelada' no configurado."));
+            cita.setEstadoCita(cancelada);
+            cita = citaRepository.save(cita);
+        }
         return toDto(cita);
     }
 
