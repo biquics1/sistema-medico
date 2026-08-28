@@ -51,7 +51,15 @@ public class AuthService {
                 "Bienvenido(a), " + usuario.getNombreCompleto() + ". Será redirigido al formulario de agendamiento de cita.");
     }
 
-    @Transactional
+    // CORREGIDO: sin noRollbackFor, cada intento fallido guardaba el
+    // incremento de intentosFallidos pero la propia ValidationException
+    // (RuntimeException) lanzada justo después disparaba el rollback
+    // automático de Spring, deshaciendo ese save(). Por eso el contador
+    // siempre volvía a leer 0 desde la BD y se quedaba pegado en
+    // "Intentos restantes: 4" sin nunca bajar a 3, 2, 1 ni bloquear la
+    // cuenta. Con noRollbackFor, el guardado del contador (y del bloqueo)
+    // sí se confirma aunque el método termine lanzando la excepción.
+    @Transactional(noRollbackFor = ValidationException.class)
     public LoginResponseDTO login(LoginRequestDTO dto) {
         Usuario usuario = usuarioRepository.findByNombreUsuario(dto.getNombreUsuario())
                 .orElseThrow(() -> new ValidationException("Usuario o contraseña incorrectos."));

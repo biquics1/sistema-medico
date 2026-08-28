@@ -195,7 +195,7 @@ public class CitaService {
         return toDto(cita);
     }
 
-    // NUEVO: cancelación inmediata disparada por el propio cliente cuando el
+    // cancelación inmediata disparada por el propio cliente cuando el
     // contador regresivo de pago en línea llega a 0, para no tener que
     // esperar hasta 60s a que corra el job programado cancelarCitasExpiradas().
     // Es idempotente y segura: solo cancela si sigue "Pendiente de pago" Y
