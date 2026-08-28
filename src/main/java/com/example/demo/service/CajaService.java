@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class CajaService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private static final Pattern DPI_PATTERN = Pattern.compile("^\\d{13}$");
     private static final Pattern CUATRO_DIGITOS = Pattern.compile("^\\d{4}$");
@@ -112,6 +113,7 @@ public class CajaService {
     // ---------------------------------------------------------------
     @Transactional
     public ComprobantePagoDTO cobrar(Integer idCita, CobrarRequestDTO request, Integer idCajero, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findByIdAndEstadoCita_Nombre(idCita, EstadoCita.PENDIENTE_PAGO)
                 .filter(c -> perteneceASede(c, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -250,6 +252,7 @@ public class CajaService {
     // Pasos 6-9 FB de "Cobro de Laboratorio en Caja"
     @Transactional
     public ComprobantePagoDTO cobrarLaboratorio(Integer idOrden, CobrarRequestDTO request, Integer idCajero, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         OrdenLaboratorio orden = ordenLaboratorioRepository.findByIdAndEstado(idOrden, OrdenLaboratorio.PENDIENTE)
                 .filter(o -> ordenPerteneceASede(o, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException(

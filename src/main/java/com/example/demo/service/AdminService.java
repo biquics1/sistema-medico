@@ -28,6 +28,7 @@ public class AdminService {
     private final UsuarioRepository usuarioRepository;
     private final CitaService citaService;
 
+
     public List<AdminMedicoDTO> listarMedicos(Integer sucursalScope) {
         List<Usuario> medicos = (sucursalScope == null)
                 ? usuarioRepository.findByRol_NombreAndEstadoOrderByNombreCompletoAsc(ROL_MEDICO, (short) 1)

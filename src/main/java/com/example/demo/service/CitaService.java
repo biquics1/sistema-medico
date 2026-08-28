@@ -29,6 +29,7 @@ public class CitaService {
     private final BranchSpecialtyRepository branchSpecialtyRepository;
     private final UsuarioRepository usuarioRepository;
     private final EstadoCitaRepository estadoCitaRepository;
+    private final AuditoriaContexto auditoriaContexto;
 
     @Value("${app.consulta.precio:150.00}")
     private BigDecimal precioConsulta;
@@ -107,6 +108,7 @@ public class CitaService {
     // Paso 5: crear cita
     @Transactional
     public CitaResponseDTO crearCita(CitaCreateDTO dto) {
+        auditoriaContexto.aplicar();
         if (dto.getMotivoConsulta() == null ||
                 dto.getMotivoConsulta().length() < 10 || dto.getMotivoConsulta().length() > 2000) {
             throw new ValidationException(
@@ -171,6 +173,7 @@ public class CitaService {
     // ------------------------------------------------------------------
     @Transactional
     public CitaResponseDTO elegirMetodoPago(Integer citaId, Integer pacienteId, String metodoPago) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findByIdAndPaciente_Id(citaId, pacienteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
 
@@ -203,6 +206,7 @@ public class CitaService {
     // estado actual de la cita sin tocar nada.
     @Transactional
     public CitaResponseDTO cancelarPorExpiracionInmediata(Integer citaId, Integer pacienteId) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findByIdAndPaciente_Id(citaId, pacienteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
 

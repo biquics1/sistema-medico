@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LaboratorioCatalogoService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final LaboratorioRepository repository;
 
@@ -37,6 +38,7 @@ public class LaboratorioCatalogoService {
 
     @Transactional
     public LaboratorioCatalogoDTO.ResponseDTO crear(LaboratorioCatalogoDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         if (repository.existsByNombreIgnoreCaseAndEstado(dto.getNombre(), (short) 1)) {
             throw new ValidationException("Ya existe un registro con el nombre " + dto.getNombre() + " en este catálogo.");
         }
@@ -49,6 +51,7 @@ public class LaboratorioCatalogoService {
 
     @Transactional
     public LaboratorioCatalogoDTO.ResponseDTO actualizar(Integer id, LaboratorioCatalogoDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         Laboratorio entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Laboratorio no encontrado."));
 
@@ -65,6 +68,7 @@ public class LaboratorioCatalogoService {
 
     @Transactional
     public void eliminar(Integer id) {
+        auditoriaContexto.aplicar();
         Laboratorio entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Laboratorio no encontrado."));
         entidad.setEstado((short) 0);

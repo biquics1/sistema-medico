@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RolService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final RolRepository repository;
 
@@ -37,6 +38,7 @@ public class RolService {
 
     @Transactional
     public RolDTO.ResponseDTO crear(RolDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         if (repository.existsByNombreIgnoreCaseAndEstado(dto.getNombre(), (short) 1)) {
             throw new ValidationException("Ya existe un registro con el nombre " + dto.getNombre() + " en este catálogo.");
         }
@@ -49,6 +51,7 @@ public class RolService {
 
     @Transactional
     public RolDTO.ResponseDTO actualizar(Integer id, RolDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         Rol entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado."));
 
@@ -65,6 +68,7 @@ public class RolService {
 
     @Transactional
     public void eliminar(Integer id) {
+        auditoriaContexto.aplicar();
         Rol entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado."));
         entidad.setEstado((short) 0);

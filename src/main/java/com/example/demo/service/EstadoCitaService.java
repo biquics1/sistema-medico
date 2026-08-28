@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EstadoCitaService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final EstadoCitaRepository repository;
 
@@ -37,6 +38,7 @@ public class EstadoCitaService {
 
     @Transactional
     public EstadoCitaDTO.ResponseDTO crear(EstadoCitaDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         if (repository.existsByNombreIgnoreCaseAndEstado(dto.getNombre(), (short) 1)) {
             throw new ValidationException("Ya existe un registro con el nombre " + dto.getNombre() + " en este catálogo.");
         }
@@ -49,6 +51,7 @@ public class EstadoCitaService {
 
     @Transactional
     public EstadoCitaDTO.ResponseDTO actualizar(Integer id, EstadoCitaDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         EstadoCita entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Estado de cita no encontrado."));
         entidad.setNombre(dto.getNombre());
@@ -59,6 +62,7 @@ public class EstadoCitaService {
 
     @Transactional
     public void eliminar(Integer id) {
+        auditoriaContexto.aplicar();
         EstadoCita entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Estado de cita no encontrado."));
         entidad.setEstado((short) 0);

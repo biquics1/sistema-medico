@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EventoAgendaService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final EventoAgendaRepository repository;
     private final UsuarioRepository usuarioRepository;
@@ -40,6 +41,7 @@ public class EventoAgendaService {
 
     @Transactional
     public EventoAgendaDTO.ResponseDTO crear(EventoAgendaDTO.CreateDTO dto, Integer medicoId) {
+        auditoriaContexto.aplicar();
         validarFechas(dto);
         Usuario medico = usuarioRepository.findById(medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico no encontrado."));
@@ -52,6 +54,7 @@ public class EventoAgendaService {
 
     @Transactional
     public EventoAgendaDTO.ResponseDTO actualizar(Integer id, EventoAgendaDTO.CreateDTO dto, Integer medicoId) {
+        auditoriaContexto.aplicar();
         validarFechas(dto);
         EventoAgenda e = repository.findByIdAndMedico_Id(id, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
@@ -61,6 +64,7 @@ public class EventoAgendaService {
 
     @Transactional
     public void eliminar(Integer id, Integer medicoId) {
+        auditoriaContexto.aplicar();
         EventoAgenda e = repository.findByIdAndMedico_Id(id, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
         repository.delete(e);

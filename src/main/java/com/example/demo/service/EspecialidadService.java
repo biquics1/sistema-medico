@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EspecialidadService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final EspecialidadRepository repository;
 
@@ -37,6 +38,7 @@ public class EspecialidadService {
 
     @Transactional
     public EspecialidadDTO.ResponseDTO crear(EspecialidadDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         if (repository.existsByNombreIgnoreCaseAndEstado(dto.getNombre(), (short) 1)) {
             throw new ValidationException("Ya existe un registro con el nombre " + dto.getNombre() + " en este catálogo.");
         }
@@ -49,6 +51,7 @@ public class EspecialidadService {
 
     @Transactional
     public EspecialidadDTO.ResponseDTO actualizar(Integer id, EspecialidadDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         Especialidad entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Especialidad no encontrada."));
 
@@ -65,6 +68,7 @@ public class EspecialidadService {
 
     @Transactional
     public void eliminar(Integer id) {
+        auditoriaContexto.aplicar();
         Especialidad entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Especialidad no encontrada."));
         entidad.setEstado((short) 0);

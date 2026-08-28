@@ -30,6 +30,7 @@ public class UsuarioService {
     private final RolRepository rolRepository;
     private final SucursalRepository sucursalRepository;
     private final EspecialidadRepository especialidadRepository;
+    private final AuditoriaContexto auditoriaContexto;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // RN-CU01-02: tamaño de página por defecto (el wizard de "Listado de Usuarios"
@@ -57,7 +58,7 @@ public class UsuarioService {
 
     // CU-01 (RN-CU01-01 / RN-CU01-02): "Listado de Usuarios" con filtro por campo y paginación
     public PageResponseDTO<UsuarioResponseDTO> buscar(String campo, String valor, Integer pagina, Integer tamano,
-                                                        Integer sucursalScope) {
+                                                      Integer sucursalScope) {
         int paginaSegura = (pagina == null || pagina < 0) ? 0 : pagina;
         int tamanoSeguro = (tamano == null || tamano <= 0) ? TAMANO_PAGINA_DEFAULT : tamano;
 
@@ -114,6 +115,7 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponseDTO crear(UsuarioCreateDTO dto, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         if (usuarioRepository.existsByNombreUsuario(dto.getNombreUsuario())) {
             throw new ValidationException(
                     "El nombre de usuario " + dto.getNombreUsuario() + " ya se encuentra registrado. Por favor, elija otro.");
@@ -164,6 +166,7 @@ public class UsuarioService {
     // NUEVO — CU-01 FA04 (Editar usuario)
     @Transactional
     public UsuarioResponseDTO actualizar(Integer id, UsuarioUpdateDTO dto, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
         validarDentroDeSede(usuario, sucursalScope);
@@ -226,6 +229,7 @@ public class UsuarioService {
 
     @Transactional
     public void eliminar(Integer id, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado."));
         validarDentroDeSede(usuario, sucursalScope);

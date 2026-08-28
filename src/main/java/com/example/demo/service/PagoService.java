@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class PagoService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final PagoRepository pagoRepository;
     private final CitaRepository citaRepository;
@@ -35,6 +36,7 @@ public class PagoService {
 
     @Transactional
     public PagoResponseDTO procesarPago(PagoCreateDTO dto) {
+        auditoriaContexto.aplicar();
 
         // Idempotencia: si ya se procesó, retorna el resultado existente
         if (dto.getIdempotencyKey() != null) {
@@ -56,7 +58,7 @@ public class PagoService {
         if (cita.getExpiraEn() != null && cita.getExpiraEn().isBefore(LocalDateTime.now())) {
             throw new ValidationException(
                     "El tiempo para confirmar su cita ha expirado. El horario seleccionado ha sido liberado. " +
-                    "Por favor, seleccione un nuevo horario.");
+                            "Por favor, seleccione un nuevo horario.");
         }
 
         validarTarjeta(dto);
@@ -66,7 +68,7 @@ public class PagoService {
         if ("4000000000000002".equals(dto.getNumeroTarjeta())) {
             throw new ValidationException(
                     "La transacción con tarjeta fue rechazada por el banco. " +
-                    "Por favor, verifique los datos de su tarjeta o intente con una tarjeta diferente.");
+                            "Por favor, verifique los datos de su tarjeta o intente con una tarjeta diferente.");
         }
 
         String numeroTransaccion = "TXN-" + UUID.randomUUID().toString().substring(0, 12).toUpperCase();

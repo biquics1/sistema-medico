@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class InventarioMedicamentoService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final InventarioMedicamentoRepository repository;
     private final MedicamentoRepository medicamentoRepository;
@@ -47,6 +48,7 @@ public class InventarioMedicamentoService {
 
     @Transactional
     public InventarioMedicamentoDTO.ResponseDTO crear(InventarioMedicamentoDTO.CreateDTO dto, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         if (sucursalScope != null && !sucursalScope.equals(dto.getSucursalId())) {
             throw new ValidationException("No tiene permiso para crear inventario en otra sucursal.");
         }
@@ -71,23 +73,23 @@ public class InventarioMedicamentoService {
         return repository.findAllStockBajo().stream()
                 .filter(i -> sucursalScope == null || sucursalScope.equals(i.getSucursal().getId()))
                 .map(i -> {
-            InventarioMedicamentoDTO.LowStockAlertDTO dto = new InventarioMedicamentoDTO.LowStockAlertDTO();
-            dto.setMedicamentoId(i.getMedicamento().getId());
-            dto.setMedicamentoNombre(i.getMedicamento().getNombre());
-            dto.setSucursalId(i.getSucursal().getId());
-            dto.setSucursalNombre(i.getSucursal().getNombre());
-            dto.setStockActual(i.getStockActual());
-            dto.setStockMinimo(i.getMedicamento().getStockMinimo());
-            dto.setMensaje("El stock del medicamento " + i.getMedicamento().getNombre()
-                    + " ha alcanzado el nivel mínimo (" + i.getStockActual() + " unidades restantes). "
-                    + "Se requiere reorden.");
-            return dto;
-        }).collect(Collectors.toList());
+                    InventarioMedicamentoDTO.LowStockAlertDTO dto = new InventarioMedicamentoDTO.LowStockAlertDTO();
+                    dto.setMedicamentoId(i.getMedicamento().getId());
+                    dto.setMedicamentoNombre(i.getMedicamento().getNombre());
+                    dto.setSucursalId(i.getSucursal().getId());
+                    dto.setSucursalNombre(i.getSucursal().getNombre());
+                    dto.setStockActual(i.getStockActual());
+                    dto.setStockMinimo(i.getMedicamento().getStockMinimo());
+                    dto.setMensaje("El stock del medicamento " + i.getMedicamento().getNombre()
+                            + " ha alcanzado el nivel mínimo (" + i.getStockActual() + " unidades restantes). "
+                            + "Se requiere reorden.");
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
     // Resumen mensual de movimientos para un medicamento/sucursal [RN-CU13-03]
     public InventarioMedicamentoDTO.SummaryDTO resumenMensual(Integer medicamentoId, Integer sucursalId, YearMonth mes,
-                                                                Integer sucursalScope) {
+                                                              Integer sucursalScope) {
         if (sucursalScope != null && !sucursalScope.equals(sucursalId)) {
             throw new ValidationException("No tiene permiso para consultar el resumen de otra sucursal.");
         }

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class FarmaciaService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private static final short RECETA_ACTIVA = 1;
     private static final long DIAS_VIGENCIA_RECETA = 7; // RN-CU10-01
@@ -161,6 +162,7 @@ public class FarmaciaService {
     @Transactional
     public ConfirmarCarritoResponseDTO confirmarCarrito(ConfirmarCarritoRequestDTO request, Integer idFarmaceutico,
                                                         Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         if (request.getItems() == null || request.getItems().isEmpty()) {
             throw new ValidationException("El carrito está vacío.");
         }
@@ -444,6 +446,7 @@ public class FarmaciaService {
     // ---------------------------------------------------------------
     @Transactional
     public MedicamentoCatalogoDTO crearMedicamento(CrearMedicamentoRequestDTO request) {
+        auditoriaContexto.aplicar();
         if (request.getNombre() == null || request.getNombre().isBlank()) {
             throw new ValidationException("El nombre es obligatorio.");
         }
@@ -481,6 +484,7 @@ public class FarmaciaService {
     // ---------------------------------------------------------------
     @Transactional
     public AjustarStockResponseDTO ajustarStock(AjustarStockRequestDTO request, Integer idUsuario, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         if (request.getMedicamentoId() == null) {
             throw new ValidationException("Debe seleccionar un medicamento.");
         }

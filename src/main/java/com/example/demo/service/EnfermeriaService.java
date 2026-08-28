@@ -22,6 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EnfermeriaService {
+    private final AuditoriaContexto auditoriaContexto;
 
     // Rangos clínicos normales (RN-CU07-06) — distintos del rango de CAPTURA (RN-CU07-01 a 05)
     private static final int PA_SIST_NORMAL_MIN = 90, PA_SIST_NORMAL_MAX = 140;
@@ -65,6 +66,7 @@ public class EnfermeriaService {
     // ---------------------------------------------------------------
     @Transactional
     public LlamarPacienteResponseDTO llamarPaciente(Integer idCita, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findById(idCita)
                 .filter(c -> perteneceASede(c, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada."));
@@ -95,7 +97,8 @@ public class EnfermeriaService {
     // ---------------------------------------------------------------
     @Transactional
     public SignosVitalesResponseDTO registrarSignosVitales(Integer idCita, RegistrarSignosVitalesRequestDTO req,
-                                                             Integer idEnfermero, Integer sucursalScope) {
+                                                           Integer idEnfermero, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findById(idCita)
                 .filter(c -> perteneceASede(c, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada."));
@@ -160,7 +163,7 @@ public class EnfermeriaService {
                 || r.getPresionDiastolica() == null || r.getPresionDiastolica() < 40 || r.getPresionDiastolica() > 150) {
             throw new ValidationException(
                     "La presión arterial debe ingresarse en formato sistólica/diastólica dentro de rangos válidos "
-                    + "(sistólica 60-250 mmHg, diastólica 40-150 mmHg).");
+                            + "(sistólica 60-250 mmHg, diastólica 40-150 mmHg).");
         }
         if (r.getTemperatura() == null
                 || r.getTemperatura().compareTo(new BigDecimal("34.0")) < 0

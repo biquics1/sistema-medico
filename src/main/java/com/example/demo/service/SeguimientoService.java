@@ -22,6 +22,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class SeguimientoService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final ConsultaMedicaRepository consultaMedicaRepository;
     private final CitaRepository citaRepository;
@@ -63,6 +64,7 @@ public class SeguimientoService {
     // ---------------------------------------------------------------
     @Transactional
     public SeguimientoResponseDTO crearSeguimiento(Integer idConsulta, Integer medicoId, CrearSeguimientoRequestDTO req) {
+        auditoriaContexto.aplicar();
         ConsultaMedica consulta = obtenerConsultaDelMedico(idConsulta, medicoId);
         Cita citaOrigen = consulta.getCita();
         Usuario medico = consulta.getMedico();
@@ -144,6 +146,7 @@ public class SeguimientoService {
     @Scheduled(cron = "0 0 8 * * *")
     @Transactional
     public void enviarRecordatoriosSeguimiento() {
+        auditoriaContexto.aplicar();
         LocalDateTime desde = LocalDateTime.now().plusDays(1).toLocalDate().atStartOfDay();
         LocalDateTime hasta = LocalDateTime.now().plusDays(2).toLocalDate().atStartOfDay();
 

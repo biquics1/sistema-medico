@@ -20,6 +20,7 @@ public class LaboratorioService {
 
     private final OrdenLaboratorioRepository ordenLaboratorioRepository;
     private final DetalleOrdenLaboratorioRepository detalleOrdenLaboratorioRepository;
+    private final AuditoriaContexto auditoriaContexto;
 
     // ---------------------------------------------------------------
     // Paso 1 FB: listado con filtros por estado, paciente y médico (FA01)
@@ -62,7 +63,8 @@ public class LaboratorioService {
     // ---------------------------------------------------------------
     @Transactional
     public ResultadoResponseDTO registrarResultado(Integer idOrden, Integer idDetalle, ResultadoRequestDTO req,
-                                                     Integer sucursalScope) {
+                                                   Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         OrdenLaboratorio orden = ordenLaboratorioRepository.findById(idOrden)
                 .filter(o -> perteneceASede(o, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la orden de laboratorio indicada."));
@@ -101,6 +103,7 @@ public class LaboratorioService {
     // ---------------------------------------------------------------
     @Transactional
     public PublicarResponseDTO publicarResultado(Integer idOrden, Integer idDetalle, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         OrdenLaboratorio orden = ordenLaboratorioRepository.findById(idOrden)
                 .filter(o -> perteneceASede(o, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la orden de laboratorio indicada."));

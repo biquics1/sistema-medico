@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SucursalService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final SucursalRepository repository;
 
@@ -37,6 +38,7 @@ public class SucursalService {
 
     @Transactional
     public SucursalDTO.ResponseDTO crear(SucursalDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         if (repository.existsByNombreIgnoreCaseAndEstado(dto.getNombre(), (short) 1)) {
             throw new ValidationException("Ya existe un registro con el nombre " + dto.getNombre() + " en este catálogo.");
         }
@@ -51,6 +53,7 @@ public class SucursalService {
 
     @Transactional
     public SucursalDTO.ResponseDTO actualizar(Integer id, SucursalDTO.CreateDTO dto) {
+        auditoriaContexto.aplicar();
         Sucursal entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Sucursal no encontrada."));
 
@@ -69,6 +72,7 @@ public class SucursalService {
 
     @Transactional
     public void eliminar(Integer id) {
+        auditoriaContexto.aplicar();
         Sucursal entidad = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Sucursal no encontrada."));
         entidad.setEstado((short) 0);

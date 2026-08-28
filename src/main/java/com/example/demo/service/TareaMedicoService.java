@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TareaMedicoService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final TareaMedicoRepository repository;
     private final UsuarioRepository usuarioRepository;
@@ -44,6 +45,7 @@ public class TareaMedicoService {
 
     @Transactional
     public TareaMedicoDTO.ResponseDTO crear(TareaMedicoDTO.CreateDTO dto, Integer medicoId) {
+        auditoriaContexto.aplicar();
         validarFechaLimite(dto.getFechaLimite());
         Usuario medico = usuarioRepository.findById(medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Médico no encontrado."));
@@ -57,6 +59,7 @@ public class TareaMedicoService {
 
     @Transactional
     public TareaMedicoDTO.ResponseDTO actualizar(Integer id, TareaMedicoDTO.CreateDTO dto, Integer medicoId) {
+        auditoriaContexto.aplicar();
         TareaMedico t = repository.findByIdAndMedico_Id(id, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarea no encontrada."));
 
@@ -76,6 +79,7 @@ public class TareaMedicoService {
 
     @Transactional
     public TareaMedicoDTO.ResponseDTO cambiarCompletada(Integer id, boolean completada, Integer medicoId) {
+        auditoriaContexto.aplicar();
         TareaMedico t = repository.findByIdAndMedico_Id(id, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarea no encontrada."));
         t.setCompletada(completada);
@@ -84,6 +88,7 @@ public class TareaMedicoService {
 
     @Transactional
     public void eliminar(Integer id, Integer medicoId) {
+        auditoriaContexto.aplicar();
         TareaMedico t = repository.findByIdAndMedico_Id(id, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tarea no encontrada."));
         repository.delete(t);

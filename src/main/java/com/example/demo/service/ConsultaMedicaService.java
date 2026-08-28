@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ConsultaMedicaService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final CitaRepository citaRepository;
     private final EstadoCitaRepository estadoCitaRepository;
@@ -56,6 +57,7 @@ public class ConsultaMedicaService {
     // ---------------------------------------------------------------
     @Transactional
     public IniciarConsultaResponseDTO iniciarConsulta(Integer idCita, Integer medicoId) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
 
@@ -122,6 +124,7 @@ public class ConsultaMedicaService {
     // ---------------------------------------------------------------
     @Transactional
     public GuardarConsultaResponseDTO guardarConsulta(Integer idCita, Integer medicoId, GuardarConsultaRequestDTO req) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
 
@@ -202,6 +205,7 @@ public class ConsultaMedicaService {
     // ---------------------------------------------------------------
     @Transactional
     public AccionCitaResponseDTO marcarNoAsistio(Integer idCita, Integer medicoId) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
 
@@ -225,6 +229,7 @@ public class ConsultaMedicaService {
     // ---------------------------------------------------------------
     @Transactional
     public AccionCitaResponseDTO finalizarAtencion(Integer idCita, Integer medicoId) {
+        auditoriaContexto.aplicar();
         Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
 
@@ -260,6 +265,7 @@ public class ConsultaMedicaService {
     // ---------------------------------------------------------------
     @Transactional
     public OrdenLaboratorioResponseDTO generarOrdenLaboratorio(Integer consultaId, Integer medicoId, OrdenLaboratorioRequestDTO req) {
+        auditoriaContexto.aplicar();
         ConsultaMedica consulta = consultaMedicaRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la consulta indicada."));
         if (!consulta.getMedico().getId().equals(medicoId)) {
@@ -299,7 +305,7 @@ public class ConsultaMedicaService {
         List<String> nombres = examenes.stream().map(ExamenLaboratorio::getNombre).toList();
         String mensaje = String.format(
                 "Orden de laboratorio generada exitosamente. Número de orden: %d. Exámenes: %s. "
-                + "El paciente debe dirigirse al área de laboratorio.",
+                        + "El paciente debe dirigirse al área de laboratorio.",
                 ordenGuardada.getId(), String.join(", ", nombres));
 
         return OrdenLaboratorioResponseDTO.builder()
@@ -315,6 +321,7 @@ public class ConsultaMedicaService {
     // ---------------------------------------------------------------
     @Transactional
     public RecetaResponseDTO generarReceta(Integer consultaId, Integer medicoId, RecetaRequestDTO req) {
+        auditoriaContexto.aplicar();
         ConsultaMedica consulta = consultaMedicaRepository.findById(consultaId)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la consulta indicada."));
         if (!consulta.getMedico().getId().equals(medicoId)) {

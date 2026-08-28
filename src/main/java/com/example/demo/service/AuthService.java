@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private final AuditoriaContexto auditoriaContexto;
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -61,6 +62,7 @@ public class AuthService {
     // sí se confirma aunque el método termine lanzando la excepción.
     @Transactional(noRollbackFor = ValidationException.class)
     public LoginResponseDTO login(LoginRequestDTO dto) {
+        auditoriaContexto.aplicar();
         Usuario usuario = usuarioRepository.findByNombreUsuario(dto.getNombreUsuario())
                 .orElseThrow(() -> new ValidationException("Usuario o contraseña incorrectos."));
 
@@ -126,6 +128,7 @@ public class AuthService {
     // ============================================================
     @Transactional
     public RegistroPacienteResponseDTO registrarPaciente(RegistroPacienteDTO dto) {
+        auditoriaContexto.aplicar();
 
         // FA02 - DPI ya registrado
         if (usuarioRepository.findByDpi(dto.getDpi()).isPresent()) {

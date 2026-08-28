@@ -30,6 +30,7 @@ public class MovimientoInventarioService {
     private final MedicamentoRepository medicamentoRepository;
     private final SucursalRepository sucursalRepository;
     private final UsuarioRepository usuarioRepository;
+    private final AuditoriaContexto auditoriaContexto;
 
     private static final String[] NOMBRES_TIPO = {
             "Compra", "Devolución", "Venta", "Reclamo", "Ajuste+", "Ajuste-", "Despacho"
@@ -49,7 +50,8 @@ public class MovimientoInventarioService {
 
     @Transactional
     public MovimientoInventarioDTO.ResponseDTO registrar(MovimientoInventarioDTO.CreateDTO dto, Integer usuarioIdActual,
-                                                          Integer sucursalScope) {
+                                                         Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         validarCampos(dto);
         if (sucursalScope != null && !sucursalScope.equals(dto.getSucursalId())) {
             throw new ValidationException("No tiene permiso para registrar movimientos en otra sucursal.");
@@ -112,6 +114,7 @@ public class MovimientoInventarioService {
 
     @Transactional
     public MovimientoInventarioDTO.ResponseDTO cambiarEstado(Integer id, boolean activo, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
         MovimientoInventario movimiento = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movimiento no encontrado."));
         if (sucursalScope != null && !sucursalScope.equals(movimiento.getSucursal().getId())) {
