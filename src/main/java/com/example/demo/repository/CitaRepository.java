@@ -32,9 +32,24 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     List<Cita> buscarPorDpiPaciente(@Param("dpi") String dpi);
 
     // CU-03: horarios disponibles / doble reserva
-    // Busca citas de un médico en un rango de fechas, excluyendo un estado (ej. "Cancelada")
-    List<Cita> findByMedico_IdAndFechaHoraBetweenAndEstadoCita_NombreNot(
-            Integer medicoId, LocalDateTime desde, LocalDateTime hasta, String estadoExcluido);
+    // Busca citas de un médico en un rango de fechas, excluyendo una lista de estados
+    // (ej. Cancelada y No Asistió: esas SÍ liberan el horario para volver a agendarse).
+    // MODIFICADO: antes solo excluía un estado (NombreNot); ahora excluye varios (NombreNotIn)
+    // para que "No Asistió" también libere el horario, igual que "Cancelada".
+    List<Cita> findByMedico_IdAndFechaHoraBetweenAndEstadoCita_NombreNotIn(
+            Integer medicoId, LocalDateTime desde, LocalDateTime hasta, List<String> estadosExcluidos);
+
+    // NUEVO — Regla de doble reserva (evita que dos pacientes tomen la misma hora
+    // del mismo médico): existencia exacta por medico + fecha_hora, excluyendo los
+    // estados que "liberan" el horario (Cancelada, No Asistió).
+    boolean existsByMedico_IdAndFechaHoraAndEstadoCita_NombreNotIn(
+            Integer medicoId, LocalDateTime fechaHora, List<String> estadosExcluidos);
+
+    // NUEVO — Regla de "una cita activa por especialidad por paciente": existencia
+    // de otra cita del mismo paciente en la misma especialidad que aún no llegó a
+    // un estado terminal (Atención Finalizada, No Asistió, Cancelada).
+    boolean existsByPaciente_IdAndEspecialidad_IdAndEstadoCita_NombreNotIn(
+            Integer pacienteId, Integer especialidadId, List<String> estadosExcluidos);
 
     // CU-03: job de expiración de reservas (FA03 / RNF-019)
     // Citas en cierto estado cuya reserva ya expiró (para liberarlas automáticamente)

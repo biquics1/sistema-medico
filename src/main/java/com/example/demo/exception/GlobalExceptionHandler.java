@@ -1,5 +1,6 @@
 package com.example.demo.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -8,32 +9,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-// Manejador global de excepciones: centraliza cómo se convierten los distintos
-// tipos de error en respuestas HTTP consistentes (siempre con la clave
-// "mensaje" que el frontend espera leer en apiFetch de common.js).
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Errores de validación @Valid en los DTOs de entrada (ej. campos
-    // obligatorios vacíos, formatos inválidos). Junta todos los mensajes de
-    // campo en un solo "mensaje" legible, además de conservar el detalle por campo.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> errores = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(e ->
                 errores.put(e.getField(), e.getDefaultMessage()));
 
-        // CORREGIDO: el frontend (common.js -> apiFetch) solo lee data.mensaje /
-        // data.message para mostrar el error al usuario. Antes esta respuesta
-        // solo traía el mapa por campo (sin "mensaje"/"message"), así que
-        // cualquier validación @Valid fallida (EventoAgendaDTO, TareaMedicoDTO,
-        // MovimientoInventarioDTO, UsuarioCreateDTO, etc.) se mostraba como el
-        // genérico "Ocurrió un error inesperado." en vez del mensaje real.
         String mensaje = String.join(" ", errores.values());
 
         Map<String, Object> body = new HashMap<>();
         body.put("mensaje", mensaje);
-        body.put("errores", errores); // se conserva el detalle por campo por si se necesita
+        body.put("errores", errores);
         return ResponseEntity.badRequest().body(body);
     }
 
@@ -42,9 +31,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje", ex.getMessage()));
     }
 
-    // Reglas de negocio violadas (ej. duplicados, estados inválidos, stock insuficiente).
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Map<String, String>> handleBusinessValidation(ValidationException ex) {
         return ResponseEntity.badRequest().body(Map.of("mensaje", ex.getMessage()));
+    }
+
+    // NUEVO — red de seguridad: si un índice único de BD (ej. idx_cita_medico_fecha_activa
+    // o idx_cita_paciente_especialidad_activa) rechaza un INSERT/UPDATE por condición de
+    // carrera no atrapada explícitamente en el service, esto evita el error 500 genérico.
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> handleIntegrity(DataIntegrityViolationException ex) {
+        return ResponseEntity.badRequest().body(Map.of("mensaje",
+                "La operación no se pudo completar porque entra en conflicto con un registro existente " +
+                        "(horario ya ocupado o especialidad ya con una cita activa)."));
     }
 }

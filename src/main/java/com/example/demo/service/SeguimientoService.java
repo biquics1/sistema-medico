@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-
+import org.springframework.dao.DataIntegrityViolationException;
 @Service
 @RequiredArgsConstructor
 public class SeguimientoService {
@@ -111,7 +111,13 @@ public class SeguimientoService {
         citaSeguimiento.setFechaHora(req.getFechaHora());
         citaSeguimiento.setMotivoConsulta(motivo);
         citaSeguimiento.setMonto(precioConsulta);
-        Cita citaGuardada = citaRepository.save(citaSeguimiento);
+        Cita citaGuardada;
+        try {
+            citaGuardada = citaRepository.save(citaSeguimiento);
+        } catch (DataIntegrityViolationException e) {
+            throw new ValidationException(
+                    "El horario seleccionado ya no está disponible. Por favor, elija otro horario.");
+        }
 
         CitaSeguimiento seguimiento = new CitaSeguimiento();
         seguimiento.setConsultaOrigen(consulta);

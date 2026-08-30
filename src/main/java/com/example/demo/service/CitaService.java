@@ -7,6 +7,7 @@ import com.example.demo.modelo.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,16 +38,23 @@ public class CitaService {
     @Value("${app.reserva.minutos:5}")
     private long minutosReserva;
 
-    // NUEVO: ventana de tiempo específica para el pago EN LÍNEA una vez que el
-    // paciente elige ese método tras confirmar la cita (más corta que la
-    // ventana genérica de arriba, que sigue aplicando mientras decide
-    // "caja" vs "línea"). Default documentado: 5 minutos.
     @Value("${app.reserva.online.minutos:5}")
     private long minutosReservaOnline;
 
     private static final LocalTime INICIO_JORNADA = LocalTime.of(8, 0);
     private static final LocalTime FIN_JORNADA = LocalTime.of(17, 0);
     private static final int DURACION_SLOT_MIN = 30;
+
+    // NUEVO — estados que "liberan" un horario de médico: si una cita quedó
+    // Cancelada o el paciente No Asistió, esa hora vuelve a estar disponible.
+    private static final List<String> ESTADOS_LIBERAN_HORARIO =
+            List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO);
+
+    // NUEVO — estados que "liberan" la especialidad para que el paciente pueda
+    // volver a agendar: además de Cancelada/No Asistió, cuenta Atención Finalizada
+    // (el ciclo de esa consulta ya se cerró por completo).
+    private static final List<String> ESTADOS_LIBERAN_ESPECIALIDAD =
+            List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO, EstadoCita.ATENCION_FINALIZADA);
 
     // Paso 1: sucursales activas
     public List<Sucursal> listarSucursalesActivas() {
@@ -80,6 +88,9 @@ public class CitaService {
     }
 
     // Paso 4: horarios disponibles de un médico en una fecha
+    // MODIFICADO: ahora excluye tanto "Cancelada" como "No Asistió" (antes solo
+    // excluía Cancelada, así que una cita marcada "No Asistió" seguía bloqueando
+    // el horario para siempre).
     public List<LocalDateTime> listarHorariosDisponibles(Integer medicoId, LocalDate fecha) {
         if (fecha.getDayOfWeek() == DayOfWeek.SATURDAY || fecha.getDayOfWeek() == DayOfWeek.SUNDAY) {
             return List.of(); // sin atención en fin de semana (regla simplificada)
@@ -88,8 +99,8 @@ public class CitaService {
         LocalDateTime desde = fecha.atTime(INICIO_JORNADA);
         LocalDateTime hasta = fecha.atTime(FIN_JORNADA);
 
-        List<Cita> ocupadas = citaRepository.findByMedico_IdAndFechaHoraBetweenAndEstadoCita_NombreNot(
-                medicoId, desde, hasta, "Cancelada");
+        List<Cita> ocupadas = citaRepository.findByMedico_IdAndFechaHoraBetweenAndEstadoCita_NombreNotIn(
+                medicoId, desde, hasta, ESTADOS_LIBERAN_HORARIO);
 
         Set<LocalDateTime> ocupadasSet = ocupadas.stream()
                 .map(Cita::getFechaHora).collect(Collectors.toSet());
@@ -128,14 +139,23 @@ public class CitaService {
         Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId())
                 .orElseThrow(() -> new ResourceNotFoundException("Especialidad no encontrada."));
 
-        // Verificación de disponibilidad (evita doble reserva)
-        boolean ocupado = citaRepository
-                .findByMedico_IdAndFechaHoraBetweenAndEstadoCita_NombreNot(
-                        medico.getId(),
-                        dto.getFechaHora(), dto.getFechaHora().plusMinutes(1),
-                        "Cancelada")
-                .stream().anyMatch(c -> c.getFechaHora().equals(dto.getFechaHora()));
-        if (ocupado) {
+        // NUEVO — Regla 1: el paciente no puede tener más de una cita activa en
+        // la misma especialidad. Debe finalizar/cancelarse la anterior primero.
+        boolean tieneCitaActivaEnEspecialidad = citaRepository
+                .existsByPaciente_IdAndEspecialidad_IdAndEstadoCita_NombreNotIn(
+                        paciente.getId(), especialidad.getId(), ESTADOS_LIBERAN_ESPECIALIDAD);
+        if (tieneCitaActivaEnEspecialidad) {
+            throw new ValidationException(
+                    "Ya tiene una cita activa para la especialidad '" + especialidad.getNombre() +
+                            "'. Debe esperar a que finalice o se cancele antes de agendar otra de la misma especialidad.");
+        }
+
+        // MODIFICADO — Regla 2 (doble reserva): antes solo se excluía "Cancelada";
+        // ahora también excluye "No Asistió", y se valida con existsBy directo por
+        // fecha_hora exacta en vez de traer una lista y filtrarla en memoria.
+        boolean horarioOcupado = citaRepository.existsByMedico_IdAndFechaHoraAndEstadoCita_NombreNotIn(
+                medico.getId(), dto.getFechaHora(), ESTADOS_LIBERAN_HORARIO);
+        if (horarioOcupado) {
             throw new ValidationException(
                     "El horario seleccionado ya no está disponible. Por favor, elija otro horario.");
         }
@@ -154,7 +174,17 @@ public class CitaService {
         cita.setMonto(precioConsulta);
         cita.setExpiraEn(LocalDateTime.now().plusMinutes(minutosReserva));
 
-        cita = citaRepository.save(cita);
+        // NUEVO — red de seguridad final: si dos requests pasan las validaciones
+        // de arriba casi al mismo tiempo (condición de carrera), el índice único
+        // parcial de la base de datos (idx_cita_medico_fecha_activa /
+        // idx_cita_paciente_especialidad_activa) rechaza el INSERT duplicado y
+        // aquí lo convertimos en un mensaje legible en vez de un error 500.
+        try {
+            cita = citaRepository.save(cita);
+        } catch (DataIntegrityViolationException e) {
+            throw new ValidationException(
+                    "El horario o la especialidad seleccionados ya no están disponibles. Por favor, intente nuevamente.");
+        }
         return toDto(cita);
     }
 
@@ -164,13 +194,6 @@ public class CitaService {
         return toDto(cita);
     }
 
-    // ------------------------------------------------------------------
-    // NUEVO: paso "método de pago" tras confirmar la cita (wizard paso 6).
-    // El paciente elige pagar en caja (sin vencimiento automático, igual
-    // que el flujo actual) o en línea (se le da una ventana corta de
-    // app.reserva.online.minutos, default 5, para completar el pago con
-    // tarjeta antes de que la cita se cancele automáticamente).
-    // ------------------------------------------------------------------
     @Transactional
     public CitaResponseDTO elegirMetodoPago(Integer citaId, Integer pacienteId, String metodoPago) {
         auditoriaContexto.aplicar();
@@ -189,7 +212,7 @@ public class CitaService {
         String metodo = metodoPago == null ? "" : metodoPago.trim().toUpperCase();
         switch (metodo) {
             case "LINEA" -> cita.setExpiraEn(LocalDateTime.now().plusMinutes(minutosReservaOnline));
-            case "CAJA" -> cita.setExpiraEn(null); // sin vencimiento automático: se paga físicamente en caja
+            case "CAJA" -> cita.setExpiraEn(null);
             default -> throw new ValidationException(
                     "Debe seleccionar un método de pago válido: 'CAJA' o 'LINEA'.");
         }
@@ -198,12 +221,6 @@ public class CitaService {
         return toDto(cita);
     }
 
-    // cancelación inmediata disparada por el propio cliente cuando el
-    // contador regresivo de pago en línea llega a 0, para no tener que
-    // esperar hasta 60s a que corra el job programado cancelarCitasExpiradas().
-    // Es idempotente y segura: solo cancela si sigue "Pendiente de pago" Y
-    // realmente ya venció; en cualquier otro caso simplemente devuelve el
-    // estado actual de la cita sin tocar nada.
     @Transactional
     public CitaResponseDTO cancelarPorExpiracionInmediata(Integer citaId, Integer pacienteId) {
         auditoriaContexto.aplicar();
@@ -222,7 +239,6 @@ public class CitaService {
         return toDto(cita);
     }
 
-    // NUEVO — CU-14: citas del médico para pintarlas en su calendario de Agenda Médica.
     public List<CitaAgendaDTO> listarCitasAgenda(Integer medicoId, LocalDateTime desde, LocalDateTime hasta) {
         return citaRepository.findParaAgendaMedico(medicoId, desde, hasta).stream()
                 .map(c -> new CitaAgendaDTO(
@@ -237,7 +253,6 @@ public class CitaService {
                 .collect(Collectors.toList());
     }
 
-    // Job: libera/cancela reservas vencidas sin pago (RN CU-03 FA03 / RNF-019)
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void cancelarCitasExpiradas() {
