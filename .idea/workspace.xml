@@ -4,29 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="agregando metodo de bitacora general completo">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="modificacion de 4 archivos">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/SeguimientoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/SeguimientoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/AdminService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/AdminService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/AuthService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EspecialidadService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EspecialidadService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EstadoCitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EstadoCitaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EventoAgendaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EventoAgendaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/ExamenLaboratorioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/ExamenLaboratorioService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/InventarioMedicamentoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/InventarioMedicamentoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioCatalogoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioCatalogoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/RolService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/RolService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/exception/GlobalExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/exception/GlobalExceptionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CitaRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CitaRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/SeguimientoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/SeguimientoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/SucursalService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/SucursalService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/TareaMedicoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/TareaMedicoService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,23 +72,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0088506553538734" />
-      <entry key="MS500" value="1.3885036343920247" />
-      <entry key="S2" value="1.7896603495569894" />
-      <entry key="S5" value="2.0022389565148933" />
-      <entry key="S10" value="2.789719790122577" />
-      <entry key="S30" value="5.728204930752652" />
-      <entry key="S60" value="7.460521143958799" />
-      <entry key="M2" value="8.615032208885626" />
-      <entry key="M5" value="9.592200722914198" />
-      <entry key="M10" value="10.45222255521168" />
-      <entry key="M15" value="11.077563544015991" />
-      <entry key="M30" value="12.132980296215672" />
-      <entry key="H1" value="12.99294928819253" />
-      <entry key="H2" value="14.523787899793016" />
-      <entry key="H4" value="20.536042771131683" />
-      <entry key="D1" value="66.66272837767592" />
-      <entry key="W1" value="92.50553516390654" />
+      <entry key="MS100" value="1.0002003127249732" />
+      <entry key="MS500" value="1.278716963851559" />
+      <entry key="S2" value="2.5799855200533033" />
+      <entry key="S5" value="3.967686592765456" />
+      <entry key="S10" value="5.324997592065558" />
+      <entry key="S30" value="8.794092991271324" />
+      <entry key="S60" value="10.860867932576479" />
+      <entry key="M2" value="12.270447489883" />
+      <entry key="M5" value="13.439373160102908" />
+      <entry key="M10" value="14.369542314336641" />
+      <entry key="M15" value="15.019464883913844" />
+      <entry key="M30" value="16.101434155159396" />
+      <entry key="H1" value="16.976162831698527" />
+      <entry key="H2" value="18.514497994723577" />
+      <entry key="H4" value="24.529640750607477" />
+      <entry key="D1" value="70.65941507982116" />
+      <entry key="W1" value="96.5048820461753" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -112,35 +98,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="8.09178389159845E-191" />
-      <entry key="M5" value="9.187930685792633E-77" />
-      <entry key="M10" value="9.585369416873116E-39" />
-      <entry key="M15" value="4.512382470192748E-26" />
-      <entry key="M30" value="2.1242369147985257E-13" />
-      <entry key="H1" value="4.608944472217608E-7" />
-      <entry key="H2" value="6.788920733237063E-4" />
-      <entry key="H4" value="0.026055557436441543" />
-      <entry key="D1" value="0.5444818342775096" />
-      <entry key="W1" value="0.9168184451246412" />
+      <entry key="M2" value="7.812988316641153E-191" />
+      <entry key="M5" value="9.059972301785086E-77" />
+      <entry key="M10" value="9.518388677599326E-39" />
+      <entry key="M15" value="4.491336798001731E-26" />
+      <entry key="M30" value="2.1192774235577895E-13" />
+      <entry key="H1" value="4.603561038541564E-7" />
+      <entry key="H2" value="6.784954707690804E-4" />
+      <entry key="H4" value="0.026047945615135914" />
+      <entry key="D1" value="0.5444553204009422" />
+      <entry key="W1" value="0.9168120671292493" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9611871675850369" />
-      <entry key="MS500" value="1.3761629156977582" />
-      <entry key="S2" value="1.785869819520477" />
-      <entry key="S5" value="2.0004204105225987" />
-      <entry key="S10" value="2.7876830059630544" />
-      <entry key="S30" value="5.725846752364485" />
-      <entry key="S60" value="7.458812778786565" />
-      <entry key="M2" value="8.6139653415092" />
-      <entry key="M5" value="9.591445465076845" />
-      <entry key="M10" value="10.451571604381936" />
-      <entry key="M15" value="11.077013616793982" />
-      <entry key="M30" value="12.132622780081721" />
-      <entry key="H1" value="12.992742729143353" />
-      <entry key="H2" value="14.524344369825988" />
-      <entry key="H4" value="20.56199716712473" />
-      <entry key="D1" value="67.20712389683521" />
-      <entry key="W1" value="93.42233506128139" />
+      <entry key="MS100" value="0.876787508951002" />
+      <entry key="MS500" value="1.2470761989738754" />
+      <entry key="S2" value="2.5379080330730224" />
+      <entry key="S5" value="3.9224777706313" />
+      <entry key="S10" value="5.291807197573201" />
+      <entry key="S30" value="8.77845932355319" />
+      <entry key="S60" value="10.85204715462842" />
+      <entry key="M2" value="12.265688793056901" />
+      <entry key="M5" value="13.437108762375297" />
+      <entry key="M10" value="14.368131316782115" />
+      <entry key="M15" value="15.018406727386619" />
+      <entry key="M30" value="16.100821543544363" />
+      <entry key="H1" value="16.975828415333005" />
+      <entry key="H2" value="18.51499005697751" />
+      <entry key="H4" value="24.555555514631344" />
+      <entry key="D1" value="71.20377874652966" />
+      <entry key="W1" value="97.42167480240145" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -267,7 +253,8 @@
     <MESSAGE value="nuevas modificaciones" />
     <MESSAGE value="agregando metodo de bitacora general" />
     <MESSAGE value="agregando metodo de bitacora general completo" />
-    <option name="LAST_COMMIT_MESSAGE" value="agregando metodo de bitacora general completo" />
+    <MESSAGE value="modificacion de 4 archivos" />
+    <option name="LAST_COMMIT_MESSAGE" value="modificacion de 4 archivos" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -276,6 +263,16 @@
           <url>jar://$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot/3.2.0/spring-boot-3.2.0-sources.jar!/org/springframework/boot/SpringApplication.java</url>
           <line>1754</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Usuario.java</url>
+          <line>17</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Usuario.java</url>
+          <line>16</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
