@@ -8,7 +8,7 @@
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
-      <remarks>C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico/src/main/resources/application.properties</remarks>
+      <remarks>C:/Users/Familia González/OneDrive/Escritorio/Tareas Wilmer/Cuarto Semestre/Programacion II/sistema-medico/src/main/resources/application.properties</remarks>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/sistema_medico</jdbc-url>
       <jdbc-additional-properties>

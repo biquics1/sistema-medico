@@ -119,7 +119,25 @@
     </header>
 
     <div class="p-8" id="main-content">
-        <section id="section-usuarios" class="space-y-6">
+        <!-- CU-01 pasos 2-3: opciones del módulo -->
+        <section id="menuUsuarios" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h2 class="text-lg font-bold text-brand-black mb-4">Usuarios</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+                    <button onclick="elegirListarUsuarios()"
+                            class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:border-brand-yellow hover:bg-gray-50 font-semibold text-brand-black text-left">
+                        <i class="fa-solid fa-list w-6 text-brand-yellow"></i> Listar Usuarios
+                    </button>
+                    <button onclick="abrirModalUsuario()"
+                            class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl hover:border-brand-yellow hover:bg-gray-50 font-semibold text-brand-black text-left">
+                        <i class="fa-solid fa-user-plus w-6 text-brand-yellow"></i> Crear Usuario
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CU-01 paso 4: pantalla "Listado de Usuarios" (oculta hasta elegir "Listar Usuarios") -->
+        <section id="section-usuarios" class="hidden space-y-6">
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
                     <h2 class="text-lg font-bold text-brand-black">Listado de Usuarios</h2>
@@ -137,9 +155,9 @@
                                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
-                        <button onclick="abrirModalUsuario()"
-                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
-                            + Crear Usuario
+                        <button onclick="mostrarOpcionesUsuarios()" title="Volver a las opciones del módulo"
+                                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-3 py-2 rounded-md text-sm">
+                            <i class="fa-solid fa-arrow-left"></i> Opciones
                         </button>
                     </div>
                 </div>
@@ -249,10 +267,10 @@
                     </div>
 
                     <div class="flex gap-2 pt-2">
-                        <button type="button" onclick="cerrarModalUsuario()"
+                        <button type="button" onclick="cancelarModalUsuario()"
                                 class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
-                        <button type="button" onclick="guardarUsuario()"
-                                class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Guardar</button>
+                        <button type="button" id="btnGuardarUsuario" onclick="guardarUsuario()"
+                                class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Crear</button>
                     </div>
                 </form>
             </div>
@@ -415,6 +433,7 @@
 
         if (id) {
             document.getElementById('modalUsuarioTitulo').innerText = 'Editar Usuario';
+            document.getElementById('btnGuardarUsuario').innerText = 'Actualizar';
             document.getElementById('labelPasswordOpcional').classList.remove('hidden');
             try {
                 const u = await apiFetch(`/api/users/${id}`);
@@ -438,11 +457,43 @@
             }
         } else {
             document.getElementById('modalUsuarioTitulo').innerText = 'Crear Usuario';
+            document.getElementById('btnGuardarUsuario').innerText = 'Crear';
             document.getElementById('labelPasswordOpcional').classList.add('hidden');
             document.getElementById('uEstado').value = '1';
         }
 
         document.getElementById('modalUsuario').classList.remove('hidden');
+    }
+
+    // CU-01 pasos 2-4: al entrar al módulo solo se muestran las opciones
+    // ("Listar Usuarios" / "Crear Usuario"); el listado se carga hasta que el
+    // usuario elige "Listar Usuarios".
+    function mostrarOpcionesUsuarios() {
+        document.getElementById('section-usuarios').classList.add('hidden');
+        document.getElementById('menuUsuarios').classList.remove('hidden');
+    }
+
+    // Paso 3: el usuario selecciona "Listar Usuarios"
+    function elegirListarUsuarios() {
+        paginaUsuariosActual = 1;
+        document.getElementById('filtroTexto').value = '';
+        document.getElementById('mensajesUsuarios').innerHTML = '';
+        mostrarListadoUsuarios();
+    }
+
+    // Paso 4: se muestra la pantalla "Listado de Usuarios" y se carga la tabla
+    function mostrarListadoUsuarios() {
+        document.getElementById('menuUsuarios').classList.add('hidden');
+        document.getElementById('section-usuarios').classList.remove('hidden');
+        cargarUsuarios();
+    }
+
+    // FA07: cancelar descarta los datos y deja al usuario en el "Listado de Usuarios"
+    function cancelarModalUsuario() {
+        cerrarModalUsuario();
+        if (document.getElementById('section-usuarios').classList.contains('hidden')) {
+            elegirListarUsuarios();
+        }
     }
 
     function cerrarModalUsuario() {
@@ -475,7 +526,7 @@
                 mostrarMensajeUsuarios('Usuario creado correctamente.', 'exito');
             }
             cerrarModalUsuario();
-            cargarUsuarios();
+            mostrarListadoUsuarios();
         } catch (e) {
             document.getElementById('mensajesModalUsuario').innerHTML =
                 `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
@@ -505,11 +556,7 @@
             mostrarMensajeUsuarios(e.message, 'error');
         }
     }
-
-    // Carga inicial de datos: solo si el usuario tiene acceso a este módulo.
-    if (tieneAccesoUsuarios) {
-        cargarUsuarios();
-    }
+    
 </script>
 </body>
 </html>
