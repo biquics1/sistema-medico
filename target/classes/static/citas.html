@@ -147,6 +147,48 @@
         <!-- 3. SIGNOS VITALES — pendiente (CU-07) -->
         <!-- 3. SIGNOS VITALES (CU-07) -->
 
+        <!-- NUEVO — Modal: Reasignar Médico (FA07 de CU-05) -->
+        <div id="modalReasignarMedico" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold text-brand-black mb-1">Reasignar Médico</h3>
+                <p class="text-sm text-gray-500 mb-4">Cita #<span id="reasignarCitaId"></span> · Médico actual: <span id="reasignarMedicoActual" class="font-semibold"></span></p>
+                <div id="mensajesModalReasignar"></div>
+
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Nuevo médico</label>
+                <select id="selectMedicoNuevo" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-brand-yellow focus:border-brand-yellow">
+                    <option value="">Cargando médicos disponibles...</option>
+                </select>
+
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Motivo (opcional)</label>
+                <textarea id="motivoReasignar" rows="2" maxlength="500"
+                          class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-brand-yellow focus:border-brand-yellow"
+                          placeholder="Ej. el médico asignado tuvo una emergencia"></textarea>
+
+                <div class="flex gap-2">
+                    <button type="button" onclick="cerrarModalReasignar()"
+                            class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button type="button" onclick="confirmarReasignacion()"
+                            class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Confirmar Reasignación</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NUEVO — Modal: Cancelar Cita -->
+        <div id="modalCancelarCita" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-sm text-center">
+                <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-3"></i>
+                <p class="text-gray-700 mb-1">¿Está seguro que desea cancelar la cita <span id="cancelarCitaId" class="font-semibold"></span>?</p>
+                <p class="text-sm text-gray-500 mb-4">Esta acción no se puede deshacer. El paciente deberá agendar una nueva cita.</p>
+                <textarea id="motivoCancelar" rows="2" maxlength="500"
+                          class="w-full p-2 border border-gray-300 rounded-md mb-4 text-left focus:ring-brand-yellow focus:border-brand-yellow"
+                          placeholder="Motivo de la cancelación (opcional)"></textarea>
+                <div class="flex gap-2">
+                    <button type="button" onclick="cerrarModalCancelar()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Volver</button>
+                    <button type="button" onclick="confirmarCancelacion()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg">Cancelar Cita</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </main>
 
@@ -213,17 +255,33 @@
         }
     }
 
+    // NUEVO — estados desde los que Recepción puede reasignar médico (FA07)
+    // y estados desde los que puede cancelar la cita. Se centralizan aquí
+    // para no repetir la lista de estados en cada botón.
+    const ESTADOS_REASIGNABLES = ['Confirmada', 'Paciente Presente'];
+    const ESTADOS_CANCELABLES = ['Pendiente de pago', 'Confirmada', 'Paciente Presente'];
+
     function renderCita(cita) {
         const badgeEmergencia = cita.esEmergencia
             ? '<span class="ml-2 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">EMERGENCIA</span>' : '';
 
-        let botonPrincipal = '';
+        const botones = [];
         if (cita.estado === 'Confirmada') {
-            botonPrincipal = `<button onclick="registrarLlegada()" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">Registrar llegada</button>`;
+            botones.push(`<button onclick="registrarLlegada()" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">Registrar llegada</button>`);
         } else if (cita.estado === 'Pendiente de pago') {
             mostrarMensajeCita("La cita tiene estado 'Pendiente de pago'. Debe realizar el pago en caja antes de ser atendido.", 'error');
         } else if (cita.estado === 'Cancelada') {
             mostrarMensajeCita('La cita fue cancelada. El paciente debe agendar una nueva cita.', 'error');
+        }
+
+        // NUEVO — Reasignar Médico (FA07): visible en "Confirmada" o "Paciente Presente"
+        if (ESTADOS_REASIGNABLES.includes(cita.estado)) {
+            botones.push(`<button onclick="abrirModalReasignar()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Reasignar Médico</button>`);
+        }
+
+        // NUEVO — Cancelar Cita: visible mientras la cita no haya iniciado atención clínica
+        if (ESTADOS_CANCELABLES.includes(cita.estado)) {
+            botones.push(`<button onclick="abrirModalCancelar()" class="bg-white border border-red-300 hover:bg-red-50 text-red-600 font-semibold px-4 py-2 rounded-lg">Cancelar Cita</button>`);
         }
 
         document.getElementById('resultadoCita').innerHTML = `
@@ -234,7 +292,7 @@
                 <p class="text-sm text-gray-600">Médico: ${cita.nombreMedico}</p>
                 <p class="text-sm text-gray-600">${new Date(cita.fechaHora).toLocaleString('es-GT')}</p>
                 <p class="text-sm text-gray-600 mt-1">${cita.motivoConsulta}</p>
-                <div class="mt-3">${botonPrincipal}</div>
+                <div class="mt-3 flex flex-wrap gap-2">${botones.join('')}</div>
             </div>`;
     }
 
@@ -245,6 +303,99 @@
             citaActual = data.cita;
             renderCita(data.cita);
         } catch (e) {
+            mostrarMensajeCita(e.message, 'error');
+        }
+    }
+
+    // ============================================================
+    // NUEVO — Reasignar Médico (FA07 de CU-05)
+    // ============================================================
+    async function abrirModalReasignar() {
+        if (!citaActual) return;
+        document.getElementById('mensajesModalReasignar').innerHTML = '';
+        document.getElementById('reasignarCitaId').innerText = citaActual.id;
+        document.getElementById('reasignarMedicoActual').innerText = citaActual.nombreMedico;
+        document.getElementById('motivoReasignar').value = '';
+
+        const select = document.getElementById('selectMedicoNuevo');
+        select.innerHTML = '<option value="">Cargando médicos disponibles...</option>';
+        document.getElementById('modalReasignarMedico').classList.remove('hidden');
+
+        try {
+            const medicos = await apiFetch(
+                `/api/recepcion/medicos-disponibles?sucursalId=${citaActual.sucursalId}&especialidadId=${citaActual.especialidadId}&medicoActualId=${citaActual.medicoId}`
+            );
+            if (!medicos.length) {
+                select.innerHTML = '<option value="">No hay otros médicos disponibles en esta sede/especialidad</option>';
+                return;
+            }
+            select.innerHTML = '<option value="">Seleccione un médico...</option>' +
+                medicos.map(m => `<option value="${m.id}">${m.nombreCompleto}</option>`).join('');
+        } catch (e) {
+            document.getElementById('mensajesModalReasignar').innerHTML =
+                `<div class="p-3 rounded-md mb-4 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+            select.innerHTML = '<option value="">No fue posible cargar los médicos</option>';
+        }
+    }
+
+    function cerrarModalReasignar() {
+        document.getElementById('modalReasignarMedico').classList.add('hidden');
+    }
+
+    async function confirmarReasignacion() {
+        const idMedicoNuevo = document.getElementById('selectMedicoNuevo').value;
+        const mensajesModal = document.getElementById('mensajesModalReasignar');
+        mensajesModal.innerHTML = '';
+
+        if (!idMedicoNuevo) {
+            mensajesModal.innerHTML =
+                `<div class="p-3 rounded-md mb-4 bg-red-50 text-red-700 border border-red-200">Debe seleccionar un médico.</div>`;
+            return;
+        }
+
+        try {
+            const motivo = document.getElementById('motivoReasignar').value.trim();
+            const cita = await apiFetch(`/api/recepcion/citas/${citaActual.id}/reasignar-medico`, {
+                method: 'POST',
+                body: JSON.stringify({ idMedicoNuevo: Number(idMedicoNuevo), motivo: motivo || null })
+            });
+            cerrarModalReasignar();
+            citaActual = cita;
+            mostrarMensajeCita('Médico reasignado correctamente.', 'exito');
+            renderCita(cita);
+        } catch (e) {
+            mensajesModal.innerHTML =
+                `<div class="p-3 rounded-md mb-4 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    // ============================================================
+    // NUEVO — Cancelar Cita
+    // ============================================================
+    function abrirModalCancelar() {
+        if (!citaActual) return;
+        document.getElementById('cancelarCitaId').innerText = '#' + citaActual.id;
+        document.getElementById('motivoCancelar').value = '';
+        document.getElementById('modalCancelarCita').classList.remove('hidden');
+    }
+
+    function cerrarModalCancelar() {
+        document.getElementById('modalCancelarCita').classList.add('hidden');
+    }
+
+    async function confirmarCancelacion() {
+        try {
+            const motivo = document.getElementById('motivoCancelar').value.trim();
+            const data = await apiFetch(`/api/recepcion/citas/${citaActual.id}/cancelar`, {
+                method: 'POST',
+                body: JSON.stringify({ motivo: motivo || null })
+            });
+            cerrarModalCancelar();
+            citaActual = data.cita;
+            mostrarMensajeCita(data.mensaje, 'exito');
+            renderCita(data.cita);
+        } catch (e) {
+            cerrarModalCancelar();
             mostrarMensajeCita(e.message, 'error');
         }
     }

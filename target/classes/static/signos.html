@@ -243,23 +243,63 @@
                 </button>
             </div>`).join('') : '<p class="text-sm text-gray-400">No hay pacientes en espera.</p>';
 
-        listaEnProceso.innerHTML = enProceso.length ? enProceso.map(c => `
-            <div class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
+        listaEnProceso.innerHTML = enProceso.length ? enProceso.map(c => {
+            const llamado = c.vecesLlamado || 0;
+            const llamarDeshabilitado = llamado >= 3;
+            return `
+            <div class="border border-gray-200 rounded-lg p-3 flex justify-between items-center gap-3">
                 <div>
                     <p class="font-semibold">${c.nombrePaciente} ${c.esEmergencia ? '<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">EMERGENCIA</span>' : ''}</p>
                     <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Llamado ${llamado} de 3</p>
                 </div>
-                <button onclick="abrirFormSignos(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}')"
-                        class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-2 rounded-lg text-sm">
-                    Registrar Signos Vitales
-                </button>
-            </div>`).join('') : '<p class="text-sm text-gray-400">No hay pacientes en toma de signos.</p>';
+                <div class="flex flex-wrap gap-2 justify-end">
+                    <button onclick="abrirFormSignos(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}')"
+                            class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-2 rounded-lg text-sm">
+                        Registrar Signos Vitales
+                    </button>
+                    <button onclick="llamarDeNuevoEnfermeria(${c.id}, this)" ${llamarDeshabilitado ? 'disabled' : ''}
+                            class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-2 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white">
+                        Llamar de nuevo
+                    </button>
+                    <button onclick="marcarNoAsistioEnfermeria(${c.id})"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-lg text-sm">
+                        No Asistió
+                    </button>
+                </div>
+            </div>`;
+        }).join('') : '<p class="text-sm text-gray-400">No hay pacientes en toma de signos.</p>';
     }
 
     async function llamarPaciente(idCita) {
         try {
             const data = await apiFetch(`/api/enfermeria/citas/${idCita}/llamar`, { method: 'POST' });
             mostrarMensajeSignos(data.mensajeAnuncio, 'info');
+            cargarColaSignos();
+        } catch (e) {
+            mostrarMensajeSignos(e.message, 'error');
+        }
+    }
+
+    async function llamarDeNuevoEnfermeria(idCita, btn) {
+        // Se deshabilita el botón de inmediato (antes de esperar la respuesta
+        // del servidor) para que un doble clic rápido no dispare dos llamadas
+        // antes de que la cola se recargue con el contador actualizado.
+        if (btn) btn.disabled = true;
+        try {
+            const data = await apiFetch(`/api/enfermeria/citas/${idCita}/llamar-de-nuevo`, { method: 'POST' });
+            mostrarMensajeSignos(data.mensajeAnuncio, 'info');
+        } catch (e) {
+            mostrarMensajeSignos(e.message, 'error');
+        } finally {
+            cargarColaSignos();
+        }
+    }
+
+    async function marcarNoAsistioEnfermeria(idCita) {
+        try {
+            const data = await apiFetch(`/api/enfermeria/citas/${idCita}/no-asistio`, { method: 'POST' });
+            mostrarMensajeSignos(data.mensaje, 'exito');
             cargarColaSignos();
         } catch (e) {
             mostrarMensajeSignos(e.message, 'error');

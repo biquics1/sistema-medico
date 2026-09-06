@@ -336,10 +336,14 @@
             let acciones = '';
             if (tipo === 'ESPERA') {
                 acciones = `
-                    <button onclick="iniciarConsulta(${c.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-sm">Iniciar Consulta</button>
-                    <button onclick="marcarNoAsistio(${c.id})" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-1.5 rounded-lg text-sm">No Asistió</button>`;
+                    <button onclick="iniciarConsulta(${c.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-sm">Iniciar Consulta</button>`;
             } else if (tipo === 'CONSULTA') {
-                acciones = `<button onclick="abrirFormConsulta(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-1.5 rounded-lg text-sm">Ver / Completar Consulta</button>`;
+                const llamado = c.vecesLlamado || 0;
+                const llamarDeshabilitado = llamado >= 3;
+                acciones = `
+                    <button onclick="abrirFormConsulta(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-1.5 rounded-lg text-sm">Ver / Completar Consulta</button>
+                    <button onclick="llamarDeNuevoMedico(${c.id}, this)" ${llamarDeshabilitado ? 'disabled' : ''} class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white">Llamar de nuevo</button>
+                    <button onclick="marcarNoAsistio(${c.id})" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-1.5 rounded-lg text-sm">No Asistió</button>`;
             } else {
                 acciones = `
                     <button onclick="finalizarAtencion(${c.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-sm">Finalizar Atención</button>
@@ -350,6 +354,7 @@
                     <p class="font-semibold">${c.nombrePaciente} ${badge}</p>
                     <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
                     <p class="text-sm text-gray-600">${new Date(c.fechaHora).toLocaleString('es-GT')}</p>
+                    ${tipo === 'CONSULTA' ? `<p class="text-xs text-gray-500 mt-1">Llamado ${c.vecesLlamado || 0} de 3</p>` : ''}
                     <div class="mt-2 flex flex-wrap gap-2">${acciones}</div>
                 </div>`;
         }).join('');
@@ -372,6 +377,25 @@
             cargarPanelMedico();
         } catch (e) {
             mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
+    async function llamarDeNuevoMedico(idCita, btn) {
+        // Se deshabilita el botón de inmediato (antes de esperar la respuesta
+        // del servidor) para que un doble clic rápido no dispare dos llamadas
+        // antes de que el panel se recargue con el contador actualizado.
+        if (btn) btn.disabled = true;
+        try {
+            const data = await apiFetch(`/api/medico/citas/${idCita}/llamar-de-nuevo?medicoId=${idMedicoActual()}`, { method: 'POST' });
+            mostrarMensajeConsulta(data.mensajeAnuncio, 'info');
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        } finally {
+            // Siempre se recarga el panel: si hubo éxito, refleja el nuevo
+            // contador (y deshabilita el botón si ya llegó a 3); si hubo
+            // error, vuelve a habilitar el botón solo si en realidad seguía
+            // disponible (evita que quede bloqueado por el disable manual).
+            cargarPanelMedico();
         }
     }
 
