@@ -45,4 +45,22 @@ public class RecepcionDTOs {
         private Integer idMedicoNuevo;
         private String motivo;               // opcional
     }
+
+    // NUEVO — Body para cancelar una cita desde Recepción (a solicitud del
+    // paciente o por indicación administrativa). El motivo es opcional y
+    // por ahora solo se usa para el log de auditoría (no existe columna
+    // "motivo_cancelacion" en la tabla cita).
+    @Data
+    public static class CancelarCitaRequestDTO {
+        private String motivo;               // opcional
+    }
+
+    // NUEVO — Confirmación de que la cita fue cancelada desde Recepción.
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class CancelarCitaResponseDTO {
+        private String mensaje;
+        private CitaRecepcionDTO cita;
+    }
 }

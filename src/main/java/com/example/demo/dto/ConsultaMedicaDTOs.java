@@ -24,6 +24,7 @@ public class ConsultaMedicaDTOs {
         private LocalDateTime fechaHora;
         private String estado;
         private boolean esEmergencia;
+        private Short vecesLlamado; // CU-08: veces que se ha llamado al paciente a consulta (maximo 3)
     }
 
     // Paso 1 FB: panel agrupado en 3 secciones

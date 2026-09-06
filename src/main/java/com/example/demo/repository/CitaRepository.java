@@ -71,6 +71,9 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     // ------------------------------------------------------------------
     List<Cita> findByMedico_IdAndEstadoCita_NombreOrderByFechaHoraAsc(Integer medicoId, String estadoNombre);
 
+    // NUEVO — CU-08: panel consolidado para Administrador General (todos los médicos)
+    List<Cita> findByEstadoCita_NombreOrderByFechaHoraAsc(String estadoNombre);
+
     // CU-08 paso 2/3: validar que la cita pertenece al médico antes de operar sobre ella
     Optional<Cita> findByIdAndMedico_Id(Integer id, Integer medicoId);
 

@@ -2,11 +2,15 @@ package com.example.demo.service;
 
 import com.example.demo.dto.PacienteDTOs.*;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.modelo.*;
 import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +18,17 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PacienteAgendaService {
+
+    private final AuditoriaContexto auditoriaContexto;
+
+    // Estados desde los cuales el paciente puede reagendar por su cuenta
+    // (aun no llega a recepcion/consulta ni fue cancelada/atendida).
+    private static final List<String> ESTADOS_REAGENDABLES =
+            List.of(EstadoCita.PENDIENTE_PAGO, EstadoCita.CONFIRMADA);
+
+    // Estados que "liberan" un horario del medico (igual que en CitaService).
+    private static final List<String> ESTADOS_LIBERAN_HORARIO =
+            List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO);
 
     private final CitaRepository citaRepository;
     private final ConsultaMedicaRepository consultaMedicaRepository;
@@ -36,6 +51,7 @@ public class PacienteAgendaService {
         dto.setId(cita.getId());
         dto.setEspecialidad(cita.getEspecialidad().getNombre());
         dto.setMedico(cita.getMedico().getNombreCompleto());
+        dto.setMedicoId(cita.getMedico().getId());
         dto.setSucursal(cita.getSucursal().getNombre());
         dto.setFechaHora(cita.getFechaHora());
         dto.setEstado(cita.getEstadoCita().getNombre());
@@ -60,6 +76,51 @@ public class PacienteAgendaService {
         });
 
         return dto;
+    }
+
+    // ---------------------------------------------------------------
+    // NUEVO -- Reagendar cita (portal del paciente): permite mover una
+    // cita propia a otra fecha/hora del MISMO medico ya asignado. No
+    // permite cambiar de medico, sucursal ni especialidad.
+    // Solo aplica mientras la cita este en 'Pendiente de pago' o
+    // 'Confirmada' (aun no inicio el proceso clinico presencial).
+    // ---------------------------------------------------------------
+    @Transactional
+    public MiCitaResumenDTO reagendarCita(Integer citaId, Integer pacienteId, LocalDateTime nuevaFechaHora) {
+        auditoriaContexto.aplicar();
+        Cita cita = citaRepository.findByIdAndPaciente_Id(citaId, pacienteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
+
+        if (!ESTADOS_REAGENDABLES.contains(cita.getEstadoCita().getNombre())) {
+            throw new ValidationException(
+                    "Solo se pueden reagendar citas en estado 'Pendiente de pago' o 'Confirmada'. " +
+                            "Esta cita se encuentra en estado '" + cita.getEstadoCita().getNombre() + "'.");
+        }
+        if (nuevaFechaHora == null || !nuevaFechaHora.isAfter(LocalDateTime.now())) {
+            throw new ValidationException(
+                    "Debe seleccionar una fecha y hora futuras. Las citas no pueden agendarse en fechas pasadas o presentes.");
+        }
+        if (nuevaFechaHora.equals(cita.getFechaHora())) {
+            throw new ValidationException("Debe seleccionar una fecha u hora distinta a la actual de la cita.");
+        }
+
+        // El horario nuevo debe estar libre para el MISMO medico (no se permite cambiar de medico).
+        boolean horarioOcupado = citaRepository.existsByMedico_IdAndFechaHoraAndEstadoCita_NombreNotIn(
+                cita.getMedico().getId(), nuevaFechaHora, ESTADOS_LIBERAN_HORARIO);
+        if (horarioOcupado) {
+            throw new ValidationException(
+                    "El horario seleccionado ya no está disponible para el médico asignado. Por favor, elija otro horario.");
+        }
+
+        cita.setFechaHora(nuevaFechaHora);
+        Cita actualizada;
+        try {
+            actualizada = citaRepository.save(cita);
+        } catch (DataIntegrityViolationException e) {
+            throw new ValidationException(
+                    "El horario seleccionado ya no está disponible. Por favor, intente nuevamente.");
+        }
+        return toResumenDTO(actualizada);
     }
 
     private OrdenLaboratorioResumenDTO toOrdenDTO(OrdenLaboratorio orden) {
@@ -122,6 +183,7 @@ public class PacienteAgendaService {
         dto.setId(c.getId());
         dto.setEspecialidad(c.getEspecialidad().getNombre());
         dto.setMedico(c.getMedico().getNombreCompleto());
+        dto.setMedicoId(c.getMedico().getId());
         dto.setSucursal(c.getSucursal().getNombre());
         dto.setFechaHora(c.getFechaHora());
         dto.setEstado(c.getEstadoCita().getNombre());

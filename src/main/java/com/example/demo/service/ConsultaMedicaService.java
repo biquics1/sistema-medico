@@ -5,6 +5,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.ValidationException;
 import com.example.demo.modelo.*;
 import com.example.demo.repository.*;
+import com.example.demo.security.AuthUsuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,23 @@ public class ConsultaMedicaService {
     // Paso 1 FB: panel del médico agrupado en 3 secciones
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
-    public PanelMedicoDTO obtenerPanel(Integer medicoId) {
+    public PanelMedicoDTO obtenerPanel(AuthUsuario usuario) {
+        // Administrador General: ve el panel consolidado de TODOS los médicos
+        // (rol de supervisión/soporte). Médico: solo sus propias citas.
+        if (usuario.esAdminGeneral()) {
+            List<CitaPanelDTO> enEspera = citaRepository
+                    .findByEstadoCita_NombreOrderByFechaHoraAsc(EstadoCita.EN_ESPERA)
+                    .stream().map(this::toPanelDTO).toList();
+            List<CitaPanelDTO> enConsulta = citaRepository
+                    .findByEstadoCita_NombreOrderByFechaHoraAsc(EstadoCita.CONSULTA_MEDICA)
+                    .stream().map(this::toPanelDTO).toList();
+            List<CitaPanelDTO> evaluados = citaRepository
+                    .findByEstadoCita_NombreOrderByFechaHoraAsc(EstadoCita.EVALUADO)
+                    .stream().map(this::toPanelDTO).toList();
+            return PanelMedicoDTO.builder().enEspera(enEspera).enConsulta(enConsulta).evaluados(evaluados).build();
+        }
+
+        Integer medicoId = usuario.getId();
         List<CitaPanelDTO> enEspera = citaRepository
                 .findByMedico_IdAndEstadoCita_NombreOrderByFechaHoraAsc(medicoId, EstadoCita.EN_ESPERA)
                 .stream().map(this::toPanelDTO).toList();
@@ -56,10 +73,9 @@ public class ConsultaMedicaService {
     // Paso 2 FB: "Iniciar Consulta" -> En Espera -> Consulta Médica
     // ---------------------------------------------------------------
     @Transactional
-    public IniciarConsultaResponseDTO iniciarConsulta(Integer idCita, Integer medicoId) {
+    public IniciarConsultaResponseDTO iniciarConsulta(Integer idCita, AuthUsuario usuario) {
         auditoriaContexto.aplicar();
-        Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
+        Cita cita = obtenerCitaComoMedico(idCita, usuario);
 
         if (!EstadoCita.EN_ESPERA.equals(cita.getEstadoCita().getNombre())) {
             throw new ValidationException("La cita no se encuentra en estado 'En Espera'.");
@@ -69,11 +85,46 @@ public class ConsultaMedicaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Consulta Médica'."));
 
         cita.setEstadoCita(consultaMedica);
+        cita.setVecesLlamadoMedico((short) 1); // primer llamado de un máximo de 3
         Cita actualizada = citaRepository.save(cita);
 
         String mensaje = String.format(
-                "Turno número %d. Paciente %s, favor pasar a consulta médica.",
+                "Turno número %d. Paciente %s, favor pasar a consulta médica. (Llamado 1 de 3)",
                 actualizada.getId(), actualizada.getPaciente().getNombreCompleto());
+
+        return IniciarConsultaResponseDTO.builder()
+                .mensajeAnuncio(mensaje)
+                .cita(toPanelDTO(actualizada))
+                .build();
+    }
+
+    // ---------------------------------------------------------------
+    // "Llamar de nuevo": permite volver a anunciar al paciente sin
+    // cambiar de estado, hasta un máximo de 3 llamados en total
+    // (1 llamado inicial de "Iniciar Consulta" + 2 reintentos).
+    // ---------------------------------------------------------------
+    @Transactional
+    public IniciarConsultaResponseDTO llamarDeNuevo(Integer idCita, AuthUsuario usuario) {
+        auditoriaContexto.aplicar();
+        Cita cita = obtenerCitaComoMedico(idCita, usuario);
+
+        if (!EstadoCita.CONSULTA_MEDICA.equals(cita.getEstadoCita().getNombre())) {
+            throw new ValidationException("Solo se puede volver a llamar a un paciente que ya fue llamado a consulta.");
+        }
+
+        short vecesActuales = cita.getVecesLlamadoMedico() == null ? 1 : cita.getVecesLlamadoMedico();
+        if (vecesActuales >= 3) {
+            throw new ValidationException(
+                    "Se alcanzó el máximo de 3 llamados para esta cita. Puede marcar 'No Asistió' para cancelarla.");
+        }
+
+        short nuevasVeces = (short) (vecesActuales + 1);
+        cita.setVecesLlamadoMedico(nuevasVeces);
+        Cita actualizada = citaRepository.save(cita);
+
+        String mensaje = String.format(
+                "Turno número %d. Paciente %s, favor pasar a consulta médica. (Llamado %d de 3)",
+                actualizada.getId(), actualizada.getPaciente().getNombreCompleto(), nuevasVeces);
 
         return IniciarConsultaResponseDTO.builder()
                 .mensajeAnuncio(mensaje)
@@ -85,9 +136,8 @@ public class ConsultaMedicaService {
     // Paso 3 FB: contexto del formulario (crea o reabre el borrador)
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
-    public ConsultaContextoDTO obtenerContexto(Integer idCita, Integer medicoId) {
-        Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
+    public ConsultaContextoDTO obtenerContexto(Integer idCita, AuthUsuario usuario) {
+        Cita cita = obtenerCitaComoMedico(idCita, usuario);
 
         return consultaMedicaRepository.findByCita_Id(idCita)
                 .map(c -> ConsultaContextoDTO.builder()
@@ -123,10 +173,9 @@ public class ConsultaMedicaService {
     // RN-CU08-01, RN-CU08-02, FA05
     // ---------------------------------------------------------------
     @Transactional
-    public GuardarConsultaResponseDTO guardarConsulta(Integer idCita, Integer medicoId, GuardarConsultaRequestDTO req) {
+    public GuardarConsultaResponseDTO guardarConsulta(Integer idCita, AuthUsuario usuario, GuardarConsultaRequestDTO req) {
         auditoriaContexto.aplicar();
-        Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
+        Cita cita = obtenerCitaComoMedico(idCita, usuario);
 
         if (!EstadoCita.CONSULTA_MEDICA.equals(cita.getEstadoCita().getNombre())) {
             throw new ValidationException("La consulta no está disponible para edición en el estado actual de la cita.");
@@ -204,22 +253,21 @@ public class ConsultaMedicaService {
     // FA06: paciente no se presenta -> En Espera -> No Asistió
     // ---------------------------------------------------------------
     @Transactional
-    public AccionCitaResponseDTO marcarNoAsistio(Integer idCita, Integer medicoId) {
+    public AccionCitaResponseDTO marcarNoAsistio(Integer idCita, AuthUsuario usuario) {
         auditoriaContexto.aplicar();
-        Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
+        Cita cita = obtenerCitaComoMedico(idCita, usuario);
 
-        if (!EstadoCita.EN_ESPERA.equals(cita.getEstadoCita().getNombre())) {
-            throw new ValidationException("Solo se puede marcar 'No Asistió' desde el estado 'En Espera'.");
+        if (!EstadoCita.CONSULTA_MEDICA.equals(cita.getEstadoCita().getNombre())) {
+            throw new ValidationException("Solo se puede marcar 'No Asistió' para un paciente ya llamado a consulta.");
         }
 
-        EstadoCita noAsistio = estadoCitaRepository.findByNombre(EstadoCita.NO_ASISTIO)
-                .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'No Asistió'."));
-        cita.setEstadoCita(noAsistio);
+        EstadoCita cancelada = estadoCitaRepository.findByNombre(EstadoCita.CANCELADA)
+                .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Cancelada'."));
+        cita.setEstadoCita(cancelada);
         Cita actualizada = citaRepository.save(cita);
 
         return AccionCitaResponseDTO.builder()
-                .mensaje("Cita #" + actualizada.getId() + " marcada como No Asistió.")
+                .mensaje("Cita #" + actualizada.getId() + " cancelada por inasistencia del paciente.")
                 .cita(toPanelDTO(actualizada))
                 .build();
     }
@@ -228,10 +276,9 @@ public class ConsultaMedicaService {
     // Sección "Evaluados": Finalizar Atención -> Atención Finalizada
     // ---------------------------------------------------------------
     @Transactional
-    public AccionCitaResponseDTO finalizarAtencion(Integer idCita, Integer medicoId) {
+    public AccionCitaResponseDTO finalizarAtencion(Integer idCita, AuthUsuario usuario) {
         auditoriaContexto.aplicar();
-        Cita cita = citaRepository.findByIdAndMedico_Id(idCita, medicoId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
+        Cita cita = obtenerCitaComoMedico(idCita, usuario);
 
         if (!EstadoCita.EVALUADO.equals(cita.getEstadoCita().getNombre())) {
             throw new ValidationException("Solo se puede finalizar la atención de citas en estado 'Evaluado'.");
@@ -264,13 +311,9 @@ public class ConsultaMedicaService {
     // FA01: generar orden de laboratorio
     // ---------------------------------------------------------------
     @Transactional
-    public OrdenLaboratorioResponseDTO generarOrdenLaboratorio(Integer consultaId, Integer medicoId, OrdenLaboratorioRequestDTO req) {
+    public OrdenLaboratorioResponseDTO generarOrdenLaboratorio(Integer consultaId, AuthUsuario usuario, OrdenLaboratorioRequestDTO req) {
         auditoriaContexto.aplicar();
-        ConsultaMedica consulta = consultaMedicaRepository.findById(consultaId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la consulta indicada."));
-        if (!consulta.getMedico().getId().equals(medicoId)) {
-            throw new ResourceNotFoundException("No se encontró la consulta indicada para este médico.");
-        }
+        ConsultaMedica consulta = obtenerConsultaComoMedico(consultaId, usuario);
         if (req.getExamenIds() == null || req.getExamenIds().isEmpty()) {
             throw new ValidationException("Debe seleccionar al menos un examen de laboratorio.");
         }
@@ -320,13 +363,9 @@ public class ConsultaMedicaService {
     // FA04: generar receta médica (RN-CU08-03)
     // ---------------------------------------------------------------
     @Transactional
-    public RecetaResponseDTO generarReceta(Integer consultaId, Integer medicoId, RecetaRequestDTO req) {
+    public RecetaResponseDTO generarReceta(Integer consultaId, AuthUsuario usuario, RecetaRequestDTO req) {
         auditoriaContexto.aplicar();
-        ConsultaMedica consulta = consultaMedicaRepository.findById(consultaId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la consulta indicada."));
-        if (!consulta.getMedico().getId().equals(medicoId)) {
-            throw new ResourceNotFoundException("No se encontró la consulta indicada para este médico.");
-        }
+        ConsultaMedica consulta = obtenerConsultaComoMedico(consultaId, usuario);
         if (req.getDetalles() == null || req.getDetalles().isEmpty()) {
             throw new ValidationException("Debe agregar al menos un medicamento a la receta.");
         }
@@ -392,6 +431,29 @@ public class ConsultaMedicaService {
     }
 
     // ---------------------------------------------------------------
+    // Resuelve la cita respetando la propiedad médico-paciente. El
+    // Administrador General puede operar sobre la cita de cualquier
+    // médico (supervisión/soporte); el resto solo sobre las propias.
+    // ---------------------------------------------------------------
+    private Cita obtenerCitaComoMedico(Integer idCita, AuthUsuario usuario) {
+        if (usuario.esAdminGeneral()) {
+            return citaRepository.findById(idCita)
+                    .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada."));
+        }
+        return citaRepository.findByIdAndMedico_Id(idCita, usuario.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada para este médico."));
+    }
+
+    private ConsultaMedica obtenerConsultaComoMedico(Integer idConsulta, AuthUsuario usuario) {
+        ConsultaMedica consulta = consultaMedicaRepository.findById(idConsulta)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la consulta indicada."));
+        if (!usuario.esAdminGeneral() && !consulta.getMedico().getId().equals(usuario.getId())) {
+            throw new ResourceNotFoundException("No se encontró la consulta indicada para este médico.");
+        }
+        return consulta;
+    }
+
+    // ---------------------------------------------------------------
     private boolean isBlank(String s) {
         return s == null || s.isBlank();
     }
@@ -404,6 +466,7 @@ public class ConsultaMedicaService {
                 .fechaHora(c.getFechaHora())
                 .estado(c.getEstadoCita().getNombre())
                 .esEmergencia(c.isEsEmergencia())
+                .vecesLlamado(c.getVecesLlamadoMedico())
                 .build();
     }
 }

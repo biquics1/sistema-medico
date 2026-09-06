@@ -80,14 +80,76 @@ public class EnfermeriaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Signos Vitales'."));
 
         cita.setEstadoCita(signosVitales);
+        cita.setVecesLlamadoEnfermeria((short) 1); // primer llamado de un máximo de 3
         Cita actualizada = citaRepository.save(cita);
 
         String mensaje = String.format(
-                "Turno número %d. Paciente %s, favor pasar a toma de signos vitales.",
+                "Turno número %d. Paciente %s, favor pasar a toma de signos vitales. (Llamado 1 de 3)",
                 actualizada.getId(), actualizada.getPaciente().getNombreCompleto());
 
         return LlamarPacienteResponseDTO.builder()
                 .mensajeAnuncio(mensaje)
+                .cita(toDTO(actualizada))
+                .build();
+    }
+
+    // ---------------------------------------------------------------
+    // "Llamar de nuevo": reintento de anuncio sin cambiar de estado,
+    // hasta un máximo de 3 llamados en total (1 inicial + 2 reintentos).
+    // ---------------------------------------------------------------
+    @Transactional
+    public LlamarPacienteResponseDTO llamarDeNuevo(Integer idCita, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
+        Cita cita = citaRepository.findById(idCita)
+                .filter(c -> perteneceASede(c, sucursalScope))
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada."));
+
+        if (!EstadoCita.SIGNOS_VITALES.equals(cita.getEstadoCita().getNombre())) {
+            throw new ValidationException("Solo se puede volver a llamar a un paciente que ya fue llamado a signos vitales.");
+        }
+
+        short vecesActuales = cita.getVecesLlamadoEnfermeria() == null ? 1 : cita.getVecesLlamadoEnfermeria();
+        if (vecesActuales >= 3) {
+            throw new ValidationException(
+                    "Se alcanzó el máximo de 3 llamados para esta cita. Puede marcar 'No Asistió' para cancelarla.");
+        }
+
+        short nuevasVeces = (short) (vecesActuales + 1);
+        cita.setVecesLlamadoEnfermeria(nuevasVeces);
+        Cita actualizada = citaRepository.save(cita);
+
+        String mensaje = String.format(
+                "Turno número %d. Paciente %s, favor pasar a toma de signos vitales. (Llamado %d de 3)",
+                actualizada.getId(), actualizada.getPaciente().getNombreCompleto(), nuevasVeces);
+
+        return LlamarPacienteResponseDTO.builder()
+                .mensajeAnuncio(mensaje)
+                .cita(toDTO(actualizada))
+                .build();
+    }
+
+    // ---------------------------------------------------------------
+    // "No Asistió": el paciente no se presenta a signos vitales pese a
+    // los llamados -> se cancela la cita (estado Cancelada).
+    // ---------------------------------------------------------------
+    @Transactional
+    public AccionCitaEnfermeriaResponseDTO marcarNoAsistio(Integer idCita, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
+        Cita cita = citaRepository.findById(idCita)
+                .filter(c -> perteneceASede(c, sucursalScope))
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada."));
+
+        if (!EstadoCita.SIGNOS_VITALES.equals(cita.getEstadoCita().getNombre())) {
+            throw new ValidationException("Solo se puede marcar 'No Asistió' para un paciente ya llamado a signos vitales.");
+        }
+
+        EstadoCita cancelada = estadoCitaRepository.findByNombre(EstadoCita.CANCELADA)
+                .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Cancelada'."));
+        cita.setEstadoCita(cancelada);
+        Cita actualizada = citaRepository.save(cita);
+
+        return AccionCitaEnfermeriaResponseDTO.builder()
+                .mensaje("Cita #" + actualizada.getId() + " cancelada por inasistencia del paciente.")
                 .cita(toDTO(actualizada))
                 .build();
     }
@@ -215,6 +277,7 @@ public class EnfermeriaService {
                 .esEmergencia(c.isEsEmergencia())
                 .fechaHora(c.getFechaHora())
                 .horaLlegada(c.getHoraLlegada())
+                .vecesLlamado(c.getVecesLlamadoEnfermeria())
                 .build();
     }
 }

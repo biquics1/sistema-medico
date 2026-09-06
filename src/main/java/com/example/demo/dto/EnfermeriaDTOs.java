@@ -26,6 +26,7 @@ public class EnfermeriaDTOs {
         private boolean esEmergencia;
         private LocalDateTime fechaHora;
         private LocalDateTime horaLlegada;
+        private Short vecesLlamado; // CU-07: veces que se ha llamado al paciente (maximo 3)
     }
 
     // Respuesta del listado: separa "Paciente Presente" de "Signos Vitales" (en proceso)
@@ -65,6 +66,16 @@ public class EnfermeriaDTOs {
     public static class SignosVitalesResponseDTO {
         private String mensaje;
         private List<String> alertasClinicas; // vacío si todo está en rango normal
+        private PacienteColaDTO cita;
+    }
+
+    // Respuesta genérica para acciones sobre la cita en enfermería
+    // ("No Asistió" -> cancela la cita)
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class AccionCitaEnfermeriaResponseDTO {
+        private String mensaje;
         private PacienteColaDTO cita;
     }
 }

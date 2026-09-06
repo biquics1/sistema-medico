@@ -183,6 +183,56 @@ public class RecepcionService {
     }
 
     // ---------------------------------------------------------------
+    // NUEVO — Cancelación de cita desde Recepción (a solicitud del paciente
+    // o por indicación administrativa). Solo procede mientras la cita no ha
+    // iniciado el proceso clínico: se permite en "Pendiente de pago",
+    // "Confirmada" y "Paciente Presente". Una vez que enfermería la pasó a
+    // "Signos Vitales" (o estados posteriores), ya no se cancela desde aquí.
+    // ---------------------------------------------------------------
+    @Transactional
+    public CancelarCitaResponseDTO cancelarCita(Integer idCita, String motivo, Integer sucursalScope) {
+        Cita cita = citaRepository.findById(idCita)
+                .filter(c -> perteneceASede(c, sucursalScope))
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No se encontró una cita asociada a los parámetros ingresados. Verifique los datos e intente nuevamente."));
+
+        String estadoActual = cita.getEstadoCita().getNombre();
+
+        if (EstadoCita.CANCELADA.equals(estadoActual)) {
+            throw new ValidationException("La cita ya se encuentra cancelada.");
+        }
+        boolean cancelable = EstadoCita.PENDIENTE_PAGO.equals(estadoActual)
+                || EstadoCita.CONFIRMADA.equals(estadoActual)
+                || EstadoCita.PACIENTE_PRESENTE.equals(estadoActual);
+        if (!cancelable) {
+            throw new ValidationException(
+                    "Solo se pueden cancelar citas en estado 'Pendiente de pago', 'Confirmada' o 'Paciente Presente'. "
+                            + "Esta cita ya se encuentra en proceso de atención (estado actual: '" + estadoActual + "').");
+        }
+
+        EstadoCita cancelada = estadoCitaRepository.findByNombre(EstadoCita.CANCELADA)
+                .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Cancelada'."));
+
+        try {
+            cita.setEstadoCita(cancelada);
+            Cita actualizada = citaRepository.save(cita);
+
+            String nombre = actualizada.getPaciente().getNombreCompleto();
+            String mensaje = "La cita #" + actualizada.getId() + " del paciente " + nombre
+                    + " ha sido cancelada correctamente.";
+
+            return CancelarCitaResponseDTO.builder()
+                    .mensaje(mensaje)
+                    .cita(toDTO(actualizada))
+                    .build();
+        } catch (ObjectOptimisticLockingFailureException e) {
+            // Mismo criterio que registrarLlegada(): otro usuario modificó la
+            // cita (rowVersion) entre que se leyó y se intentó guardar.
+            throw new ValidationException("Operación no permitida");
+        }
+    }
+
+    // ---------------------------------------------------------------
     // FA07: reasignación de médico
     // ---------------------------------------------------------------
     @Transactional

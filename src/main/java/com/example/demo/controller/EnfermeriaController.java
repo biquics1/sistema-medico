@@ -37,4 +37,18 @@ public class EnfermeriaController {
                                                     @AuthenticationPrincipal AuthUsuario usuario) {
         return enfermeriaService.registrarSignosVitales(idCita, request, usuario.getId(), usuario.sucursalScopeOrNull());
     }
+
+    // "Llamar de nuevo": reintento de anuncio sin cambiar de estado (máximo 3 llamados en total)
+    @PostMapping("/citas/{idCita}/llamar-de-nuevo")
+    public LlamarPacienteResponseDTO llamarDeNuevo(@PathVariable Integer idCita,
+                                                   @AuthenticationPrincipal AuthUsuario usuario) {
+        return enfermeriaService.llamarDeNuevo(idCita, usuario.sucursalScopeOrNull());
+    }
+
+    // "No Asistió": el paciente no llegó a signos vitales pese a los llamados -> cancela la cita
+    @PostMapping("/citas/{idCita}/no-asistio")
+    public AccionCitaEnfermeriaResponseDTO noAsistio(@PathVariable Integer idCita,
+                                                     @AuthenticationPrincipal AuthUsuario usuario) {
+        return enfermeriaService.marcarNoAsistio(idCita, usuario.sucursalScopeOrNull());
+    }
 }

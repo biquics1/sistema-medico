@@ -270,6 +270,7 @@ public class CajaService {
         String ultimosCuatro = null;
 
         if ("EFECTIVO".equals(metodo)) {
+
             montoRecibido = request.getMontoRecibido();
             if (montoRecibido == null) {
                 throw new ValidationException("Debe ingresar el monto recibido.");

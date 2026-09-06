@@ -35,6 +35,18 @@ public class RecepcionController {
         return recepcionService.registrarLlegada(idCita, usuario.sucursalScopeOrNull());
     }
 
+    // NUEVO — Cancelación de cita desde Recepción (a solicitud del paciente
+    // o por indicación administrativa), mientras la cita no haya iniciado
+    // su atención clínica. Ver RecepcionService.cancelarCita.
+    @PostMapping("/citas/{idCita}/cancelar")
+    public CancelarCitaResponseDTO cancelar(
+            @PathVariable Integer idCita,
+            @RequestBody(required = false) CancelarCitaRequestDTO request,
+            @AuthenticationPrincipal AuthUsuario usuario) {
+        String motivo = request != null ? request.getMotivo() : null;
+        return recepcionService.cancelarCita(idCita, motivo, usuario.sucursalScopeOrNull());
+    }
+
     // FA07 paso 2: médicos disponibles de la misma sede + especialidad
     @GetMapping("/medicos-disponibles")
     public List<MedicoDisponibleDTO> medicosDisponibles(

@@ -27,21 +27,21 @@ public class MedicoController {
     // Paso 1 FB
     @GetMapping("/panel")
     public PanelMedicoDTO panel(@AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.obtenerPanel(usuario.getId());
+        return consultaMedicaService.obtenerPanel(usuario);
     }
 
     // Paso 2 FB
     @PostMapping("/citas/{idCita}/iniciar-consulta")
     public IniciarConsultaResponseDTO iniciarConsulta(@PathVariable Integer idCita,
                                                       @AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.iniciarConsulta(idCita, usuario.getId());
+        return consultaMedicaService.iniciarConsulta(idCita, usuario);
     }
 
     // Paso 3 FB: contexto para abrir/reabrir el formulario
     @GetMapping("/citas/{idCita}/consulta")
     public ConsultaContextoDTO contexto(@PathVariable Integer idCita,
                                         @AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.obtenerContexto(idCita, usuario.getId());
+        return consultaMedicaService.obtenerContexto(idCita, usuario);
     }
 
     // Pasos 4-9 FB: guardar borrador o finalizar
@@ -49,21 +49,28 @@ public class MedicoController {
     public GuardarConsultaResponseDTO guardarConsulta(@PathVariable Integer idCita,
                                                       @RequestBody GuardarConsultaRequestDTO request,
                                                       @AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.guardarConsulta(idCita, usuario.getId(), request);
+        return consultaMedicaService.guardarConsulta(idCita, usuario, request);
     }
 
-    // FA06
+    // "Llamar de nuevo": reintento de anuncio sin cambiar de estado (máximo 3 llamados en total)
+    @PostMapping("/citas/{idCita}/llamar-de-nuevo")
+    public IniciarConsultaResponseDTO llamarDeNuevo(@PathVariable Integer idCita,
+                                                    @AuthenticationPrincipal AuthUsuario usuario) {
+        return consultaMedicaService.llamarDeNuevo(idCita, usuario);
+    }
+
+    // FA06 - Ahora se ejecuta desde la columna "En Consulta Médica" y cancela la cita
     @PostMapping("/citas/{idCita}/no-asistio")
     public AccionCitaResponseDTO noAsistio(@PathVariable Integer idCita,
                                            @AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.marcarNoAsistio(idCita, usuario.getId());
+        return consultaMedicaService.marcarNoAsistio(idCita, usuario);
     }
 
     // Sección "Evaluados"
     @PostMapping("/citas/{idCita}/finalizar-atencion")
     public AccionCitaResponseDTO finalizarAtencion(@PathVariable Integer idCita,
                                                    @AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.finalizarAtencion(idCita, usuario.getId());
+        return consultaMedicaService.finalizarAtencion(idCita, usuario);
     }
 
     // Paso 6 FB: autocompletado CIE-10
@@ -89,7 +96,7 @@ public class MedicoController {
     public OrdenLaboratorioResponseDTO ordenLaboratorio(@PathVariable Integer idConsulta,
                                                         @RequestBody OrdenLaboratorioRequestDTO request,
                                                         @AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.generarOrdenLaboratorio(idConsulta, usuario.getId(), request);
+        return consultaMedicaService.generarOrdenLaboratorio(idConsulta, usuario, request);
     }
 
     // FA04
@@ -97,7 +104,7 @@ public class MedicoController {
     public RecetaResponseDTO receta(@PathVariable Integer idConsulta,
                                     @RequestBody RecetaRequestDTO request,
                                     @AuthenticationPrincipal AuthUsuario usuario) {
-        return consultaMedicaService.generarReceta(idConsulta, usuario.getId(), request);
+        return consultaMedicaService.generarReceta(idConsulta, usuario, request);
     }
 
     //  Agendamiento de Cita de Seguimiento

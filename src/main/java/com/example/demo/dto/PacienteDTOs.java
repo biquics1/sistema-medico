@@ -17,6 +17,7 @@ public class PacienteDTOs {
         private Integer id;
         private String especialidad;
         private String medico;
+        private Integer medicoId; // NUEVO: necesario para reagendar (consultar horarios del mismo medico)
         private String sucursal;
         private LocalDateTime fechaHora;
         private String estado;
@@ -28,6 +29,7 @@ public class PacienteDTOs {
         private Integer id;
         private String especialidad;
         private String medico;
+        private Integer medicoId; // NUEVO: necesario para reagendar (consultar horarios del mismo medico)
         private String sucursal;
         private LocalDateTime fechaHora;
         private String estado;
@@ -93,5 +95,12 @@ public class PacienteDTOs {
         private String frecuencia;
         private String duracion;
         private String indicaciones;
+    }
+
+    // NUEVO -- Reagendar cita (paciente): solo permite cambiar fecha/hora,
+    // NO permite cambiar el medico asignado.
+    @Data
+    public static class ReagendarCitaRequestDTO {
+        private LocalDateTime fechaHora;
     }
 }

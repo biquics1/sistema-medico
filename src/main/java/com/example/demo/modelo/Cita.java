@@ -67,6 +67,12 @@ public class Cita {
     @Column(name = "creado_en", nullable = false)
     private LocalDateTime creadoEn = LocalDateTime.now();
 
+    @Column(name = "veces_llamado_enfermeria", nullable = false)
+    private Short vecesLlamadoEnfermeria = 0; // CU-07: cuantas veces se ha llamado al paciente (maximo 3: 1 inicial + 2 "Llamar de nuevo")
+
+    @Column(name = "veces_llamado_medico", nullable = false)
+    private Short vecesLlamadoMedico = 0; // CU-08: cuantas veces se ha llamado al paciente a consulta (maximo 3: 1 inicial + 2 "Llamar de nuevo")
+
     // Bloqueo optimista (RNF-025): evita que caja y recepción
     // pisen el mismo cambio de estado sin darse cuenta.
     @Version
