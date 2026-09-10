@@ -33,7 +33,7 @@ public class AuditoriaContexto {
         String ip = AuditContextHolder.getIpOrigen();
 
         em.createNativeQuery(
-                        "SELECT set_config('app.usuaio_id', :uid, true), set_config('app.ip_origen', :ip, true)")
+                        "SELECT set_config('app.usuario_id', :uid, true), set_config('app.ip_origen', :ip, true)")
                 .setParameter("uid", usuarioId != null ? usuarioId.toString() : "")
                 .setParameter("ip", ip != null ? ip : "")
                 .getSingleResult();

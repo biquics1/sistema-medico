@@ -112,7 +112,7 @@ public class RecepcionService {
                 .build();
     }
 
-    // CORREGIDO: buscarPorDpiPaciente ordena las citas activas por fechaHora
+    // buscarPorDpiPaciente ordena las citas activas por fechaHora
     // DESC, así que si el paciente tenía más de una cita activa (ej. la de
     // hoy, ya con llegada registrada, y otra futura todavía "Confirmada"),
     // se devolvía la MÁS FUTURA en vez de la de HOY. Con dos personas

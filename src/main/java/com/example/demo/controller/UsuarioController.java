@@ -33,10 +33,6 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.listar(admin.sucursalScopeOrNull()));
     }
 
-    // NUEVO — CU-01 (RN-CU01-01 / RN-CU01-02): pantalla "Listado de Usuarios"
-    // con selector "Filtrar por campo" (ID, Nombre, Correo Electrónico, Rol,
-    // Nombre de Usuario, DPI) y paginación.
-    // Ej: GET /api/users/buscar?campo=NOMBRE&valor=ana&pagina=0&tamano=20
     @GetMapping("/buscar")
     public ResponseEntity<PageResponseDTO<UsuarioResponseDTO>> buscar(
             @RequestParam(required = false) String campo,
@@ -47,7 +43,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.buscar(campo, valor, pagina, tamano, admin.sucursalScopeOrNull()));
     }
 
-    // NUEVO — necesario para precargar el formulario de "Editar Usuario"
+    // necesario para precargar el formulario de "Editar Usuario"
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> obtenerPorId(@PathVariable Integer id,
                                                            @AuthenticationPrincipal AuthUsuario admin) {

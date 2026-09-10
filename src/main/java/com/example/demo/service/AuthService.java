@@ -123,9 +123,8 @@ public class AuthService {
         );
     }
 
-    // ============================================================
     // CU-02: Registro de Usuarios Externos
-    // ============================================================
+
     @Transactional
     public RegistroPacienteResponseDTO registrarPaciente(RegistroPacienteDTO dto) {
         auditoriaContexto.aplicar();
