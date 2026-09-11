@@ -4,11 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="cambios agregando boton de llamado, reasignar medico y cancelar citas">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="cambios minimos">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/31dd17f9-0cc0-436a-9ada-8bfc60621aa1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/31dd17f9-0cc0-436a-9ada-8bfc60621aa1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/31dd17f9-0cc0-436a-9ada-8bfc60621aa1/storage_v2/_src_/database/sistema_medico.BvZqdg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/31dd17f9-0cc0-436a-9ada-8bfc60621aa1/storage_v2/_src_/database/sistema_medico.BvZqdg/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/UsuarioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/AuditoriaContexto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/AuditoriaContexto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/CitaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/CitaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/CitaResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/CitaResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PagoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PagoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/CitaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/CitaController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/UsuarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/UsuarioController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/CitaResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/CitaResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/modelo/Cita.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/modelo/Cita.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/AuthService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/AuthService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,23 +79,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0000000000000002" />
-      <entry key="S2" value="1.000163606257725" />
-      <entry key="S5" value="1.0959770214984796" />
-      <entry key="S10" value="2.191133735975244" />
-      <entry key="S30" value="9.046147451127032" />
-      <entry key="S60" value="14.486800531111168" />
-      <entry key="M2" value="18.573906965182935" />
-      <entry key="M5" value="21.649756668318563" />
-      <entry key="M10" value="22.874523589987433" />
-      <entry key="M15" value="23.380514298980962" />
-      <entry key="M30" value="24.03151039892908" />
-      <entry key="H1" value="24.458983260265207" />
-      <entry key="H2" value="24.72166060906499" />
-      <entry key="H4" value="25.42485370416568" />
-      <entry key="D1" value="63.611860169065324" />
-      <entry key="W1" value="115.73927018067837" />
+      <entry key="MS100" value="1.0000004841432486" />
+      <entry key="MS500" value="1.0720224280560493" />
+      <entry key="S2" value="2.0631116872076216" />
+      <entry key="S5" value="3.0141440464152995" />
+      <entry key="S10" value="4.310673074792933" />
+      <entry key="S30" value="11.092439830543222" />
+      <entry key="S60" value="16.74065239636257" />
+      <entry key="M2" value="21.098260753259463" />
+      <entry key="M5" value="24.428373861180702" />
+      <entry key="M10" value="25.75762748367074" />
+      <entry key="M15" value="26.300884028127456" />
+      <entry key="M30" value="26.990609300946446" />
+      <entry key="H1" value="27.438178286511388" />
+      <entry key="H2" value="27.711149635608592" />
+      <entry key="H4" value="28.41945524097937" />
+      <entry key="D1" value="66.60967091709294" />
+      <entry key="W1" value="118.73870597239095" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -95,34 +106,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="1.7920996952050555E-157" />
-      <entry key="M10" value="4.2333198499582585E-79" />
-      <entry key="M15" value="5.6379435345899975E-53" />
-      <entry key="M30" value="7.508624064760481E-27" />
-      <entry key="H1" value="8.665231713439907E-14" />
-      <entry key="H2" value="2.9436765639995E-7" />
-      <entry key="H4" value="5.425565928084823E-4" />
-      <entry key="D1" value="0.2855885824948029" />
-      <entry key="W1" value="0.8360816495034193" />
+      <entry key="M5" value="1.7747562535371608E-157" />
+      <entry key="M10" value="4.212785602825245E-79" />
+      <entry key="M15" value="5.619697063597842E-53" />
+      <entry key="M30" value="7.496463875453456E-27" />
+      <entry key="H1" value="8.658212214685804E-14" />
+      <entry key="H2" value="2.942484021143666E-7" />
+      <entry key="H4" value="5.424466813562102E-4" />
+      <entry key="D1" value="0.28557893922866306" />
+      <entry key="W1" value="0.8360776163917372" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.3037741295193548E-74" />
-      <entry key="MS500" value="1.839668880460388E-15" />
-      <entry key="S2" value="3.6202023721939816E-4" />
-      <entry key="S5" value="0.12682828673083893" />
-      <entry key="S10" value="1.3562339393971392" />
-      <entry key="S30" value="8.568534588904727" />
-      <entry key="S60" value="14.200248940310967" />
-      <entry key="M2" value="18.415068737435096" />
-      <entry key="M5" value="21.58184754699823" />
-      <entry key="M10" value="22.83975893544101" />
-      <entry key="M15" value="23.357139467408203" />
-      <entry key="M30" value="24.0197114332004" />
-      <entry key="H1" value="24.453051656340687" />
-      <entry key="H2" value="24.718686166063417" />
-      <entry key="H4" value="25.423903566106624" />
-      <entry key="D1" value="63.89715097184423" />
-      <entry key="W1" value="116.57529842433891" />
+      <entry key="MS100" value="0.18174683476581863" />
+      <entry key="MS500" value="0.76252533730122" />
+      <entry key="S2" value="1.6203280282545016" />
+      <entry key="S5" value="2.3341588720331767" />
+      <entry key="S10" value="3.602739412688632" />
+      <entry key="S30" value="10.626990057681937" />
+      <entry key="S60" value="16.45109898156622" />
+      <entry key="M2" value="20.93479405536305" />
+      <entry key="M5" value="24.357709693823107" />
+      <entry key="M10" value="25.721319483751163" />
+      <entry key="M15" value="26.276442225483812" />
+      <entry key="M30" value="26.9782574805873" />
+      <entry key="H1" value="27.43196534279482" />
+      <entry key="H2" value="27.708033284336643" />
+      <entry key="H4" value="28.4184337285447" />
+      <entry key="D1" value="66.89494015743225" />
+      <entry key="W1" value="119.57472847898718" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -149,7 +160,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Run&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -252,17 +263,12 @@
     <MESSAGE value="modificacion de 4 archivos" />
     <MESSAGE value="pequeñas correcciones" />
     <MESSAGE value="cambios agregando boton de llamado, reasignar medico y cancelar citas" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambios agregando boton de llamado, reasignar medico y cancelar citas" />
+    <MESSAGE value="cambios minimos" />
+    <option name="LAST_COMMIT_MESSAGE" value="cambios minimos" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="NONE" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>230</line>
-          <placement>INTER_LINE</placement>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
           <line>115</line>

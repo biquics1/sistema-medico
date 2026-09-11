@@ -62,7 +62,13 @@ public class Cita {
     private BigDecimal monto = new BigDecimal("150.00"); // Monto a cobrar por la consulta
 
     @Column(name = "expira_en")
-    private LocalDateTime expiraEn; // Momento en que expira la reserva temporal si no se paga (CU-03/CU-04)
+    private LocalDateTime expiraEn; // Fin del día de la cita (fechaHora). Si sigue "Pendiente de pago" al pasar
+    // la medianoche de ese día, el job la cancela automáticamente.
+
+    @Column(name = "sesion_pago_expira_en")
+    private LocalDateTime sesionPagoExpiraEn; // Ventana de 5 min para completar el pago EN LÍNEA (CU-04).
+    // Es independiente de expiraEn: si vence, NO cancela la cita,
+    // solo invalida esa sesión de pago con tarjeta.
 
     @Column(name = "creado_en", nullable = false)
     private LocalDateTime creadoEn = LocalDateTime.now();

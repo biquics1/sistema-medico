@@ -61,8 +61,9 @@ public class CitaController {
         return citaService.elegirMetodoPago(id, usuario.getId(), dto.getMetodoPago());
     }
 
-    // NUEVO — el frontend llama esto cuando el contador de pago en línea
-    // llega a 0, para cancelar la cita de inmediato sin esperar al job.
+    // MODIFICADO — el frontend llama esto cuando el contador de 5 min de pago en
+    // línea llega a 0. Ya NO cancela la cita (eso solo ocurre a medianoche del día
+    // de la cita); solo limpia la sesión de pago para permitir elegir método de nuevo.
     @PostMapping("/api/appointments/{id}/cancelar-expirada")
     public CitaResponseDTO cancelarExpirada(@PathVariable Integer id,
                                             @AuthenticationPrincipal AuthUsuario usuario) {

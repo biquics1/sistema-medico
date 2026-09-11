@@ -55,10 +55,13 @@ public class PagoService {
         if (!"Pendiente de pago".equals(cita.getEstadoCita().getNombre())) {
             throw new ValidationException("Esta cita ya no está pendiente de pago.");
         }
-        if (cita.getExpiraEn() != null && cita.getExpiraEn().isBefore(LocalDateTime.now())) {
+        // Ventana de 5 min de la SESIÓN de pago en línea (CU-04). Si vence, no se cancela
+        // la cita (eso solo pasa a medianoche del día de la cita, ver CitaService), solo
+        // se rechaza este intento de pago y debe volver a elegir método de pago.
+        if (cita.getSesionPagoExpiraEn() != null && cita.getSesionPagoExpiraEn().isBefore(LocalDateTime.now())) {
             throw new ValidationException(
-                    "El tiempo para confirmar su cita ha expirado. El horario seleccionado ha sido liberado. " +
-                            "Por favor, seleccione un nuevo horario.");
+                    "El tiempo para completar el pago en línea ha expirado. " +
+                            "Por favor, seleccione nuevamente el método de pago para intentarlo de nuevo.");
         }
 
         validarTarjeta(dto);
@@ -90,6 +93,7 @@ public class PagoService {
                         "Estado '" + ESTADO_CONFIRMADA + "' no configurado."));
         cita.setEstadoCita(confirmada);
         cita.setExpiraEn(null);
+        cita.setSesionPagoExpiraEn(null);
         citaRepository.save(cita);
 
         // comprobante de pago por correo (RN-GLOBAL-006 / RN-CU04-05)

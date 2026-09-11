@@ -20,4 +20,5 @@ public class CitaResponseDTO {
     private String motivoConsulta;
     private BigDecimal monto;
     private LocalDateTime expiraEn;
+    private LocalDateTime sesionPagoExpiraEn;
 }

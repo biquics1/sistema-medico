@@ -35,9 +35,6 @@ public class CitaService {
     @Value("${app.consulta.precio:150.00}")
     private BigDecimal precioConsulta;
 
-    @Value("${app.reserva.minutos:5}")
-    private long minutosReserva;
-
     @Value("${app.reserva.online.minutos:5}")
     private long minutosReservaOnline;
 
@@ -172,7 +169,12 @@ public class CitaService {
         cita.setFechaHora(dto.getFechaHora());
         cita.setMotivoConsulta(dto.getMotivoConsulta());
         cita.setMonto(precioConsulta);
-        cita.setExpiraEn(LocalDateTime.now().plusMinutes(minutosReserva));
+        // Se mantiene "Pendiente de pago" hasta el final del día de la CITA (no de la creación),
+        // así el paciente puede agendar con una semana/mes de anticipación sin que se cancele antes de tiempo.
+        cita.setExpiraEn(dto.getFechaHora().toLocalDate().atTime(LocalTime.MAX));
+        // El flujo por defecto tras "Confirmar Cita" redirige a pago en línea (CU-03/CU-04),
+// así que el contador de 5 min arranca desde la creación, sin esperar a /metodo-pago.
+        cita.setSesionPagoExpiraEn(LocalDateTime.now().plusMinutes(minutosReservaOnline));
 
         // NUEVO — red de seguridad final: si dos requests pasan las validaciones
         // de arriba casi al mismo tiempo (condición de carrera), el índice único
@@ -211,8 +213,9 @@ public class CitaService {
 
         String metodo = metodoPago == null ? "" : metodoPago.trim().toUpperCase();
         switch (metodo) {
-            case "LINEA" -> cita.setExpiraEn(LocalDateTime.now().plusMinutes(minutosReservaOnline));
-            case "CAJA" -> cita.setExpiraEn(null);
+            // "expiraEn" NO se toca aquí: se mantiene como fin del día de la cita en ambos casos.
+            case "LINEA" -> cita.setSesionPagoExpiraEn(LocalDateTime.now().plusMinutes(minutosReservaOnline));
+            case "CAJA" -> cita.setSesionPagoExpiraEn(null);
             default -> throw new ValidationException(
                     "Debe seleccionar un método de pago válido: 'CAJA' o 'LINEA'.");
         }
@@ -221,6 +224,11 @@ public class CitaService {
         return toDto(cita);
     }
 
+    // MODIFICADO — antes cancelaba la cita completa cuando el timer de pago en línea
+    // llegaba a 0. Ahora esa ventana de 5 min es solo de la SESIÓN de pago (tarjeta),
+    // no de la cita: al vencer, simplemente se limpia sesionPagoExpiraEn para que el
+    // paciente pueda elegir método de pago de nuevo. La cita sigue "Pendiente de pago"
+    // hasta el final del día (ver cancelarCitasExpiradas).
     @Transactional
     public CitaResponseDTO cancelarPorExpiracionInmediata(Integer citaId, Integer pacienteId) {
         auditoriaContexto.aplicar();
@@ -228,12 +236,11 @@ public class CitaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
 
         boolean pendiente = EstadoCita.PENDIENTE_PAGO.equals(cita.getEstadoCita().getNombre());
-        boolean venciada = cita.getExpiraEn() != null && !cita.getExpiraEn().isAfter(LocalDateTime.now());
+        boolean sesionVencida = cita.getSesionPagoExpiraEn() != null
+                && !cita.getSesionPagoExpiraEn().isAfter(LocalDateTime.now());
 
-        if (pendiente && venciada) {
-            EstadoCita cancelada = estadoCitaRepository.findByNombre(EstadoCita.CANCELADA)
-                    .orElseThrow(() -> new ResourceNotFoundException("Estado 'Cancelada' no configurado."));
-            cita.setEstadoCita(cancelada);
+        if (pendiente && sesionVencida) {
+            cita.setSesionPagoExpiraEn(null);
             cita = citaRepository.save(cita);
         }
         return toDto(cita);
@@ -279,7 +286,8 @@ public class CitaService {
                 c.getFechaHora(),
                 c.getMotivoConsulta(),
                 c.getMonto(),
-                c.getExpiraEn()
+                c.getExpiraEn(),
+                c.getSesionPagoExpiraEn()
         );
     }
 }
