@@ -28,17 +28,12 @@ public class PagoService {
 
     private static final Pattern VENC_PATTERN = Pattern.compile("^(0[1-9]|1[0-2])/\\d{2}$");
 
-    // BUGFIX: el catálogo estado_cita NO tiene un estado llamado "Pagada".
-    // El nombre real usado por todo el flujo (CU-05/CU-06) es "Confirmada",
-    // por eso el pago en línea (CU-04) fallaba siempre con
-    // "Estado 'Pagada' no configurado."
     private static final String ESTADO_CONFIRMADA = "Confirmada";
 
     @Transactional
     public PagoResponseDTO procesarPago(PagoCreateDTO dto) {
         auditoriaContexto.aplicar();
 
-        // Idempotencia: si ya se procesó, retorna el resultado existente
         if (dto.getIdempotencyKey() != null) {
             var existente = pagoRepository.findByIdempotencyKey(dto.getIdempotencyKey());
             if (existente.isPresent()) {
@@ -55,19 +50,21 @@ public class PagoService {
         if (!"Pendiente de pago".equals(cita.getEstadoCita().getNombre())) {
             throw new ValidationException("Esta cita ya no está pendiente de pago.");
         }
-        // Ventana de 5 min de la SESIÓN de pago en línea (CU-04). Si vence, no se cancela
-        // la cita (eso solo pasa a medianoche del día de la cita, ver CitaService), solo
-        // se rechaza este intento de pago y debe volver a elegir método de pago.
+        // Ventana de 5 min de la SESIÓN de pago en línea (CU-04). Si vence, se
+        // cancela la cita aquí mismo (respaldo por si el frontend no alcanzó a
+        // llamar /cancelar-expirada antes de este intento de pago).
         if (cita.getSesionPagoExpiraEn() != null && cita.getSesionPagoExpiraEn().isBefore(LocalDateTime.now())) {
+            EstadoCita cancelada = estadoCitaRepository.findByNombre(EstadoCita.CANCELADA)
+                    .orElseThrow(() -> new ResourceNotFoundException("Estado 'Cancelada' no configurado."));
+            cita.setEstadoCita(cancelada);
+            citaRepository.save(cita);
             throw new ValidationException(
-                    "El tiempo para completar el pago en línea ha expirado. " +
-                            "Por favor, seleccione nuevamente el método de pago para intentarlo de nuevo.");
+                    "El tiempo para confirmar su cita ha expirado. El horario seleccionado ha sido liberado. " +
+                            "Por favor, seleccione un nuevo horario.");
         }
 
         validarTarjeta(dto);
 
-        // Simulación de pasarela de pago siempre aprueba en este entorno de curso.
-        // Para simular un rechazo, usa el número de tarjeta 4000000000000002.
         if ("4000000000000002".equals(dto.getNumeroTarjeta())) {
             throw new ValidationException(
                     "La transacción con tarjeta fue rechazada por el banco. " +
@@ -78,7 +75,7 @@ public class PagoService {
 
         Pago pago = new Pago();
         pago.setCita(cita);
-        pago.setPaciente(cita.getPaciente()); // paciente_id es NOT NULL en el schema
+        pago.setPaciente(cita.getPaciente());
         pago.setNumeroTransaccion(numeroTransaccion);
         pago.setMonto(cita.getMonto());
         pago.setMetodoPago("TARJETA");
@@ -96,7 +93,6 @@ public class PagoService {
         cita.setSesionPagoExpiraEn(null);
         citaRepository.save(cita);
 
-        // comprobante de pago por correo (RN-GLOBAL-006 / RN-CU04-05)
         emailService.enviarComprobantePago(cita, pago);
 
         return new PagoResponseDTO(cita.getId(), numeroTransaccion, pago.getMonto(),
@@ -133,7 +129,6 @@ public class PagoService {
         }
     }
 
-    // Algoritmo de Luhn (RN-CU04-01)
     private boolean esLuhnValido(String numero) {
         int suma = 0;
         boolean alternar = false;

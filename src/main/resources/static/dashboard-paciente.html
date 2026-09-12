@@ -893,29 +893,42 @@
         // cita.expiraEn viene del servidor (ahora + 5 minutos, ver
         // CitaService.elegirMetodoPago) — el contador se calcula contra esa
         // hora real, no contra un contador local, para evitar desfaces.
-        iniciarContadorPagoLinea(cita.expiraEn);
+        iniciarContadorPagoLinea(cita.sesionPagoExpiraEn);
     }
 
-    function iniciarContadorPagoLinea(expiraEnISO) {
+    // El contador llegó a 0 sin que se completara el pago: se cancela la
+    // cita de inmediato (no se genera cita para pagar después en caja) y se
+    // redirige al paciente, igual que el patrón de CU-04 FA02.
+    async function expirarPagoEnLinea() {
         detenerContadorPagoLinea();
-        const expiraEnMs = new Date(expiraEnISO).getTime();
+        document.getElementById('formPagoLinea').classList.add('hidden');
+        document.getElementById('mensajesPagoLinea').innerHTML = `
+            <div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200 text-sm">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                El tiempo para confirmar tu cita ha expirado. La cita ha sido cancelada.
+                Serás redirigido en unos segundos...
+            </div>`;
 
-        function actualizar() {
-            const restanteMs = expiraEnMs - Date.now();
-            const elemento = document.getElementById('contadorPagoLinea');
-            if (restanteMs <= 0) {
-                if (elemento) elemento.innerText = '00:00';
-                expirarPagoEnLinea();
-                return;
+        try {
+            if (citaCreada) {
+                await apiFetch(`/api/appointments/${citaCreada.id}/cancelar-expirada`, { method: 'POST' });
             }
-            const totalSeg = Math.floor(restanteMs / 1000);
-            const min = String(Math.floor(totalSeg / 60)).padStart(2, '0');
-            const seg = String(totalSeg % 60).padStart(2, '0');
-            if (elemento) elemento.innerText = `${min}:${seg}`;
+        } catch (e) {
+            // Si esta llamada falla por cualquier motivo, PagoService cancela
+            // la cita igual en el siguiente intento de pago (respaldo).
         }
 
-        actualizar();
-        contadorPagoLineaInterval = setInterval(actualizar, 1000);
+        setTimeout(() => {
+            citaCreada = null;
+            document.getElementById('vistaWizard').classList.add('hidden');
+            document.getElementById('vistaDashboard').classList.remove('hidden');
+            mostrarMensajeDashboard(
+                'El tiempo para pagar en línea expiró y tu cita fue cancelada automáticamente. ' +
+                'Puedes agendar una nueva cita cuando quieras.',
+                'error'
+            );
+            cargarMisCitas();
+        }, 4000);
     }
 
     function detenerContadorPagoLinea() {

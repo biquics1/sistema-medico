@@ -42,23 +42,16 @@ public class CitaService {
     private static final LocalTime FIN_JORNADA = LocalTime.of(17, 0);
     private static final int DURACION_SLOT_MIN = 30;
 
-    // NUEVO — estados que "liberan" un horario de médico: si una cita quedó
-    // Cancelada o el paciente No Asistió, esa hora vuelve a estar disponible.
     private static final List<String> ESTADOS_LIBERAN_HORARIO =
             List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO);
 
-    // NUEVO — estados que "liberan" la especialidad para que el paciente pueda
-    // volver a agendar: además de Cancelada/No Asistió, cuenta Atención Finalizada
-    // (el ciclo de esa consulta ya se cerró por completo).
     private static final List<String> ESTADOS_LIBERAN_ESPECIALIDAD =
             List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO, EstadoCita.ATENCION_FINALIZADA);
 
-    // Paso 1: sucursales activas
     public List<Sucursal> listarSucursalesActivas() {
         return sucursalRepository.findByEstado((short) 1);
     }
 
-    // Paso 2: especialidades por sucursal
     public List<Especialidad> listarEspecialidadesPorSucursal(Integer sucursalId) {
         List<BranchSpecialty> asignaciones = branchSpecialtyRepository
                 .findBySucursal_IdAndEstado(sucursalId, (short) 1);
@@ -69,7 +62,6 @@ public class CitaService {
         return asignaciones.stream().map(BranchSpecialty::getEspecialidad).collect(Collectors.toList());
     }
 
-    // Paso 3: médicos por sucursal + especialidad
     public List<DoctorDisponibleDTO> listarMedicos(Integer sucursalId, Integer especialidadId) {
         List<Usuario> medicos = usuarioRepository
                 .findByRol_NombreAndSucursal_IdAndEspecialidad_IdAndEstado(
@@ -84,13 +76,9 @@ public class CitaService {
                 .collect(Collectors.toList());
     }
 
-    // Paso 4: horarios disponibles de un médico en una fecha
-    // MODIFICADO: ahora excluye tanto "Cancelada" como "No Asistió" (antes solo
-    // excluía Cancelada, así que una cita marcada "No Asistió" seguía bloqueando
-    // el horario para siempre).
     public List<LocalDateTime> listarHorariosDisponibles(Integer medicoId, LocalDate fecha) {
         if (fecha.getDayOfWeek() == DayOfWeek.SATURDAY || fecha.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            return List.of(); // sin atención en fin de semana (regla simplificada)
+            return List.of();
         }
 
         LocalDateTime desde = fecha.atTime(INICIO_JORNADA);
@@ -113,7 +101,6 @@ public class CitaService {
         return disponibles;
     }
 
-    // Paso 5: crear cita
     @Transactional
     public CitaResponseDTO crearCita(CitaCreateDTO dto) {
         auditoriaContexto.aplicar();
@@ -136,8 +123,6 @@ public class CitaService {
         Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId())
                 .orElseThrow(() -> new ResourceNotFoundException("Especialidad no encontrada."));
 
-        // NUEVO — Regla 1: el paciente no puede tener más de una cita activa en
-        // la misma especialidad. Debe finalizar/cancelarse la anterior primero.
         boolean tieneCitaActivaEnEspecialidad = citaRepository
                 .existsByPaciente_IdAndEspecialidad_IdAndEstadoCita_NombreNotIn(
                         paciente.getId(), especialidad.getId(), ESTADOS_LIBERAN_ESPECIALIDAD);
@@ -147,9 +132,6 @@ public class CitaService {
                             "'. Debe esperar a que finalice o se cancele antes de agendar otra de la misma especialidad.");
         }
 
-        // MODIFICADO — Regla 2 (doble reserva): antes solo se excluía "Cancelada";
-        // ahora también excluye "No Asistió", y se valida con existsBy directo por
-        // fecha_hora exacta en vez de traer una lista y filtrarla en memoria.
         boolean horarioOcupado = citaRepository.existsByMedico_IdAndFechaHoraAndEstadoCita_NombreNotIn(
                 medico.getId(), dto.getFechaHora(), ESTADOS_LIBERAN_HORARIO);
         if (horarioOcupado) {
@@ -172,15 +154,7 @@ public class CitaService {
         // Se mantiene "Pendiente de pago" hasta el final del día de la CITA (no de la creación),
         // así el paciente puede agendar con una semana/mes de anticipación sin que se cancele antes de tiempo.
         cita.setExpiraEn(dto.getFechaHora().toLocalDate().atTime(LocalTime.MAX));
-        // El flujo por defecto tras "Confirmar Cita" redirige a pago en línea (CU-03/CU-04),
-// así que el contador de 5 min arranca desde la creación, sin esperar a /metodo-pago.
-        cita.setSesionPagoExpiraEn(LocalDateTime.now().plusMinutes(minutosReservaOnline));
 
-        // NUEVO — red de seguridad final: si dos requests pasan las validaciones
-        // de arriba casi al mismo tiempo (condición de carrera), el índice único
-        // parcial de la base de datos (idx_cita_medico_fecha_activa /
-        // idx_cita_paciente_especialidad_activa) rechaza el INSERT duplicado y
-        // aquí lo convertimos en un mensaje legible en vez de un error 500.
         try {
             cita = citaRepository.save(cita);
         } catch (DataIntegrityViolationException e) {
@@ -224,11 +198,10 @@ public class CitaService {
         return toDto(cita);
     }
 
-    // MODIFICADO — antes cancelaba la cita completa cuando el timer de pago en línea
-    // llegaba a 0. Ahora esa ventana de 5 min es solo de la SESIÓN de pago (tarjeta),
-    // no de la cita: al vencer, simplemente se limpia sesionPagoExpiraEn para que el
-    // paciente pueda elegir método de pago de nuevo. La cita sigue "Pendiente de pago"
-    // hasta el final del día (ver cancelarCitasExpiradas).
+    // El contador de 5 min de pago en línea (sesionPagoExpiraEn) llega a 0 sin
+    // completarse el pago: se cancela la cita de inmediato (CU-04 FA02).
+    // Esto es independiente del job de medianoche (expiraEn), que sigue
+    // existiendo como respaldo general para citas pagadas en CAJA.
     @Transactional
     public CitaResponseDTO cancelarPorExpiracionInmediata(Integer citaId, Integer pacienteId) {
         auditoriaContexto.aplicar();
@@ -240,7 +213,9 @@ public class CitaService {
                 && !cita.getSesionPagoExpiraEn().isAfter(LocalDateTime.now());
 
         if (pendiente && sesionVencida) {
-            cita.setSesionPagoExpiraEn(null);
+            EstadoCita cancelada = estadoCitaRepository.findByNombre(EstadoCita.CANCELADA)
+                    .orElseThrow(() -> new ResourceNotFoundException("Estado 'Cancelada' no configurado."));
+            cita.setEstadoCita(cancelada);
             cita = citaRepository.save(cita);
         }
         return toDto(cita);
