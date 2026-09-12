@@ -188,7 +188,8 @@ public class CitaService {
         String metodo = metodoPago == null ? "" : metodoPago.trim().toUpperCase();
         switch (metodo) {
             // "expiraEn" NO se toca aquí: se mantiene como fin del día de la cita en ambos casos.
-            case "LINEA" -> cita.setSesionPagoExpiraEn(LocalDateTime.now().plusMinutes(minutosReservaOnline));
+            case "LINEA" -> cita.setSesionPagoExpiraEn(
+                    LocalDateTime.now().plusMinutes(minutosReservaOnline).withNano(0));
             case "CAJA" -> cita.setSesionPagoExpiraEn(null);
             default -> throw new ValidationException(
                     "Debe seleccionar un método de pago válido: 'CAJA' o 'LINEA'.");

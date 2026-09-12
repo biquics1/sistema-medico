@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="cambios en cancelacion de cita">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="cambios para el pago en linea">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PagoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PagoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,23 +69,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.000053935168099" />
-      <entry key="MS500" value="1.1868756884569758" />
-      <entry key="S2" value="2.5653785293676634" />
-      <entry key="S5" value="3.6989659882398747" />
-      <entry key="S10" value="4.299897354650001" />
-      <entry key="S30" value="6.7859109369464905" />
-      <entry key="S60" value="12.271156409730871" />
-      <entry key="M2" value="19.449153319027683" />
-      <entry key="M5" value="26.91954998903325" />
-      <entry key="M10" value="30.281077861092793" />
-      <entry key="M15" value="31.59188296326615" />
-      <entry key="M30" value="33.10188383751735" />
-      <entry key="H1" value="33.98350564887794" />
-      <entry key="H2" value="34.48082936134762" />
-      <entry key="H4" value="35.30133312254258" />
-      <entry key="D1" value="73.56528940204663" />
-      <entry key="W1" value="125.72755347100386" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0000000180628097" />
+      <entry key="M5" value="1.0023420773695448" />
+      <entry key="M10" value="1.1185429245849272" />
+      <entry key="M15" value="1.4384977544973785" />
+      <entry key="M30" value="2.622075630687128" />
+      <entry key="H1" value="4.158949225170068" />
+      <entry key="H2" value="6.499045811012831" />
+      <entry key="H4" value="12.604974896273232" />
+      <entry key="D1" value="62.34022018156065" />
+      <entry key="W1" value="127.743975023888" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -96,34 +96,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="1.4734630651479375E-157" />
-      <entry key="M10" value="3.8385714336819915E-79" />
-      <entry key="M15" value="5.28177323307209E-53" />
-      <entry key="M30" value="7.267580913255876E-27" />
-      <entry key="H1" value="8.525010799556717E-14" />
-      <entry key="H2" value="2.919762113521701E-7" />
-      <entry key="H4" value="5.403482315619894E-4" />
-      <entry key="D1" value="0.2853945151713838" />
-      <entry key="W1" value="0.8360004620833613" />
+      <entry key="M5" value="8.439956987738223E-193" />
+      <entry key="M10" value="9.186923852812894E-97" />
+      <entry key="M15" value="9.450325003142092E-65" />
+      <entry key="M30" value="9.72127820975314E-33" />
+      <entry key="H1" value="9.859654258518973E-17" />
+      <entry key="H2" value="9.929579174627171E-9" />
+      <entry key="H4" value="9.964727379425462E-5" />
+      <entry key="D1" value="0.21531662819583056" />
+      <entry key="W1" value="0.8030181606620973" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9075680499151597" />
-      <entry key="MS500" value="1.144642805332951" />
-      <entry key="S2" value="2.471302489683739" />
-      <entry key="S5" value="3.6336497727562476" />
-      <entry key="S10" value="4.257735193101412" />
-      <entry key="S30" value="6.697545678859845" />
-      <entry key="S60" value="12.147942683699402" />
-      <entry key="M2" value="19.341543443607335" />
-      <entry key="M5" value="26.858757594046093" />
-      <entry key="M10" value="30.246903728147934" />
-      <entry key="M15" value="31.568176536726273" />
-      <entry key="M30" value="33.08953845573906" />
-      <entry key="H1" value="33.9772020469848" />
-      <entry key="H2" value="34.4776437278173" />
-      <entry key="H4" value="35.300268831510714" />
-      <entry key="D1" value="73.85036662201257" />
-      <entry key="W1" value="126.56349771442329" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="4.814619528E-314" />
+      <entry key="S2" value="4.684254614095526E-79" />
+      <entry key="S5" value="4.6586083127677406E-32" />
+      <entry key="S10" value="2.1583809470915324E-16" />
+      <entry key="S30" value="5.998500502218893E-6" />
+      <entry key="S60" value="0.0024491836399541706" />
+      <entry key="M2" value="0.049489245576280705" />
+      <entry key="M5" value="0.30281421999930597" />
+      <entry key="M10" value="0.666695371835711" />
+      <entry key="M15" value="1.1082793154866992" />
+      <entry key="M30" value="2.4404744498741127" />
+      <entry key="H1" value="4.063594090798478" />
+      <entry key="H2" value="6.450068790662331" />
+      <entry key="H4" value="12.580038015147124" />
+      <entry key="D1" value="62.55113079271317" />
+      <entry key="W1" value="128.54634288396812" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -255,7 +255,8 @@
     <MESSAGE value="cambios agregando boton de llamado, reasignar medico y cancelar citas" />
     <MESSAGE value="cambios minimos" />
     <MESSAGE value="cambios en cancelacion de cita" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambios en cancelacion de cita" />
+    <MESSAGE value="cambios para el pago en linea" />
+    <option name="LAST_COMMIT_MESSAGE" value="cambios para el pago en linea" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -268,7 +269,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
           <line>46</line>
-          <properties class="com.example.demo.service.CajaService" method="buscarCitaParaCobro">
+          <properties class="com.example.demo.service.CajaService">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -277,7 +278,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
           <line>114</line>
-          <properties class="com.example.demo.service.CajaService" method="cobrar">
+          <properties class="com.example.demo.service.CajaService">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -286,7 +287,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtAuthFilter.java</url>
           <line>32</line>
-          <properties class="com.example.demo.security.JwtAuthFilter" method="doFilterInternal">
+          <properties class="com.example.demo.security.JwtAuthFilter">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -295,7 +296,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtUtil.java</url>
           <line>77</line>
-          <properties class="com.example.demo.security.JwtUtil" method="extraerClaims">
+          <properties class="com.example.demo.security.JwtUtil">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
