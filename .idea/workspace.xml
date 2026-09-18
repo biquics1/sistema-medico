@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="cambios para el pago en linea">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="linea corregida">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/usuarios.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,21 +73,21 @@
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
       <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0" />
-      <entry key="S60" value="1.0" />
-      <entry key="M2" value="1.0000000180628097" />
-      <entry key="M5" value="1.0023420773695448" />
-      <entry key="M10" value="1.1185429245849272" />
-      <entry key="M15" value="1.4384977544973785" />
-      <entry key="M30" value="2.622075630687128" />
-      <entry key="H1" value="4.158949225170068" />
-      <entry key="H2" value="6.499045811012831" />
-      <entry key="H4" value="12.604974896273232" />
-      <entry key="D1" value="62.34022018156065" />
-      <entry key="W1" value="127.743975023888" />
+      <entry key="S2" value="1.0000000000000016" />
+      <entry key="S5" value="1.0000022567265479" />
+      <entry key="S10" value="1.0025993711810675" />
+      <entry key="S30" value="1.2859402771733843" />
+      <entry key="S60" value="1.9261610137886098" />
+      <entry key="M2" value="2.6668669415501043" />
+      <entry key="M5" value="3.3733994573779915" />
+      <entry key="M10" value="3.7726499454634377" />
+      <entry key="M15" value="4.179156130017743" />
+      <entry key="M30" value="5.444109882578733" />
+      <entry key="H1" value="7.039095033329801" />
+      <entry key="H2" value="9.415873862279419" />
+      <entry key="H4" value="15.533271047457287" />
+      <entry key="D1" value="65.28741307640914" />
+      <entry key="W1" value="130.72875500062946" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -96,34 +98,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="8.439956987738223E-193" />
-      <entry key="M10" value="9.186923852812894E-97" />
-      <entry key="M15" value="9.450325003142092E-65" />
-      <entry key="M30" value="9.72127820975314E-33" />
-      <entry key="H1" value="9.859654258518973E-17" />
-      <entry key="H2" value="9.929579174627171E-9" />
-      <entry key="H4" value="9.964727379425462E-5" />
-      <entry key="D1" value="0.21531662819583056" />
-      <entry key="W1" value="0.8030181606620973" />
+      <entry key="M5" value="6.662109099381277E-193" />
+      <entry key="M10" value="8.162174403540578E-97" />
+      <entry key="M15" value="8.73381349267944E-65" />
+      <entry key="M30" value="9.345487409803444E-33" />
+      <entry key="H1" value="9.667206116455486E-17" />
+      <entry key="H2" value="9.832195134584887E-9" />
+      <entry key="H4" value="9.915742601835155E-5" />
+      <entry key="D1" value="0.21513985624611542" />
+      <entry key="W1" value="0.8029239465484379" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="4.814619528E-314" />
-      <entry key="S2" value="4.684254614095526E-79" />
-      <entry key="S5" value="4.6586083127677406E-32" />
-      <entry key="S10" value="2.1583809470915324E-16" />
-      <entry key="S30" value="5.998500502218893E-6" />
-      <entry key="S60" value="0.0024491836399541706" />
-      <entry key="M2" value="0.049489245576280705" />
-      <entry key="M5" value="0.30281421999930597" />
-      <entry key="M10" value="0.666695371835711" />
-      <entry key="M15" value="1.1082793154866992" />
-      <entry key="M30" value="2.4404744498741127" />
-      <entry key="H1" value="4.063594090798478" />
-      <entry key="H2" value="6.450068790662331" />
-      <entry key="H4" value="12.580038015147124" />
-      <entry key="D1" value="62.55113079271317" />
-      <entry key="W1" value="128.54634288396812" />
+      <entry key="MS100" value="0.8293195458144417" />
+      <entry key="MS500" value="0.963261894020148" />
+      <entry key="S2" value="0.9906861581012834" />
+      <entry key="S5" value="0.9962654129052793" />
+      <entry key="S10" value="0.9998102113897863" />
+      <entry key="S30" value="1.1880790248930733" />
+      <entry key="S60" value="1.614769328071466" />
+      <entry key="M2" value="2.135689404674862" />
+      <entry key="M5" value="2.818409106405065" />
+      <entry key="M10" value="3.369624134915113" />
+      <entry key="M15" value="3.8728803737631514" />
+      <entry key="M30" value="5.268960327513589" />
+      <entry key="H1" value="6.945311376700551" />
+      <entry key="H2" value="9.367230916125893" />
+      <entry key="H4" value="15.508383266024865" />
+      <entry key="D1" value="65.49813823617171" />
+      <entry key="W1" value="131.531026965012" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -135,43 +137,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.requests | Crear usuario.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Eliminar usuario.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Obtener usuario por id.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Run&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HTTP Request.requests | Crear usuario.executor": "Run",
+    "HTTP Request.requests | Eliminar usuario.executor": "Run",
+    "HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor": "Run",
+    "HTTP Request.requests | Obtener usuario por id.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.DemoApplication.executor": "Debug",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
+    "to.speed.mode.migration.done": "true"
   }
-}</component>
+}]]></component>
   <component name="RunDashboard">
     <option name="configurationStatuses">
       <map>
@@ -256,7 +258,8 @@
     <MESSAGE value="cambios minimos" />
     <MESSAGE value="cambios en cancelacion de cita" />
     <MESSAGE value="cambios para el pago en linea" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambios para el pago en linea" />
+    <MESSAGE value="linea corregida" />
+    <option name="LAST_COMMIT_MESSAGE" value="linea corregida" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -266,10 +269,15 @@
           <line>115</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/dto/VerifyDpiDTO.java</url>
+          <line>11</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
           <line>46</line>
-          <properties class="com.example.demo.service.CajaService">
+          <properties class="com.example.demo.service.CajaService" method="buscarCitaParaCobro">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -278,35 +286,98 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
           <line>114</line>
-          <properties class="com.example.demo.service.CajaService">
+          <properties class="com.example.demo.service.CajaService" method="cobrar">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtAuthFilter.java</url>
-          <line>32</line>
-          <properties class="com.example.demo.security.JwtAuthFilter">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>50</line>
+          <properties class="com.example.demo.service.CitaService" method="listarSucursalesActivas">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
-          <option name="timeStamp" value="32" />
+          <option name="timeStamp" value="105" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtUtil.java</url>
-          <line>77</line>
-          <properties class="com.example.demo.security.JwtUtil">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>54</line>
+          <properties class="com.example.demo.service.CitaService" method="listarEspecialidadesPorSucursal">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
-          <option name="timeStamp" value="34" />
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>64</line>
+          <properties class="com.example.demo.service.CitaService" method="listarMedicos">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="107" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>78</line>
+          <properties class="com.example.demo.service.CitaService" method="listarHorariosDisponibles">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="108" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>104</line>
+          <properties class="com.example.demo.service.CitaService" method="crearCita">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="109" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>166</line>
+          <properties class="com.example.demo.service.CitaService" method="obtenerCita">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="110" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>173</line>
+          <properties class="com.example.demo.service.CitaService" method="elegirMetodoPago">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="111" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>240</line>
+          <properties class="com.example.demo.service.CitaService" method="cancelarCitasExpiradas">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="114" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
+          <line>206</line>
+          <properties class="com.example.demo.service.CitaService" method="cancelarPorExpiracionInmediata">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="116" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="SpringBootApplicationConfigurationType">
-        <watch expression="ip" />
+        <watch expression="ip" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

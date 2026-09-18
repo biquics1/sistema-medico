@@ -125,11 +125,12 @@
                     <h2 class="text-lg font-bold text-brand-black">Listado de Usuarios</h2>
                     <div class="flex gap-2">
                         <select id="filtroCampo" class="p-2 border border-gray-300 rounded-md text-sm">
-                            <option value="nombreCompleto">Nombre</option>
-                            <option value="nombreUsuario">Nombre de Usuario</option>
-                            <option value="correoElectronico">Correo Electrónico</option>
-                            <option value="rolNombre">Rol</option>
-                            <option value="dpi">DPI</option>
+                            <option value="ID">ID</option>
+                            <option value="NOMBRE">Nombre</option>
+                            <option value="USUARIO">Nombre de Usuario</option>
+                            <option value="CORREO">Correo Electrónico</option>
+                            <option value="ROL">Rol</option>
+                            <option value="DPI">DPI</option>
                         </select>
                         <input id="filtroTexto" maxlength="25" placeholder="Buscar..."
                                class="p-2 border border-gray-300 rounded-md text-sm">
@@ -351,34 +352,32 @@
     }
 
     async function cargarUsuarios() {
-        try {
-            usuariosCache = await apiFetch('/api/users');
-            renderTablaUsuarios();
-        } catch (e) {
-            mostrarMensajeUsuarios(e.message, 'error');
-        }
+        paginaUsuariosActual = 1;
+        await renderTablaUsuarios();
     }
 
-    function renderTablaUsuarios() {
+    // CU-01 FB paso 6/7 (RN-CU01-01/02): búsqueda server-side vía GET /api/users/buscar
+    async function renderTablaUsuarios() {
         const campo = document.getElementById('filtroCampo').value;
-        const texto = document.getElementById('filtroTexto').value.trim().toLowerCase();
-
-        let filtrados = usuariosCache;
-        if (texto) {
-            filtrados = usuariosCache.filter(u => (u[campo] || '').toString().toLowerCase().includes(texto));
-        }
-
-        const porPagina = Number(document.getElementById('usuariosPorPagina').value);
-        const totalPaginas = Math.max(1, Math.ceil(filtrados.length / porPagina));
-        if (paginaUsuariosActual > totalPaginas) paginaUsuariosActual = totalPaginas;
-        const inicio = (paginaUsuariosActual - 1) * porPagina;
-        const pagina = filtrados.slice(inicio, inicio + porPagina);
-
+        const valor = document.getElementById('filtroTexto').value.trim();
+        const tamano = Number(document.getElementById('usuariosPorPagina').value);
         const tbody = document.getElementById('tablaUsuariosBody');
-        if (pagina.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">No se encontraron datos usuarios.</td></tr>`;
-        } else {
-            tbody.innerHTML = pagina.map(u => `
+
+        try {
+            const params = new URLSearchParams({
+                campo,
+                pagina: String(paginaUsuariosActual - 1), // backend es 0-based
+                tamano: String(tamano)
+            });
+            if (valor) params.set('valor', valor);
+
+            const resp = await apiFetch(`/api/users/buscar?${params.toString()}`);
+            usuariosCache = resp.contenido;
+
+            if (usuariosCache.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">No se encontraron datos usuarios.</td></tr>`;
+            } else {
+                tbody.innerHTML = usuariosCache.map(u => `
                 <tr class="border-t border-gray-100">
                     <td class="px-3 py-2">${u.id}</td>
                     <td class="px-3 py-2">${u.nombreCompleto}</td>
@@ -396,10 +395,14 @@
                     </td>
                 </tr>
             `).join('');
-        }
+            }
 
-        document.getElementById('conteoUsuarios').innerText = `${filtrados.length} registro(s)`;
-        document.getElementById('paginaUsuariosLabel').innerText = `${paginaUsuariosActual} / ${totalPaginas}`;
+            document.getElementById('conteoUsuarios').innerText = `${resp.totalElementos} registro(s)`;
+            document.getElementById('paginaUsuariosLabel').innerText = `${resp.pagina + 1} / ${Math.max(1, resp.totalPaginas)}`;
+        } catch (e) {
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">No se encontraron datos usuarios.</td></tr>`;
+            mostrarMensajeUsuarios(e.message, 'error');
+        }
     }
 
     function cambiarPaginaUsuarios(delta) {

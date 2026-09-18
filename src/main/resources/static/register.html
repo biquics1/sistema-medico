@@ -111,6 +111,11 @@
                 class="w-full bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-3 rounded-lg shadow transition">
             Registrarse
         </button>
+        <div class="text-center">
+            <a href="#" id="linkVolverPortal" class="text-sm text-gray-500 hover:text-brand-black hover:underline">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Volver al portal
+            </a>
+        </div>
 
         <p class="text-center text-sm text-gray-500">
             ¿Ya tienes cuenta?
@@ -206,6 +211,14 @@
         } finally {
             btnRegistrar.disabled = false;
             btnRegistrar.textContent = 'Registrarse';
+        }
+    });
+    document.getElementById('linkVolverPortal').addEventListener('click', (e) => {
+        e.preventDefault();
+        const confirmado = window.confirm('¿Está seguro que desea salir? Se perderán los datos ingresados en el formulario.');
+        if (confirmado) {
+            form.reset();
+            window.location.href = 'index.html';
         }
     });
 </script>
