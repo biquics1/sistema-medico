@@ -155,6 +155,10 @@
                                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
+                        <button onclick="limpiarBusquedaUsuarios()" title="Limpiar búsqueda / Reiniciar filtros"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
+                            <i class="fa-solid fa-rotate-left"></i> Limpiar
+                        </button>
                         <button onclick="mostrarOpcionesUsuarios()" title="Volver a las opciones del módulo"
                                 class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-3 py-2 rounded-md text-sm">
                             <i class="fa-solid fa-arrow-left"></i> Opciones
@@ -480,7 +484,15 @@
         document.getElementById('mensajesUsuarios').innerHTML = '';
         mostrarListadoUsuarios();
     }
+    function limpiarBusquedaUsuarios() {
+        document.getElementById('filtroTexto').value = '';
+        document.getElementById('filtroCampo').value = 'nombreCompleto';
+        document.getElementById('mensajesUsuarios').innerHTML = '';
+        paginaUsuariosActual = 1;
 
+        // Renderiza la tabla mostrando todos los usuarios cargados
+        renderTablaUsuarios();
+    }
     // Paso 4: se muestra la pantalla "Listado de Usuarios" y se carga la tabla
     function mostrarListadoUsuarios() {
         document.getElementById('menuUsuarios').classList.add('hidden');
