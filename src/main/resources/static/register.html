@@ -116,6 +116,33 @@
             ¿Ya tienes cuenta?
             <a href="login.html" class="text-brand-black font-semibold hover:underline">Inicia sesión</a>
         </p>
+        <button type="button" onclick="solicitarCancelacion()"
+                class="text-xs text-gray-500 hover:text-red-600 font-medium transition flex items-center gap-1">
+            <i class="fa-solid fa-arrow-left"></i> Volver al portal
+        </button>
+</div>
+</form>
+</div>
+
+<!-- Modal de Confirmación FA03 -->
+<div id="modalCancelar" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl p-6 w-full max-w-sm text-center shadow-2xl border border-gray-100">
+        <i class="fa-solid fa-circle-question text-4xl text-brand-yellow mb-3"></i>
+        <h3 class="text-lg font-bold text-brand-black mb-2">¿Desea cancelar el registro?</h3>
+        <p class="text-sm text-gray-600 mb-6">Se descartarán todos los datos ingresados en el formulario y volverá al portal principal.</p>
+
+        <div class="flex gap-3">
+            <button type="button" onclick="cerrarModalCancelar()"
+                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2.5 rounded-lg transition text-sm">
+                Continuar registro
+            </button>
+            <button type="button" onclick="confirmarCancelacion()"
+                    class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg transition text-sm shadow">
+                Sí, salir
+            </button>
+        </div>
+    </div>
+</div>
     </form>
 </div>
 
@@ -157,6 +184,20 @@
             : input?.parentElement?.querySelector('.error-text');
         if (input) input.classList.add('border-red-500');
         if (p) { p.textContent = texto; p.classList.remove('hidden'); }
+    }
+    function solicitarCancelacion() {
+        document.getElementById('modalCancelar').classList.remove('hidden');
+    }
+
+    function cerrarModalCancelar() {
+        document.getElementById('modalCancelar').classList.add('hidden');
+    }
+
+
+    function confirmarCancelacion() {
+        form.reset();
+        limpiarErrores();
+        window.location.href = 'index.html';
     }
 
     form.addEventListener('submit', async (e) => {
