@@ -63,7 +63,7 @@
 
         <div id="mensajesDashboard"></div>
 
-        <h2 class="text-lg font-bold text-brand-black mb-3">Mis Citas</h2>
+        <h2 id="tituloMisCitas" class="text-lg font-bold text-brand-black mb-3">Mis Citas</h2>
         <div id="listaMisCitas" class="space-y-3">
             <p class="text-gray-400 text-sm">Cargando tus citas...</p>
         </div>
@@ -74,7 +74,7 @@
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 md:p-8">
             <div class="flex items-center justify-between mb-6">
                 <h1 class="text-xl font-bold text-brand-black">Agendar Cita</h1>
-                <button onclick="cancelarWizard()" class="text-gray-400 hover:text-red-500 text-sm font-semibold">
+                <button id="btnCancelarWizard" onclick="cancelarWizard()" class="text-gray-400 hover:text-red-500 text-sm font-semibold">
                     <i class="fa-solid fa-xmark mr-1"></i> Cancelar
                 </button>
             </div>
@@ -202,15 +202,16 @@
 
             <!-- Paso "Pago en línea" (fuera del indicador numerado de 6 pasos). -->
             <div id="wizardPasoPagoLinea" class="hidden space-y-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-bold text-brand-black">Pago en línea con tarjeta</h2>
+                <div id="encabezadoPagoLinea" class="flex items-center justify-between">
+                    <h2 class="font-bold text-brand-black">Pago de Consulta</h2>
                     <span id="contadorPagoLinea"
                           class="px-3 py-1 rounded-full text-sm font-bold bg-red-100 text-red-700">05:00</span>
                 </div>
 
-                <div class="bg-brand-lightgray border border-gray-200 rounded-lg p-4 text-sm space-y-1">
-                    <p><strong>Especialidad:</strong> <span id="resumenPagoEspecialidad"></span></p>
+                <div id="resumenPagoBox" class="bg-brand-lightgray border border-gray-200 rounded-lg p-4 text-sm space-y-1">
                     <p><strong>Médico:</strong> <span id="resumenPagoMedico"></span></p>
+                    <p><strong>Especialidad:</strong> <span id="resumenPagoEspecialidad"></span></p>
+                    <p><strong>Sede:</strong> <span id="resumenPagoSucursal"></span></p>
                     <p><strong>Fecha y hora:</strong> <span id="resumenPagoFechaHora"></span></p>
                     <p><strong>Total a pagar:</strong> Q<span id="resumenPagoMonto"></span></p>
                 </div>
@@ -219,6 +220,7 @@
 
                 <!-- Formulario de tarjeta -->
                 <div id="formPagoLinea" class="space-y-3">
+                    <h3 class="text-sm font-bold text-gray-700">Datos de pago</h3>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Número de tarjeta</label>
                         <input id="pagoNumeroTarjeta" type="text" inputmode="numeric" maxlength="23"
@@ -245,7 +247,7 @@
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700">CVV</label>
                             <input id="pagoCvv" type="password" maxlength="4" placeholder="•••"
-                                   oninput="this.value = this.value.replace(/\\D/g,'').slice(0,4)"
+                                   oninput="this.value = this.value.replace(/\D/g,'').slice(0,4)"
                                    class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
                     </div>
@@ -266,18 +268,48 @@
                     </div>
                 </div>
 
-                <!-- Confirmación de pago exitoso -->
-                <div id="confirmacionPagoLinea" class="hidden text-center space-y-3 py-4">
-                    <i class="fa-solid fa-circle-check text-5xl text-green-500"></i>
-                    <h3 class="text-lg font-bold text-brand-black">¡Pago Exitoso!</h3>
-                    <p class="text-sm text-gray-600">Número de transacción:
-                        <span id="txnPagoLinea" class="font-semibold"></span></p>
-                    <p class="text-sm text-gray-600">Tu cita ha sido confirmada. Preséntate en recepción a la
-                        hora de tu cita.</p>
-                    <div class="flex gap-2 justify-center pt-2">
-                        <button onclick="cancelarWizard()"
+                <!-- Confirmación de pago exitoso (CU-04 pasos 13-15) -->
+                <div id="confirmacionPagoLinea" class="hidden space-y-4 py-2">
+                    <div class="text-center space-y-2">
+                        <i class="fa-solid fa-circle-check text-5xl text-green-500"></i>
+                        <h3 class="text-xl font-bold text-brand-black">¡Pago Exitoso!</h3>
+                    </div>
+
+                    <!-- Paso 13: mensaje de confirmación -->
+                    <div class="p-3 rounded-md bg-green-50 text-green-700 border border-green-200 text-sm text-center">
+                        ¡Pago realizado exitosamente! Número de transacción: <strong id="txnMensajePago"></strong>.
+                        Su cita ha sido confirmada.
+                    </div>
+
+                    <!-- Paso 14: comprobante de pago -->
+                    <div class="bg-brand-lightgray border border-gray-200 rounded-lg p-4 text-sm space-y-1">
+                        <p class="font-bold text-brand-black mb-2">
+                            <i class="fa-solid fa-receipt mr-1 text-brand-yellow"></i> Comprobante de pago
+                        </p>
+                        <p><strong>Número de transacción:</strong> <span id="txnPagoLinea" class="font-semibold"></span></p>
+                        <p><strong>Médico:</strong> <span id="compMedico"></span></p>
+                        <p><strong>Especialidad:</strong> <span id="compEspecialidad"></span></p>
+                        <p><strong>Sucursal:</strong> <span id="compSucursal"></span></p>
+                        <p><strong>Fecha:</strong> <span id="compFecha"></span></p>
+                        <p><strong>Hora:</strong> <span id="compHora"></span></p>
+                        <p><strong>Monto pagado:</strong> Q<span id="compMonto"></span></p>
+                    </div>
+
+                    <!-- Paso 14 (RN-CU04-05): aviso del correo de confirmación -->
+                    <div class="p-3 rounded-md bg-blue-50 text-blue-700 border border-blue-200 text-sm">
+                        <i class="fa-solid fa-envelope mr-1"></i>
+                        <span id="avisoCorreoPago"></span>
+                    </div>
+
+                    <!-- Paso 15: botones finales -->
+                    <div class="flex gap-2 justify-center pt-2 flex-wrap">
+                        <button onclick="volverAlPortal()"
                                 class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">
-                            Volver a Mis Citas
+                            <i class="fa-solid fa-house mr-1"></i> Volver al Portal
+                        </button>
+                        <button onclick="verMisCitas()"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg">
+                            <i class="fa-solid fa-calendar-check mr-1"></i> Ver Mis Citas
                         </button>
                     </div>
                 </div>
@@ -323,7 +355,11 @@
             }
         });
         const data = await resp.json().catch(() => ({}));
-        if (!resp.ok) throw new Error(data.mensaje || data.message || 'Ocurrió un error inesperado.');
+        if (!resp.ok) {
+            const error = new Error(data.mensaje || data.message || 'Ocurrió un error inesperado.');
+            error.errores = data.errores || null; // errores por campo, si el backend los envía
+            throw error;
+        }
         return data;
     }
 
@@ -512,6 +548,7 @@
         wizardSeleccion = { sucursalId: null, sucursalNombre: '', especialidadId: null, especialidadNombre: '', medicoId: null, medicoNombre: '', fechaHora: null };
         document.getElementById('vistaDashboard').classList.add('hidden');
         document.getElementById('vistaWizard').classList.remove('hidden');
+        document.getElementById('btnCancelarWizard').classList.remove('hidden');
         irAPaso(1);
     }
 
@@ -773,10 +810,15 @@
         document.getElementById('wizardPasoPagoLinea').classList.remove('hidden');
         document.getElementById('formPagoLinea').classList.remove('hidden');
         document.getElementById('confirmacionPagoLinea').classList.add('hidden');
+        document.getElementById('encabezadoPagoLinea').classList.remove('hidden');
+        document.getElementById('resumenPagoBox').classList.remove('hidden');
+        document.getElementById('btnCancelarWizard').classList.remove('hidden');
         document.getElementById('mensajesPagoLinea').innerHTML = '';
+        limpiarErroresPago();
         bloquearBotonesMetodoPago(false);
 
         document.getElementById('resumenPagoEspecialidad').innerText = wizardSeleccion.especialidadNombre;
+        document.getElementById('resumenPagoSucursal').innerText = wizardSeleccion.sucursalNombre;
         document.getElementById('resumenPagoMedico').innerText = wizardSeleccion.medicoNombre;
         document.getElementById('resumenPagoFechaHora').innerText = new Date(wizardSeleccion.fechaHora).toLocaleString('es-GT');
         document.getElementById('resumenPagoMonto').innerText = Number(cita.monto).toFixed(2);
@@ -907,6 +949,83 @@
         input.value = valor;
     }
 
+    // -------- Errores de validación debajo de cada campo (CU-04 paso 8 / FA01) --------
+
+    const CAMPOS_PAGO = {
+        numeroTarjeta: 'pagoNumeroTarjeta',
+        nombreTitular: 'pagoNombreTitular',
+        vencimiento: 'pagoVencimiento',
+        cvv: 'pagoCvv'
+    };
+
+    function limpiarErroresPago() {
+        document.querySelectorAll('#formPagoLinea .error-campo').forEach(el => el.remove());
+        document.querySelectorAll('#formPagoLinea .border-red-500').forEach(el => {
+            el.classList.remove('border-red-500');
+            el.classList.add('border-gray-300');
+        });
+    }
+
+    // Marca cada campo con error y devuelve los mensajes que no corresponden a ningún campo
+    function mostrarErroresPago(errores) {
+        const sinCampo = [];
+        Object.entries(errores).forEach(([campo, mensaje]) => {
+            const input = document.getElementById(CAMPOS_PAGO[campo]);
+            if (!input) { sinCampo.push(mensaje); return; }
+            input.classList.remove('border-gray-300');
+            input.classList.add('border-red-500');
+            const p = document.createElement('p');
+            p.className = 'error-campo text-xs text-red-600 mt-1';
+            p.textContent = mensaje;
+            input.insertAdjacentElement('afterend', p);
+        });
+        return sinCampo;
+    }
+
+    // -------- Pago exitoso (CU-04 pasos 13-15) --------
+
+    function mostrarConfirmacionPago(resultado, cita) {
+        const fechaHora = new Date(wizardSeleccion.fechaHora);
+
+        // La pantalla de confirmación reemplaza al formulario, al resumen y al contador
+        document.getElementById('encabezadoPagoLinea').classList.add('hidden');
+        document.getElementById('resumenPagoBox').classList.add('hidden');
+        document.getElementById('formPagoLinea').classList.add('hidden');
+        document.getElementById('btnCancelarWizard').classList.add('hidden');
+        document.getElementById('mensajesPagoLinea').innerHTML = '';
+
+        document.getElementById('txnMensajePago').innerText = resultado.numeroTransaccion;
+        document.getElementById('txnPagoLinea').innerText = resultado.numeroTransaccion;
+        document.getElementById('compMedico').innerText = wizardSeleccion.medicoNombre;
+        document.getElementById('compEspecialidad').innerText = wizardSeleccion.especialidadNombre;
+        document.getElementById('compSucursal').innerText = wizardSeleccion.sucursalNombre;
+        document.getElementById('compFecha').innerText = fechaHora.toLocaleDateString('es-GT');
+        document.getElementById('compHora').innerText = fechaHora.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('compMonto').innerText = Number(resultado.monto ?? cita.monto).toFixed(2);
+
+        // Aviso del correo de confirmación (RN-CU04-05). Si el backend devuelve el
+        // correo del paciente se muestra; si no, se usa un texto genérico.
+        const correo = resultado.correoPaciente || sessionStorage.getItem('correoElectronico');
+        document.getElementById('avisoCorreoPago').innerHTML =
+            'Se ha enviado un correo de confirmación a <strong id="correoPagoDestino">tu correo electrónico registrado</strong>.';
+        if (correo) document.getElementById('correoPagoDestino').innerText = correo;
+
+        document.getElementById('confirmacionPagoLinea').classList.remove('hidden');
+    }
+
+    // Paso 15: "Volver al Portal" y "Ver Mis Citas".
+
+    const URL_PORTAL_INICIO = '/';
+
+    function volverAlPortal() {
+        window.location.href = URL_PORTAL_INICIO;
+    }
+
+    function verMisCitas() {
+        cancelarWizard();
+        document.getElementById('tituloMisCitas').scrollIntoView({ behavior: 'smooth' });
+    }
+
     // -------- Enviar el pago --------
 
     async function pagarConTarjeta() {
@@ -917,6 +1036,7 @@
         const cvv = document.getElementById('pagoCvv').value.trim();
 
         document.getElementById('mensajesPagoLinea').innerHTML = '';
+        limpiarErroresPago();
 
         const btn = document.getElementById('btnPagarTarjeta');
         const textoOriginal = btn.innerHTML;
@@ -943,16 +1063,20 @@
             });
 
             detenerContadorPagoLinea();
-            document.getElementById('formPagoLinea').classList.add('hidden');
-            document.getElementById('txnPagoLinea').innerText = resultado.numeroTransaccion;
-            document.getElementById('confirmacionPagoLinea').classList.remove('hidden');
+            mostrarConfirmacionPago(resultado, citaCreada);
             citaCreada = null;
         } catch (e) {
             // FA01/FA03 de CU-04: validación de campos o rechazo de la pasarela.
             // El formulario permanece activo y el contador sigue corriendo,
             // el paciente puede corregir los datos y reintentar sin perder la reserva.
+            let texto = e.message;
+            if (e.errores) {
+                // El backend devolvió errores por campo: se marcan debajo de cada uno
+                const sinCampo = mostrarErroresPago(e.errores);
+                texto = sinCampo.length ? sinCampo.join(' ') : 'Revise los datos marcados en rojo.';
+            }
             document.getElementById('mensajesPagoLinea').innerHTML =
-                `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200 text-sm">${e.message}</div>`;
+                `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200 text-sm">${texto}</div>`;
             btn.disabled = false;
             btn.innerHTML = textoOriginal;
         }
