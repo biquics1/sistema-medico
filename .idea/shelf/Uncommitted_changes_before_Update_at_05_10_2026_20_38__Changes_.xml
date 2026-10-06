@@ -1,0 +1,20 @@
+<changelist name="Uncommitted_changes_before_Update_at_05_10_2026_20_38_[Changes]" date="1791254316020" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_05_10_2026_20_38_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 05/10/2026 20:38 [Changes]" />
+  <binary>
+    <option name="AFTER_PATH" value="target/test-classes/com/example/demo/DemoApplicationTests.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_05_10_2026_20_38_[Changes]/DemoApplicationTests.class" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="target/classes/com/example/demo/dto/MetodoPagoDTO.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_05_10_2026_20_38_[Changes]/MetodoPagoDTO.class" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="target/classes/com/example/demo/service/AuditoriaContexto.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_05_10_2026_20_38_[Changes]/AuditoriaContexto.class" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="target/classes/com/example/demo/security/AuditContextHolder.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_05_10_2026_20_38_[Changes]/AuditContextHolder.class" />
+  </binary>
+</changelist>
