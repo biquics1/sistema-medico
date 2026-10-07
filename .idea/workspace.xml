@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="es prueba de commit">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="areglo de correo y boton">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UsuarioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UsuarioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/UsuarioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/UsuarioService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,23 +71,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0043053319216397" />
-      <entry key="MS500" value="1.404001323429365" />
-      <entry key="S2" value="2.854072142909524" />
-      <entry key="S5" value="4.470759537933792" />
-      <entry key="S10" value="5.502542734087069" />
-      <entry key="S30" value="6.6769492294005754" />
-      <entry key="S60" value="7.560218186536873" />
-      <entry key="M2" value="8.45041107492461" />
-      <entry key="M5" value="9.274174272826622" />
-      <entry key="M10" value="9.719532354698545" />
-      <entry key="M15" value="10.141441110409877" />
-      <entry key="M30" value="11.421707856934159" />
-      <entry key="H1" value="13.025665430601684" />
-      <entry key="H2" value="15.407501107800165" />
-      <entry key="H4" value="21.52695274758177" />
-      <entry key="D1" value="71.28347048510426" />
-      <entry key="W1" value="136.72764883093134" />
+      <entry key="MS100" value="1.0552128086957846" />
+      <entry key="MS500" value="1.7884444966584447" />
+      <entry key="S2" value="4.057283175679466" />
+      <entry key="S5" value="6.531628982348135" />
+      <entry key="S10" value="8.25485636942496" />
+      <entry key="S30" value="9.932554704528568" />
+      <entry key="S60" value="10.444063257951022" />
+      <entry key="M2" value="10.716225551353972" />
+      <entry key="M5" value="10.936700990321519" />
+      <entry key="M10" value="11.667646431472106" />
+      <entry key="M15" value="12.759125016799166" />
+      <entry key="M30" value="15.7894845988933" />
+      <entry key="H1" value="19.44219615689122" />
+      <entry key="H2" value="23.406210264557867" />
+      <entry key="H4" value="30.318181337152943" />
+      <entry key="D1" value="81.00987984035164" />
+      <entry key="W1" value="147.37602220331794" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -94,34 +98,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="6.551607730335995E-193" />
-      <entry key="M10" value="8.094200226295378E-97" />
-      <entry key="M15" value="8.685256099673719E-65" />
-      <entry key="M30" value="9.319472141529123E-33" />
-      <entry key="H1" value="9.653741316986446E-17" />
-      <entry key="H2" value="9.825345447864126E-9" />
-      <entry key="H4" value="9.91228805466432E-5" />
-      <entry key="D1" value="0.21512736233078408" />
-      <entry key="W1" value="0.8029172851583848" />
+      <entry key="M5" value="3.648968009915251E-195" />
+      <entry key="M10" value="6.04066884534756E-98" />
+      <entry key="M15" value="1.539536602283675E-65" />
+      <entry key="M30" value="3.923692906285709E-33" />
+      <entry key="H1" value="6.263938781857391E-17" />
+      <entry key="H2" value="7.914504900407467E-9" />
+      <entry key="H4" value="8.896350319320527E-5" />
+      <entry key="D1" value="0.21128499039190357" />
+      <entry key="W1" value="0.8008527361779475" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.00818449924496072" />
-      <entry key="MS500" value="0.7318183925433812" />
-      <entry key="S2" value="2.5933231527064304" />
-      <entry key="S5" value="4.343079474673079" />
-      <entry key="S10" value="5.431165455045864" />
-      <entry key="S30" value="6.5689999751825505" />
-      <entry key="S60" value="7.260948214290532" />
-      <entry key="M2" value="7.9344828295581" />
-      <entry key="M5" value="8.725769863753015" />
-      <entry key="M10" value="9.318550162589615" />
-      <entry key="M15" value="9.835992302849926" />
-      <entry key="M30" value="11.246607603132869" />
-      <entry key="H1" value="12.931793180175513" />
-      <entry key="H2" value="15.358782418497407" />
-      <entry key="H4" value="21.50201881612672" />
-      <entry key="D1" value="71.49417426980699" />
-      <entry key="W1" value="137.52991283395463" />
+      <entry key="MS100" value="0.5735956671635842" />
+      <entry key="MS500" value="1.648902988964583" />
+      <entry key="S2" value="4.005958578234135" />
+      <entry key="S5" value="6.50120129719927" />
+      <entry key="S10" value="8.23568125709376" />
+      <entry key="S30" value="9.92481434522749" />
+      <entry key="S60" value="10.439983525402528" />
+      <entry key="M2" value="10.714128454284701" />
+      <entry key="M5" value="10.932794305535708" />
+      <entry key="M10" value="11.637292774288948" />
+      <entry key="M15" value="12.704695371361483" />
+      <entry key="M30" value="15.715620356352746" />
+      <entry key="H1" value="19.381214338768288" />
+      <entry key="H2" value="23.366930530245583" />
+      <entry key="H4" value="30.29578500281308" />
+      <entry key="D1" value="81.21681726997733" />
+      <entry key="W1" value="148.1762229096672" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
@@ -245,7 +249,8 @@
     <MESSAGE value="linea corregida" />
     <MESSAGE value="prueba de comit" />
     <MESSAGE value="es prueba de commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="es prueba de commit" />
+    <MESSAGE value="areglo de correo y boton" />
+    <option name="LAST_COMMIT_MESSAGE" value="areglo de correo y boton" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

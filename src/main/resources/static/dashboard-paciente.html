@@ -275,8 +275,12 @@
                     <p class="text-sm text-gray-600">Tu cita ha sido confirmada. Preséntate en recepción a la
                         hora de tu cita.</p>
                     <div class="flex gap-2 justify-center pt-2">
-                        <button onclick="volverAlPortal()"
+                        <button onclick="cancelarWizard()"
                                 class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">
+                            <i class="fa-solid fa-calendar-check mr-1"></i> Volver a Mis Citas
+                        </button>
+                        <button onclick="volverAlPortal()"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-4 py-2 rounded-lg">
                             <i class="fa-solid fa-house mr-1"></i> Volver al portal
                         </button>
                     </div>
@@ -289,8 +293,12 @@
                 <h3 class="text-lg font-bold text-brand-black">¡Cita registrada!</h3>
                 <p class="text-sm text-gray-600">Acércate a caja para realizar el pago y confirmar tu reserva.</p>
                 <div class="flex gap-2 justify-center pt-2">
-                    <button onclick="volverAlPortal()"
+                    <button onclick="cancelarWizard()"
                             class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">
+                        <i class="fa-solid fa-calendar-check mr-1"></i> Volver a Mis Citas
+                    </button>
+                    <button onclick="volverAlPortal()"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold px-4 py-2 rounded-lg">
                         <i class="fa-solid fa-house mr-1"></i> Volver al portal
                     </button>
                 </div>
@@ -631,8 +639,11 @@
         cargarMisCitas();
     }
 
+    // Portal público de citas (index.html). "Volver a Mis Citas" usa cancelarWizard().
     function volverAlPortal() {
-        cancelarWizard();
+        if (typeof detenerContadorPagoLinea === 'function') detenerContadorPagoLinea();
+        citaCreada = null;
+        window.location.href = 'index.html';
     }
 
     function irAPaso(n) {

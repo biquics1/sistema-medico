@@ -110,8 +110,12 @@ public class EmailService {
         } catch (Exception e) {
             // RN-GLOBAL-006: si falla el envío, se registra pero NO se propaga
             // (el flujo de negocio -pago/registro- ya se completó igual)
-            log.error("Error al enviar notificación por correo electrónico. Destinatario: {}. Causa: {}",
-                    destinatario, e.getMessage());
+            Throwable raiz = e;
+            while (raiz.getCause() != null && raiz.getCause() != raiz) {
+                raiz = raiz.getCause();
+            }
+            log.error("Error al enviar correo a {}. Causa raíz: {}: {}",
+                    destinatario, raiz.getClass().getSimpleName(), raiz.getMessage());
         }
     }
 }
