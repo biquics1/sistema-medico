@@ -25,7 +25,7 @@ import static com.example.demo.repository.UsuarioSpecifications.*;
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
-
+//es prueba de commit
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final SucursalRepository sucursalRepository;

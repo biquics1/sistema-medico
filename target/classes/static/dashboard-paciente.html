@@ -899,6 +899,30 @@
     // El contador llegó a 0 sin que se completara el pago: se cancela la
     // cita de inmediato (no se genera cita para pagar después en caja) y se
     // redirige al paciente, igual que el patrón de CU-04 FA02.
+    function iniciarContadorPagoLinea(expiraEnISO) {
+        detenerContadorPagoLinea(); // por si quedó uno corriendo de un intento anterior
+
+        const expiraEnMs = new Date(expiraEnISO).getTime();
+        const span = document.getElementById('contadorPagoLinea');
+
+        function actualizar() {
+            const restanteMs = expiraEnMs - Date.now();
+
+            if (restanteMs <= 0) {
+                span.textContent = '00:00';
+                expirarPagoEnLinea();
+                return;
+            }
+
+            const totalSegundos = Math.floor(restanteMs / 1000);
+            const minutos = String(Math.floor(totalSegundos / 60)).padStart(2, '0');
+            const segundos = String(totalSegundos % 60).padStart(2, '0');
+            span.textContent = `${minutos}:${segundos}`;
+        }
+
+        actualizar(); // pinta el valor inicial sin esperar 1 seg
+        contadorPagoLineaInterval = setInterval(actualizar, 1000);
+    }
     async function expirarPagoEnLinea() {
         detenerContadorPagoLinea();
         document.getElementById('formPagoLinea').classList.add('hidden');

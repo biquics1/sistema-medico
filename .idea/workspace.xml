@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="linea corregida">
+    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="prueba de comit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/usuarios.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UsuarioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UsuarioService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +20,7 @@
     </colors>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="205" />
+    <option name="cachedIndexableFilesCount" value="211" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -71,23 +67,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0000000000000016" />
-      <entry key="S5" value="1.0000022567265479" />
-      <entry key="S10" value="1.0025993711810675" />
-      <entry key="S30" value="1.2859402771733843" />
-      <entry key="S60" value="1.9261610137886098" />
-      <entry key="M2" value="2.6668669415501043" />
-      <entry key="M5" value="3.3733994573779915" />
-      <entry key="M10" value="3.7726499454634377" />
-      <entry key="M15" value="4.179156130017743" />
-      <entry key="M30" value="5.444109882578733" />
-      <entry key="H1" value="7.039095033329801" />
-      <entry key="H2" value="9.415873862279419" />
-      <entry key="H4" value="15.533271047457287" />
-      <entry key="D1" value="65.28741307640914" />
-      <entry key="W1" value="130.72875500062946" />
+      <entry key="MS100" value="1.000235824354953" />
+      <entry key="MS500" value="1.20116298619541" />
+      <entry key="S2" value="2.434621298914924" />
+      <entry key="S5" value="3.870316140678905" />
+      <entry key="S10" value="4.754652715131138" />
+      <entry key="S30" value="5.7809870446177145" />
+      <entry key="S60" value="6.620057731034999" />
+      <entry key="M2" value="7.48431369343687" />
+      <entry key="M5" value="8.289214203182812" />
+      <entry key="M10" value="8.727453484678005" />
+      <entry key="M15" value="9.146976543682616" />
+      <entry key="M30" value="10.42486271716329" />
+      <entry key="H1" value="12.027485498065897" />
+      <entry key="H2" value="14.408591344013871" />
+      <entry key="H4" value="20.527729384825246" />
+      <entry key="D1" value="70.28391367396075" />
+      <entry key="W1" value="135.72777109666163" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -98,34 +94,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="6.662109099381277E-193" />
-      <entry key="M10" value="8.162174403540578E-97" />
-      <entry key="M15" value="8.73381349267944E-65" />
-      <entry key="M30" value="9.345487409803444E-33" />
-      <entry key="H1" value="9.667206116455486E-17" />
-      <entry key="H2" value="9.832195134584887E-9" />
-      <entry key="H4" value="9.915742601835155E-5" />
-      <entry key="D1" value="0.21513985624611542" />
-      <entry key="W1" value="0.8029239465484379" />
+      <entry key="M5" value="6.563516559028295E-193" />
+      <entry key="M10" value="8.10155328256768E-97" />
+      <entry key="M15" value="8.690515298416643E-65" />
+      <entry key="M30" value="9.322293332875054E-33" />
+      <entry key="H1" value="9.655202397088863E-17" />
+      <entry key="H2" value="9.826088945805877E-9" />
+      <entry key="H4" value="9.912663086076238E-5" />
+      <entry key="D1" value="0.21512871886666732" />
+      <entry key="W1" value="0.8029180084396695" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.8293195458144417" />
-      <entry key="MS500" value="0.963261894020148" />
-      <entry key="S2" value="0.9906861581012834" />
-      <entry key="S5" value="0.9962654129052793" />
-      <entry key="S10" value="0.9998102113897863" />
-      <entry key="S30" value="1.1880790248930733" />
-      <entry key="S60" value="1.614769328071466" />
-      <entry key="M2" value="2.135689404674862" />
-      <entry key="M5" value="2.818409106405065" />
-      <entry key="M10" value="3.369624134915113" />
-      <entry key="M15" value="3.8728803737631514" />
-      <entry key="M30" value="5.268960327513589" />
-      <entry key="H1" value="6.945311376700551" />
-      <entry key="H2" value="9.367230916125893" />
-      <entry key="H4" value="15.508383266024865" />
-      <entry key="D1" value="65.49813823617171" />
-      <entry key="W1" value="131.531026965012" />
+      <entry key="MS100" value="0.9014629994190582" />
+      <entry key="MS500" value="1.1758175400972952" />
+      <entry key="S2" value="2.4053474168703786" />
+      <entry key="S5" value="3.84305824340837" />
+      <entry key="S10" value="4.735271623667591" />
+      <entry key="S30" value="5.689385833495326" />
+      <entry key="S60" value="6.327179522672822" />
+      <entry key="M2" value="6.970588185592473" />
+      <entry key="M5" value="7.74163065743801" />
+      <entry key="M10" value="8.327015461421635" />
+      <entry key="M15" value="8.84194830895509" />
+      <entry key="M30" value="10.250012177078602" />
+      <entry key="H1" value="11.93375038879378" />
+      <entry key="H2" value="14.359944639528369" />
+      <entry key="H4" value="20.502832344994246" />
+      <entry key="D1" value="70.49462509303928" />
+      <entry key="W1" value="136.53003672319437" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -143,6 +139,7 @@
     &quot;HTTP Request.requests | Eliminar usuario.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.requests | Obtener usuario por id.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.demo [clean].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
@@ -152,7 +149,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Run&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -174,22 +171,6 @@
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunDashboard">
-    <option name="configurationStatuses">
-      <map>
-        <entry key="HttpClient.HttpRequestRunConfigurationType">
-          <value>
-            <map>
-              <entry key="requests | Crear usuario" value="STOPPED" />
-              <entry key="requests | Eliminar usuario" value="STOPPED" />
-              <entry key="requests | Login (usa el usuario que registraste en CU-02)" value="STOPPED" />
-              <entry key="requests | Obtener usuario por id" value="STOPPED" />
-            </map>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="RunManager" selected="Spring Boot.DemoApplication">
     <configuration name="requests | Crear usuario" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" executionIdentifier="Crear usuario" index="2" runType="Run single request">
       <method v="2" />
@@ -259,7 +240,8 @@
     <MESSAGE value="cambios en cancelacion de cita" />
     <MESSAGE value="cambios para el pago en linea" />
     <MESSAGE value="linea corregida" />
-    <option name="LAST_COMMIT_MESSAGE" value="linea corregida" />
+    <MESSAGE value="prueba de comit" />
+    <option name="LAST_COMMIT_MESSAGE" value="prueba de comit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
