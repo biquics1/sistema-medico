@@ -275,11 +275,24 @@
                     <p class="text-sm text-gray-600">Tu cita ha sido confirmada. Preséntate en recepción a la
                         hora de tu cita.</p>
                     <div class="flex gap-2 justify-center pt-2">
-                        <button onclick="cancelarWizard()"
+                        <button onclick="volverAlPortal()"
                                 class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">
-                            Volver a Mis Citas
+                            <i class="fa-solid fa-house mr-1"></i> Volver al portal
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Confirmación: pagar en caja -->
+            <div id="wizardPasoConfirmCaja" class="hidden text-center space-y-3 py-4">
+                <i class="fa-solid fa-circle-check text-5xl text-green-500"></i>
+                <h3 class="text-lg font-bold text-brand-black">¡Cita registrada!</h3>
+                <p class="text-sm text-gray-600">Acércate a caja para realizar el pago y confirmar tu reserva.</p>
+                <div class="flex gap-2 justify-center pt-2">
+                    <button onclick="volverAlPortal()"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg">
+                        <i class="fa-solid fa-house mr-1"></i> Volver al portal
+                    </button>
                 </div>
             </div>
         </div>
@@ -618,12 +631,17 @@
         cargarMisCitas();
     }
 
+    function volverAlPortal() {
+        cancelarWizard();
+    }
+
     function irAPaso(n) {
         wizardPasoActual = n;
         document.getElementById('mensajesWizard').innerHTML = '';
         // Por si se venía del paso de pago en línea (Parte 3), lo ocultamos
         // y detenemos su contador si existe.
         document.getElementById('wizardPasoPagoLinea').classList.add('hidden');
+        document.getElementById('wizardPasoConfirmCaja').classList.add('hidden');
         if (typeof detenerContadorPagoLinea === 'function') detenerContadorPagoLinea();
 
         for (let i = 1; i <= 6; i++) {
@@ -818,13 +836,9 @@
             });
 
             citaCreada = null;
-            document.getElementById('vistaWizard').classList.add('hidden');
-            document.getElementById('vistaDashboard').classList.remove('hidden');
-            mostrarMensajeDashboard(
-                'Tu cita ha sido registrada exitosamente. Acércate a caja para realizar el pago y confirmar tu reserva.',
-                'exito'
-            );
-            cargarMisCitas();
+            bloquearBotonesMetodoPago(false);
+            document.getElementById('wizardPaso6').classList.add('hidden');
+            document.getElementById('wizardPasoConfirmCaja').classList.remove('hidden');
         } catch (e) {
             mostrarMensajeMetodoPago(e.message, 'error');
             bloquearBotonesMetodoPago(false);
@@ -869,6 +883,7 @@
         document.getElementById('formPagoLinea').classList.remove('hidden');
         document.getElementById('confirmacionPagoLinea').classList.add('hidden');
         document.getElementById('mensajesPagoLinea').innerHTML = '';
+        document.getElementById('contadorPagoLinea').classList.remove('hidden');
         bloquearBotonesMetodoPago(false);
 
         document.getElementById('resumenPagoEspecialidad').innerText = wizardSeleccion.especialidadNombre;
@@ -923,38 +938,6 @@
         actualizar(); // pinta el valor inicial sin esperar 1 seg
         contadorPagoLineaInterval = setInterval(actualizar, 1000);
     }
-    async function expirarPagoEnLinea() {
-        detenerContadorPagoLinea();
-        document.getElementById('formPagoLinea').classList.add('hidden');
-        document.getElementById('mensajesPagoLinea').innerHTML = `
-            <div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200 text-sm">
-                <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                El tiempo para confirmar tu cita ha expirado. La cita ha sido cancelada.
-                Serás redirigido en unos segundos...
-            </div>`;
-
-        try {
-            if (citaCreada) {
-                await apiFetch(`/api/appointments/${citaCreada.id}/cancelar-expirada`, { method: 'POST' });
-            }
-        } catch (e) {
-            // Si esta llamada falla por cualquier motivo, PagoService cancela
-            // la cita igual en el siguiente intento de pago (respaldo).
-        }
-
-        setTimeout(() => {
-            citaCreada = null;
-            document.getElementById('vistaWizard').classList.add('hidden');
-            document.getElementById('vistaDashboard').classList.remove('hidden');
-            mostrarMensajeDashboard(
-                'El tiempo para pagar en línea expiró y tu cita fue cancelada automáticamente. ' +
-                'Puedes agendar una nueva cita cuando quieras.',
-                'error'
-            );
-            cargarMisCitas();
-        }, 4000);
-    }
-
     function detenerContadorPagoLinea() {
         if (contadorPagoLineaInterval) {
             clearInterval(contadorPagoLineaInterval);
@@ -1075,6 +1058,7 @@
             });
 
             detenerContadorPagoLinea();
+            document.getElementById('contadorPagoLinea').classList.add('hidden');
             document.getElementById('formPagoLinea').classList.add('hidden');
             document.getElementById('txnPagoLinea').innerText = resultado.numeroTransaccion;
             document.getElementById('confirmacionPagoLinea').classList.remove('hidden');
