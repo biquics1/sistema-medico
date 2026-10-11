@@ -33,6 +33,7 @@ public class UsuarioService {
     private final SucursalRepository sucursalRepository;
     private final EspecialidadRepository especialidadRepository;
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // RN-CU01-02: tamaño de página por defecto (el wizard de "Listado de Usuarios"
@@ -162,7 +163,9 @@ public class UsuarioService {
         usuario.setEspecialidad(especialidad);
         usuario.setEstado(dto.getEstado());
 
-        return toResponseDTO(usuarioRepository.save(usuario));
+        Usuario guardado = usuarioRepository.save(usuario);
+        emailService.enviarCuentaCreadaPorAdmin(guardado);
+        return toResponseDTO(guardado);
     }
 
     // NUEVO — CU-01 FA04 (Editar usuario)

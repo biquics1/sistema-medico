@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class PacienteAgendaService {
 
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
 
     // Estados desde los cuales el paciente puede reagendar por su cuenta
     // (aun no llega a recepcion/consulta ni fue cancelada/atendida).
@@ -112,6 +113,7 @@ public class PacienteAgendaService {
                     "El horario seleccionado ya no está disponible para el médico asignado. Por favor, elija otro horario.");
         }
 
+        LocalDateTime fechaAnterior = cita.getFechaHora();
         cita.setFechaHora(nuevaFechaHora);
         Cita actualizada;
         try {
@@ -120,6 +122,7 @@ public class PacienteAgendaService {
             throw new ValidationException(
                     "El horario seleccionado ya no está disponible. Por favor, intente nuevamente.");
         }
+        emailService.enviarCitaReagendada(actualizada, fechaAnterior);
         return toResumenDTO(actualizada);
     }
 

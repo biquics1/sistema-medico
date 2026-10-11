@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class FarmaciaService {
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
 
     private static final short RECETA_ACTIVA = 1;
     private static final long DIAS_VIGENCIA_RECETA = 7; // RN-CU10-01
@@ -301,6 +302,13 @@ public class FarmaciaService {
             d.setPago(pagoGuardado);
             despachoMedicamentoRepository.save(d);
         }
+
+        // Comprobante de farmacia al correo del paciente (si está identificado)
+        List<String> lineasCorreo = itemsDespachados.stream()
+                .map(i -> String.format("- %s x%d  (Q%.2f)%s", i.getNombreMedicamento(), i.getCantidad(), i.getSubtotal(),
+                        i.isSustituido() ? " [sustituido por " + i.getNombreMedicamentoSustituto() + "]" : ""))
+                .toList();
+        emailService.enviarComprobanteFarmacia(pacienteParaPago, pagoGuardado, lineasCorreo);
 
         String mensaje = String.format(
                 "¡Pago registrado exitosamente! %d medicamento(s) despachado(s). Total: Q%.2f.",

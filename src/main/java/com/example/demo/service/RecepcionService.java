@@ -31,6 +31,7 @@ public class RecepcionService {
     private final UsuarioRepository usuarioRepository;
     private final EstadoCitaRepository estadoCitaRepository;
     private final ReasignacionMedicoRepository reasignacionMedicoRepository;
+    private final EmailService emailService;
 
     // ---------------------------------------------------------------
     // Paso 3 FB: búsqueda por número de cita o DPI (RN-CU05-01)
@@ -162,6 +163,7 @@ public class RecepcionService {
             cita.setEstadoCita(pacientePresente);
             cita.setHoraLlegada(LocalDateTime.now());
             Cita actualizada = citaRepository.save(cita);
+            emailService.enviarLlegadaRegistrada(actualizada);
 
             String nombre = actualizada.getPaciente().getNombreCompleto();
             String mensaje = actualizada.isEsEmergencia()
@@ -216,6 +218,8 @@ public class RecepcionService {
         try {
             cita.setEstadoCita(cancelada);
             Cita actualizada = citaRepository.save(cita);
+            emailService.enviarCitaCancelada(actualizada,
+                    motivo != null && !motivo.isBlank() ? motivo : "Cancelada por recepción.");
 
             String nombre = actualizada.getPaciente().getNombreCompleto();
             String mensaje = "La cita #" + actualizada.getId() + " del paciente " + nombre
@@ -289,6 +293,7 @@ public class RecepcionService {
 
         cita.setMedico(medicoNuevo);
         Cita actualizada = citaRepository.save(cita);
+        emailService.enviarMedicoReasignado(actualizada, medicoAnterior);
 
         return toDTO(actualizada);
     }

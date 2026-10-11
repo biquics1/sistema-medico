@@ -21,6 +21,7 @@ public class LaboratorioService {
     private final OrdenLaboratorioRepository ordenLaboratorioRepository;
     private final DetalleOrdenLaboratorioRepository detalleOrdenLaboratorioRepository;
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
 
     // ---------------------------------------------------------------
     // Paso 1 FB: listado con filtros por estado, paciente y médico (FA01)
@@ -130,6 +131,8 @@ public class LaboratorioService {
             ordenLaboratorioRepository.save(orden);
             seCompleto = true;
         }
+
+        emailService.enviarResultadoLaboratorioPublicado(orden, detalle, seCompleto);
 
         return PublicarResponseDTO.builder()
                 .mensaje("Resultado publicado exitosamente.")

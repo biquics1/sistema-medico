@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class CajaService {
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
 
     private static final Pattern DPI_PATTERN = Pattern.compile("^\\d{13}$");
     private static final Pattern CUATRO_DIGITOS = Pattern.compile("^\\d{4}$");
@@ -184,6 +185,7 @@ public class CajaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Confirmada'."));
         cita.setEstadoCita(confirmada);
         citaRepository.save(cita);
+        emailService.enviarComprobantePago(cita, pago);
 
         String nombrePaciente = cita.getPaciente().getNombreCompleto();
         String mensaje = String.format(
@@ -318,6 +320,7 @@ public class CajaService {
         orden.setEstado(OrdenLaboratorio.EN_PROCESO);
         orden.setPago(pagoGuardado);
         ordenLaboratorioRepository.save(orden);
+        emailService.enviarComprobantePagoLaboratorio(orden, pagoGuardado);
 
         String nombrePaciente = orden.getPaciente().getNombreCompleto();
         String mensaje = String.format(

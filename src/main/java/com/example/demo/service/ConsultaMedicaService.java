@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConsultaMedicaService {
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
 
     private final CitaRepository citaRepository;
     private final EstadoCitaRepository estadoCitaRepository;
@@ -235,6 +236,7 @@ public class ConsultaMedicaService {
             cita.setEstadoCita(evaluado);
             citaRepository.save(cita);
             estadoResultante = evaluado.getNombre();
+            emailService.enviarConsultaFinalizada(cita, consultaGuardada);
         }
 
         String mensaje = finalizar
@@ -265,6 +267,7 @@ public class ConsultaMedicaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Cancelada'."));
         cita.setEstadoCita(cancelada);
         Cita actualizada = citaRepository.save(cita);
+        emailService.enviarCitaCancelada(actualizada, "No asistió a la consulta médica pese a los llamados.");
 
         return AccionCitaResponseDTO.builder()
                 .mensaje("Cita #" + actualizada.getId() + " cancelada por inasistencia del paciente.")
@@ -288,6 +291,7 @@ public class ConsultaMedicaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Atención Finalizada'."));
         cita.setEstadoCita(atencionFinalizada);
         Cita actualizada = citaRepository.save(cita);
+        emailService.enviarAtencionFinalizada(actualizada);
 
         return AccionCitaResponseDTO.builder()
                 .mensaje("Atención finalizada para cita #" + actualizada.getId() + ".")
@@ -346,6 +350,7 @@ public class ConsultaMedicaService {
         }
 
         List<String> nombres = examenes.stream().map(ExamenLaboratorio::getNombre).toList();
+        emailService.enviarOrdenLaboratorio(ordenGuardada, nombres);
         String mensaje = String.format(
                 "Orden de laboratorio generada exitosamente. Número de orden: %d. Exámenes: %s. "
                         + "El paciente debe dirigirse al área de laboratorio.",
@@ -382,6 +387,7 @@ public class ConsultaMedicaService {
         RecetaMedica recetaGuardada = recetaMedicaRepository.save(receta);
 
         List<String> nombresMedicamentos = new java.util.ArrayList<>();
+        List<DetalleRecetaMedica> detallesGuardados = new java.util.ArrayList<>();
         for (DetalleRecetaRequestDTO d : req.getDetalles()) {
             Medicamento medicamento = medicamentoRepository.findById(d.getMedicamentoId())
                     .orElseThrow(() -> new ResourceNotFoundException("El medicamento indicado no existe en el catálogo."));
@@ -393,10 +399,13 @@ public class ConsultaMedicaService {
             detalle.setFrecuencia(d.getFrecuencia());
             detalle.setDuracion(d.getDuracion());
             detalle.setIndicaciones(d.getIndicaciones());
-            detalleRecetaMedicaRepository.save(detalle);
+            detallesGuardados.add(detalleRecetaMedicaRepository.save(detalle));
 
             nombresMedicamentos.add(medicamento.getNombre());
         }
+
+        // La receta se envía al correo del paciente al guardarla
+        emailService.enviarReceta(recetaGuardada, detallesGuardados);
 
         String mensaje = String.format(
                 "Receta médica generada exitosamente. Medicamentos: %s. El paciente puede adquirirlos en la farmacia de la clínica.",

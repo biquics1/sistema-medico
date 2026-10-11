@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EnfermeriaService {
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
 
     // Rangos clínicos normales (RN-CU07-06) — distintos del rango de CAPTURA (RN-CU07-01 a 05)
     private static final int PA_SIST_NORMAL_MIN = 90, PA_SIST_NORMAL_MAX = 140;
@@ -147,6 +148,7 @@ public class EnfermeriaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Cancelada'."));
         cita.setEstadoCita(cancelada);
         Cita actualizada = citaRepository.save(cita);
+        emailService.enviarCitaCancelada(actualizada, "No asistió a la toma de signos vitales pese a los llamados.");
 
         return AccionCitaEnfermeriaResponseDTO.builder()
                 .mensaje("Cita #" + actualizada.getId() + " cancelada por inasistencia del paciente.")
@@ -202,6 +204,7 @@ public class EnfermeriaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'En Espera'."));
         cita.setEstadoCita(enEspera);
         Cita actualizada = citaRepository.save(cita);
+        emailService.enviarSignosVitales(actualizada, sv);
 
         String nombre = actualizada.getPaciente().getNombreCompleto();
         String mensaje = req.isEsEmergencia()

@@ -31,6 +31,7 @@ public class CitaService {
     private final UsuarioRepository usuarioRepository;
     private final EstadoCitaRepository estadoCitaRepository;
     private final AuditoriaContexto auditoriaContexto;
+    private final EmailService emailService;
 
     @Value("${app.consulta.precio:150.00}")
     private BigDecimal precioConsulta;
@@ -161,6 +162,7 @@ public class CitaService {
             throw new ValidationException(
                     "El horario o la especialidad seleccionados ya no están disponibles. Por favor, intente nuevamente.");
         }
+        emailService.enviarCitaAgendada(cita);
         return toDto(cita);
     }
 
@@ -218,6 +220,7 @@ public class CitaService {
                     .orElseThrow(() -> new ResourceNotFoundException("Estado 'Cancelada' no configurado."));
             cita.setEstadoCita(cancelada);
             cita = citaRepository.save(cita);
+            emailService.enviarCitaCancelada(cita, "Venció el tiempo para completar el pago en línea.");
         }
         return toDto(cita);
     }
@@ -248,6 +251,7 @@ public class CitaService {
         for (Cita c : expiradas) {
             c.setEstadoCita(cancelada);
             citaRepository.save(c);
+            emailService.enviarCitaCancelada(c, "No se realizó el pago de la cita a tiempo.");
         }
     }
 
