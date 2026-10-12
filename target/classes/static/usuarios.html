@@ -119,7 +119,31 @@
     </header>
 
     <div class="p-8" id="main-content">
-        <section id="section-usuarios" class="space-y-6">
+        <!-- MENÚ DEL MÓDULO (CU-01: opciones "Listar Usuarios" y "Crear Usuario") -->
+        <section id="section-menu-usuarios" class="space-y-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h2 class="text-lg font-bold text-brand-black mb-4">Gestión de Usuarios</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="opcionListarUsuarios()"
+                            class="flex items-center gap-4 p-6 rounded-xl border border-gray-200 hover:border-brand-yellow hover:shadow transition text-left">
+                        <i class="fa-solid fa-list text-3xl text-brand-yellow"></i>
+                        <div>
+                            <p class="font-bold text-brand-black">Listar Usuarios</p>
+                            <p class="text-sm text-gray-500">Consultar, buscar, editar o eliminar usuarios.</p>
+                        </div>
+                    </button>
+                    <button onclick="opcionCrearUsuario()"
+                            class="flex items-center gap-4 p-6 rounded-xl border border-gray-200 hover:border-brand-yellow hover:shadow transition text-left">
+                        <i class="fa-solid fa-user-plus text-3xl text-brand-yellow"></i>
+                        <div>
+                            <p class="font-bold text-brand-black">Crear Usuario</p>
+                            <p class="text-sm text-gray-500">Registrar un nuevo usuario interno.</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <section id="section-usuarios" class="space-y-6 hidden">
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
                     <h2 class="text-lg font-bold text-brand-black">Listado de Usuarios</h2>
@@ -138,9 +162,9 @@
                                 class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
-                        <button onclick="abrirModalUsuario()"
-                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
-                            + Crear Usuario
+                        <button onclick="volverMenuUsuarios()"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg text-sm">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> Volver al menú
                         </button>
                     </div>
                 </div>
@@ -307,7 +331,28 @@
         document.getElementById('mensajesUsuarios').innerHTML =
             `<div class="p-3 rounded-md mb-4 ${colores[tipo]}">${texto}</div>`;
     }
+    // ===== Navegación del módulo: menú / listado =====
+    function volverMenuUsuarios() {
+        document.getElementById('mensajesUsuarios').innerHTML = '';
+        document.getElementById('section-usuarios').classList.add('hidden');
+        document.getElementById('section-menu-usuarios').classList.remove('hidden');
+    }
 
+    function mostrarListadoUsuarios() {
+        document.getElementById('section-menu-usuarios').classList.add('hidden');
+        document.getElementById('section-usuarios').classList.remove('hidden');
+    }
+
+    // Opción "Listar Usuarios": solo aquí se consultan los usuarios
+    function opcionListarUsuarios() {
+        mostrarListadoUsuarios();
+        cargarUsuarios();
+    }
+
+    // Opción "Crear Usuario": abre el formulario en blanco
+    function opcionCrearUsuario() {
+        abrirModalUsuario();
+    }
     async function cargarCatalogosUsuario() {
         [rolesCache, sucursalesCache, especialidadesCache] = await Promise.all([
             apiFetch('/api/roles'),
@@ -509,10 +554,7 @@
         }
     }
 
-    // Carga inicial de datos: solo si el usuario tiene acceso a este módulo.
-    if (tieneAccesoUsuarios) {
-        cargarUsuarios();
-    }
+
 </script>
 </body>
 </html>

@@ -4,222 +4,53 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< Updated upstream
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="arreglo de botoones segun dashboar paciente">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/ConsultaMedicaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/ConsultaMedicaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EnfermeriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EnfermeriaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/FarmaciaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/FarmaciaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LaboratorioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/LaboratorioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/RecepcionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/RecepcionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UsuarioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/UsuarioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-=======
-    <list default="true" id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="areglo de correo y boton">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
->>>>>>> Stashed changes
+    <list default="true" id="d29d1273-0fb7-4b74-82de-84679c237ad6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/RecepcionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/RecepcionService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/UsuarioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/UsuarioService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/usuarios.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DatabaseLocalColorSettings">
-    <colors>
-      <entry key="31dd17f9-0cc0-436a-9ada-8bfc60621aa1" value="" />
-    </colors>
-  </component>
-  <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="211" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="package-info" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;biquics1&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/biquics1/sistema-medico.git&quot;,
-    &quot;accountId&quot;: &quot;fbe995b5-197e-4c7f-96f6-3cd8f1cad6b5&quot;
-  }
-}</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/FarmaciaController.java" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DespachoMedicamento.java" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/example/demo/modelo/DetalleDespachoMedicamento.java" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/example/demo/security/JwtAuthFilter.java" root0="SKIP_INSPECTION" />
-  </component>
-  <component name="HttpClientOnboardingState">{
-  &quot;isOnboardingCommentShown&quot;: true
-}</component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
-  <component name="McpProjectServerCommands">
-    <commands />
-    <urls />
-  </component>
-  <component name="NextEditCompletionFeaturesState">
-    <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.000000000023381" />
-      <entry key="S5" value="1.0000792115122212" />
-      <entry key="S10" value="1.0124268183902516" />
-      <entry key="S30" value="1.3773777657008794" />
-      <entry key="S60" value="2.0408943284059617" />
-      <entry key="M2" value="3.1435821014189043" />
-      <entry key="M5" value="6.130343141337574" />
-      <entry key="M10" value="11.295910602202275" />
-      <entry key="M15" value="15.585275470990702" />
-      <entry key="M30" value="24.325858444264224" />
-      <entry key="H1" value="33.364786236807106" />
-      <entry key="H2" value="41.50485043411837" />
-      <entry key="H4" value="50.92551784597348" />
-      <entry key="D1" value="104.25655017076635" />
-      <entry key="W1" value="171.93692056979978" />
-    </decayedCancelled>
-    <decayedSelected>
-      <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="0.0" />
-      <entry key="M2" value="0.0" />
-      <entry key="M5" value="1.2493329643148081E-197" />
-      <entry key="M10" value="3.5345904491394928E-99" />
-      <entry key="M15" value="2.3203815293031166E-66" />
-      <entry key="M30" value="1.5232798591536369E-33" />
-      <entry key="H1" value="3.902921801873099E-17" />
-      <entry key="H2" value="6.247336874119316E-9" />
-      <entry key="H4" value="7.904009662265918E-5" />
-      <entry key="D1" value="0.20716095785777902" />
-      <entry key="W1" value="0.7986007275012398" />
-    </decayedSelected>
-    <decayedShown>
-      <entry key="MS100" value="0.8888426811665702" />
-      <entry key="MS500" value="0.9767085289622274" />
-      <entry key="S2" value="0.9941255713172484" />
-      <entry key="S5" value="0.9977250262643024" />
-      <entry key="S10" value="1.0112286374810393" />
-      <entry key="S30" value="1.3766004304385242" />
-      <entry key="S60" value="2.0389822316958677" />
-      <entry key="M2" value="3.140281426416678" />
-      <entry key="M5" value="6.126867496904729" />
-      <entry key="M10" value="11.29122600510809" />
-      <entry key="M15" value="15.574655120609686" />
-      <entry key="M30" value="24.295633868967197" />
-      <entry key="H1" value="33.32590389034859" />
-      <entry key="H2" value="41.473369781173346" />
-      <entry key="H4" value="50.90537353850039" />
-      <entry key="D1" value="104.45940614798658" />
-      <entry key="W1" value="172.73486502974077" />
-    </decayedShown>
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 8,
-  &quot;fromUser&quot;: false
-}</component>
-  <component name="ProjectId" id="3H0o1FaDBqK4Z6WfBvp5ef8flWq" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3KbXHflnac2JjoSLGxqsiCFBy0y" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HTTP Request.requests | Crear usuario.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Eliminar usuario.executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Login (usa el usuario que registraste en CU-02).executor&quot;: &quot;Run&quot;,
-    &quot;HTTP Request.requests | Obtener usuario por id.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.demo [clean].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;636&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;636&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DemoApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/USER/OneDrive/Escritorio/progra 2/sistema medico demo/sistema medico&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.usuarios.html.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.DemoApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
-  <component name="RunManager" selected="Spring Boot.DemoApplication">
-    <configuration name="requests | Crear usuario" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" executionIdentifier="Crear usuario" index="2" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | Eliminar usuario" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" executionIdentifier="Eliminar usuario" index="4" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | Login (usa el usuario que registraste en CU-02)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" executionIdentifier="Login (usa el usuario que registraste en CU-02)" index="6" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="requests | Obtener usuario por id" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/requests.http" executionIdentifier="Obtener usuario por id" index="3" runType="Run single request">
-      <method v="2" />
-    </configuration>
-    <configuration name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <module name="demo" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.DemoApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="HTTP Request.requests | Crear usuario" />
-        <item itemvalue="HTTP Request.requests | Login (usa el usuario que registraste en CU-02)" />
-        <item itemvalue="HTTP Request.requests | Eliminar usuario" />
-        <item itemvalue="HTTP Request.requests | Obtener usuario por id" />
-      </list>
-    </recent_temporary>
-  </component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -230,196 +61,15 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="ece435ba-c07e-439c-a871-98c0abc4c29c" name="Changes" comment="" />
-      <created>1785014130216</created>
+      <changelist id="d29d1273-0fb7-4b74-82de-84679c237ad6" name="Changes" comment="" />
+      <created>1791827167999</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1785014130216</updated>
+      <updated>1791827167999</updated>
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="primer commit" />
-    <MESSAGE value="segunda prueba" />
-    <MESSAGE value="cambios //" />
-    <MESSAGE value="agregando comentarios a carpeta modelo" />
-    <MESSAGE value="agregando comentarios a carpeta repository" />
-    <MESSAGE value="agregando comentarios a carpeta DTO" />
-    <MESSAGE value="agregando comentarios a carpeta controller, excepcion y config" />
-    <MESSAGE value="metodo de pago en linea nuevo" />
-    <MESSAGE value="nuevas modificaciones" />
-    <MESSAGE value="agregando metodo de bitacora general" />
-    <MESSAGE value="agregando metodo de bitacora general completo" />
-    <MESSAGE value="modificacion de 4 archivos" />
-    <MESSAGE value="pequeñas correcciones" />
-    <MESSAGE value="cambios agregando boton de llamado, reasignar medico y cancelar citas" />
-    <MESSAGE value="cambios minimos" />
-    <MESSAGE value="cambios en cancelacion de cita" />
-    <MESSAGE value="cambios para el pago en linea" />
-    <MESSAGE value="linea corregida" />
-    <MESSAGE value="prueba de comit" />
-    <MESSAGE value="es prueba de commit" />
-    <MESSAGE value="areglo de correo y boton" />
-    <MESSAGE value="arreglo de botoones segun dashboar paciente" />
-    <option name="LAST_COMMIT_MESSAGE" value="arreglo de botoones segun dashboar paciente" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-<<<<<<< Updated upstream
-        <line-breakpoint enabled="true" type="java-line">
-=======
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
-          <line>115</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
->>>>>>> Stashed changes
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/dto/VerifyDpiDTO.java</url>
-          <line>11</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-<<<<<<< Updated upstream
-=======
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/EnfermeriaController.java</url>
-          <line>21</line>
-          <option name="timeStamp" value="117" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/EnfermeriaService.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="118" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/controller/EnfermeriaController.java</url>
-          <line>28</line>
-          <option name="timeStamp" value="120" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/EnfermeriaService.java</url>
-          <line>89</line>
-          <option name="timeStamp" value="122" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
-          <line>46</line>
-          <properties class="com.example.demo.service.CajaService" method="buscarCitaParaCobro">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java</url>
-          <line>114</line>
-          <properties class="com.example.demo.service.CajaService" method="cobrar">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>50</line>
-          <properties class="com.example.demo.service.CitaService" method="listarSucursalesActivas">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="105" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>54</line>
-          <properties class="com.example.demo.service.CitaService" method="listarEspecialidadesPorSucursal">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="106" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>64</line>
-          <properties class="com.example.demo.service.CitaService" method="listarMedicos">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="107" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>78</line>
-          <properties class="com.example.demo.service.CitaService" method="listarHorariosDisponibles">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="108" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>104</line>
-          <properties class="com.example.demo.service.CitaService" method="crearCita">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="109" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>166</line>
-          <properties class="com.example.demo.service.CitaService" method="obtenerCita">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="110" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>173</line>
-          <properties class="com.example.demo.service.CitaService" method="elegirMetodoPago">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="111" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>240</line>
-          <properties class="com.example.demo.service.CitaService" method="cancelarCitasExpiradas">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="114" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java</url>
-          <line>206</line>
-          <properties class="com.example.demo.service.CitaService" method="cancelarPorExpiracionInmediata">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="116" />
-        </line-breakpoint>
-        <line-breakpoint type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/EnfermeriaService.java</url>
-          <line>67</line>
-          <properties class="com.example.demo.service.EnfermeriaService" method="llamarPaciente">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="121" />
-        </line-breakpoint>
->>>>>>> Stashed changes
-      </breakpoints>
-    </breakpoint-manager>
-    <watches-manager>
-      <configuration name="SpringBootApplicationConfigurationType">
-        <watch expression="ip" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>
