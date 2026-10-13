@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d29d1273-0fb7-4b74-82de-84679c237ad6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/usuarios.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/RecepcionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/RecepcionService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/UsuarioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/UsuarioService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/static/usuarios.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/usuarios.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,6 +28,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JavaScript Debug.dashboard-paciente.html.executor": "Run",
     "JavaScript Debug.usuarios.html.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
