@@ -10,15 +10,19 @@ import com.example.demo.repository.ConsultaMedicaRepository;
 import com.example.demo.repository.EstadoCitaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
-import org.springframework.dao.DataIntegrityViolationException;
+
 @Service
 @RequiredArgsConstructor
 public class SeguimientoService {
@@ -28,7 +32,6 @@ public class SeguimientoService {
     private final CitaRepository citaRepository;
     private final EstadoCitaRepository estadoCitaRepository;
     private final CitaSeguimientoRepository citaSeguimientoRepository;
-    private final CitaService citaService; // reutiliza el cálculo de horarios disponibles de CU-03
     private final EmailService emailService;
 
     @Value("${app.consulta.precio:150.00}")
@@ -37,9 +40,8 @@ public class SeguimientoService {
     private static final Set<String> TIPOS_VALIDOS = Set.of(
             CitaSeguimiento.MONITOREO_TRATAMIENTO, CitaSeguimiento.REVISION_RESULTADOS);
 
-    // ---------------------------------------------------------------
-    // Paso 2-3 FB: banner con los datos precargados de la consulta padre
-    // ---------------------------------------------------------------
+    private static final List<String> ESTADOS_LIBERAN_HORARIO = List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO);
+
     @Transactional(readOnly = true)
     public ContextoSeguimientoDTO obtenerContexto(Integer idConsulta, Integer medicoId) {
         ConsultaMedica consulta = obtenerConsultaDelMedico(idConsulta, medicoId);
@@ -59,9 +61,6 @@ public class SeguimientoService {
                 .build();
     }
 
-    // ---------------------------------------------------------------
-    // Pasos 4-8 FB: confirmar el agendamiento (RN-CU11-01/02/03, FA01)
-    // ---------------------------------------------------------------
     @Transactional
     public SeguimientoResponseDTO crearSeguimiento(Integer idConsulta, Integer medicoId, CrearSeguimientoRequestDTO req) {
         auditoriaContexto.aplicar();
@@ -69,36 +68,53 @@ public class SeguimientoService {
         Cita citaOrigen = consulta.getCita();
         Usuario medico = consulta.getMedico();
 
-        // RN-CU11-01
+        // 1. Validar Tipo de Seguimiento
         String tipo = req.getTipoSeguimiento() == null ? "" : req.getTipoSeguimiento().trim().toUpperCase();
         if (!TIPOS_VALIDOS.contains(tipo)) {
             throw new ValidationException("Debe seleccionar el tipo de seguimiento.");
         }
 
-        // RN-CU11-03 ("Observaciones")
+        // 2. Validar Observaciones
         String motivo = req.getMotivoSeguimiento();
         if (motivo == null || motivo.length() < 10 || motivo.length() > 2000) {
-            throw new ValidationException(
-                    "Las observaciones son obligatorias. Deben contener entre 10 y 2000 caracteres.");
+            throw new ValidationException("Las observaciones son obligatorias. Deben contener entre 10 y 2000 caracteres.");
         }
 
-        // RN-CU11-02: fecha futura...
-        if (req.getFechaHora() == null || !req.getFechaHora().isAfter(LocalDateTime.now())) {
-            throw new ValidationException(
-                    "Seleccione una fecha futura dentro de los horarios disponibles del médico.");
+        // 3. Normalización y validación de fecha/hora
+        if (req.getFechaHora() == null) {
+            throw new ValidationException("Debe seleccionar una fecha y hora válidas.");
         }
 
-        // ...y que coincida con un horario realmente disponible del médico (mismo cálculo que CU-03)
-        List<LocalDateTime> disponibles =
-                citaService.listarHorariosDisponibles(medicoId, req.getFechaHora().toLocalDate());
-        if (!disponibles.contains(req.getFechaHora())) {
-            // FA01 - conflicto de horario
-            throw new ValidationException(
-                    "El horario seleccionado ya no está disponible. Por favor, elija otro horario.");
+        LocalDateTime fechaHoraNormalizada = req.getFechaHora().withSecond(0).withNano(0);
+
+        if (!fechaHoraNormalizada.isAfter(LocalDateTime.now())) {
+            throw new ValidationException("Seleccione una fecha futura dentro de los horarios disponibles del médico.");
         }
 
-        // La cita de seguimiento nace "Confirmada": es continuidad de la atención
-        // ya iniciada por el médico, no pasa por el flujo de pago (CU-04/CU-06).
+        DayOfWeek dia = fechaHoraNormalizada.getDayOfWeek();
+        if (dia == DayOfWeek.SATURDAY || dia == DayOfWeek.SUNDAY) {
+            throw new ValidationException("Las citas de seguimiento solo pueden agendarse de lunes a viernes.");
+        }
+
+        LocalTime hora = fechaHoraNormalizada.toLocalTime();
+        if (hora.isBefore(LocalTime.of(8, 0)) || hora.isAfter(LocalTime.of(17, 0)) || hora.equals(LocalTime.of(17, 0))) {
+            throw new ValidationException("El horario permitido es de 08:00 AM a 05:00 PM.");
+        }
+
+        // 4. Verificación directa de disponibilidad descartando citas canceladas/no asistió
+        List<Cita> citasOcupadas = citaRepository.findByMedico_IdAndFechaHoraBetweenAndEstadoCita_NombreNotIn(
+                medicoId,
+                fechaHoraNormalizada.minusMinutes(1),
+                fechaHoraNormalizada.plusMinutes(1),
+                ESTADOS_LIBERAN_HORARIO
+        );
+
+        if (!citasOcupadas.isEmpty()) {
+            throw new ValidationException("El médico ya tiene una cita agendada en la fecha y hora seleccionadas ("
+                    + fechaHoraNormalizada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "). Por favor elija otro horario.");
+        }
+
+        // Cita de seguimiento nace como "Confirmada"
         EstadoCita confirmada = estadoCitaRepository.findByNombre(EstadoCita.CONFIRMADA)
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Confirmada'."));
 
@@ -108,15 +124,15 @@ public class SeguimientoService {
         citaSeguimiento.setSucursal(citaOrigen.getSucursal());
         citaSeguimiento.setEspecialidad(citaOrigen.getEspecialidad());
         citaSeguimiento.setEstadoCita(confirmada);
-        citaSeguimiento.setFechaHora(req.getFechaHora());
+        citaSeguimiento.setFechaHora(fechaHoraNormalizada);
         citaSeguimiento.setMotivoConsulta(motivo);
         citaSeguimiento.setMonto(precioConsulta);
+
         Cita citaGuardada;
         try {
             citaGuardada = citaRepository.save(citaSeguimiento);
         } catch (DataIntegrityViolationException e) {
-            throw new ValidationException(
-                    "El horario seleccionado ya no está disponible. Por favor, elija otro horario.");
+            throw new ValidationException("El horario seleccionado ya no está disponible. Por favor, elija otro horario.");
         }
 
         CitaSeguimiento seguimiento = new CitaSeguimiento();
@@ -126,13 +142,13 @@ public class SeguimientoService {
         seguimiento.setMotivoSeguimiento(motivo);
         CitaSeguimiento seguimientoGuardado = citaSeguimientoRepository.save(seguimiento);
 
-        // RN-CU11-04 (responsabilidad del backend)
         emailService.enviarSeguimientoAgendado(citaGuardada, seguimientoGuardado);
 
         String etiquetaTipo = CitaSeguimiento.MONITOREO_TRATAMIENTO.equals(tipo)
                 ? "Monitoreo de Tratamiento" : "Revisión de Resultados de Laboratorio";
         String mensaje = String.format(
-                "Cita de seguimiento agendada exitosamente. Tipo: %s. Paciente: %s.",
+                "Cita de seguimiento agendada exitosamente para el %s. Tipo: %s. Paciente: %s.",
+                citaGuardada.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
                 etiquetaTipo, citaOrigen.getPaciente().getNombreCompleto());
 
         return SeguimientoResponseDTO.builder()
@@ -144,11 +160,6 @@ public class SeguimientoService {
                 .build();
     }
 
-    // ---------------------------------------------------------------
-    // RN-CU11-05 / RNF-020: recordatorio 1-2 días antes, resiliente a
-    // reinicios (se marca recordatorio_enviado en BD, no en memoria).
-    // No se envía si la cita fue cancelada.
-    // ---------------------------------------------------------------
     @Scheduled(cron = "0 0 8 * * *")
     @Transactional
     public void enviarRecordatoriosSeguimiento() {
@@ -169,7 +180,6 @@ public class SeguimientoService {
         }
     }
 
-    // ---------------------------------------------------------------
     private ConsultaMedica obtenerConsultaDelMedico(Integer idConsulta, Integer medicoId) {
         ConsultaMedica consulta = consultaMedicaRepository.findById(idConsulta)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la consulta indicada."));

@@ -142,6 +142,12 @@
                     <button onclick="guardarConsulta()" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow">
                         Guardar Consulta
                     </button>
+                    <button onclick="abrirModalOrdenLabDesdeFormulario()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-flask"></i> Generar Orden de Laboratorio
+                    </button>
+                    <button onclick="abrirModalRecetaDesdeFormulario()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5">
+                        <i class="fa-solid fa-pills"></i> Generar Receta Médica
+                    </button>
                     <button onclick="cerrarFormConsulta()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg">
                         Cerrar
                     </button>
@@ -160,7 +166,7 @@
                     <label for="ordenEsExterna" class="text-sm font-medium text-gray-700">Orden Externa</label>
                 </div>
                 <div class="mt-3">
-                    <label class="block text-sm font-medium text-gray-700">Notas</label>
+                    <label class="block text-sm font-medium text-gray-700">Observaciones / Notas</label>
                     <textarea id="ordenNotas" rows="2" class="w-full p-2 border border-gray-300 rounded-md"></textarea>
                 </div>
                 <div class="flex gap-2 pt-4">
@@ -290,7 +296,6 @@
                     <button onclick="llamarDeNuevoMedico(${c.id}, this)" ${llamarDeshabilitado ? 'disabled' : ''} class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">Llamar de nuevo</button>
                     <button onclick="marcarNoAsistio(${c.id})" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-1.5 rounded-lg text-sm">No Asistió</button>`;
             } else {
-                // SECCIÓN EVALUADOS: FA01 (Lab), FA04 (Receta), FA02 (Seguimiento) y Finalizar
                 acciones = `
                     <button onclick="abrirModalOrdenLabPorCita(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-flask"></i> Orden Lab</button>
                     <button onclick="abrirModalRecetaPorCita(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-pills"></i> Receta Médica</button>
@@ -380,6 +385,54 @@
         document.getElementById('formConsultaContainer').classList.add('hidden');
     }
 
+    // Auxiliar: Asegura que la consulta exista en BD antes de abrir recetario u orden de laboratorio
+    async function asegurarConsultaGuardada() {
+        if (consultaActualId) return true;
+
+        const motivo = document.getElementById('cMotivoVisita').value.trim();
+        if (!motivo) {
+            throw new Error('Debe ingresar al menos el Motivo de Visita antes de generar una receta u orden de laboratorio.');
+        }
+
+        const body = {
+            motivoVisita: motivo,
+            hallazgosClinicos: document.getElementById('cHallazgos').value.trim(),
+            cie10Id: document.getElementById('cCie10Id').value ? Number(document.getElementById('cCie10Id').value) : null,
+            diagnostico: document.getElementById('cDiagnostico').value.trim(),
+            planTratamiento: document.getElementById('cPlanTratamiento').value.trim(),
+            notasAdicionales: document.getElementById('cNotas').value.trim(),
+            estadoConsulta: 'EN_CURSO'
+        };
+
+        const data = await apiFetch(`/api/medico/citas/${citaConsultaActual}/consulta?medicoId=${idMedicoActual()}`, {
+            method: 'PUT',
+            body: JSON.stringify(body)
+        });
+
+        consultaActualId = data.consultaId;
+        return true;
+    }
+
+    async function abrirModalOrdenLabDesdeFormulario() {
+        try {
+            await asegurarConsultaGuardada();
+            await abrirModalOrdenLab();
+        } catch (e) {
+            document.getElementById('mensajesFormConsulta').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    async function abrirModalRecetaDesdeFormulario() {
+        try {
+            await asegurarConsultaGuardada();
+            await abrirModalReceta();
+        } catch (e) {
+            document.getElementById('mensajesFormConsulta').innerHTML =
+                `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
     let cie10Timeout = null;
     async function buscarCie10Autocomplete() {
         const texto = document.getElementById('cCie10Busqueda').value.trim();
@@ -447,19 +500,15 @@
     }
 
     async function abrirModalOrdenLab() {
-        if (!consultaActualId) {
-            mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de generar una orden de laboratorio.', 'error');
-            return;
-        }
         document.getElementById('mensajesOrdenLab').innerHTML = '';
         document.getElementById('ordenEsExterna').checked = false;
         document.getElementById('ordenNotas').value = '';
         try {
             if (!examenesCatalogo.length) examenesCatalogo = await apiFetch('/api/medico/examenes');
             document.getElementById('listaExamenesCatalogo').innerHTML = examenesCatalogo.map(ex => `
-                <label class="flex items-center gap-2 text-sm p-1">
-                    <input type="checkbox" value="${ex.id}" class="examenCheckbox">
-                    ${ex.nombre} — Q${Number(ex.precio).toFixed(2)}
+                <label class="flex items-center gap-2 text-sm p-1 hover:bg-gray-50 rounded">
+                    <input type="checkbox" value="${ex.id}" data-nombre="${ex.nombre.replace(/"/g, '&quot;')}" class="examenCheckbox">
+                    <span>${ex.nombre} — Q${Number(ex.precio).toFixed(2)}</span>
                 </label>`).join('');
             document.getElementById('modalOrdenLab').classList.remove('hidden');
         } catch (e) {
@@ -472,23 +521,33 @@
     }
 
     async function guardarOrdenLab() {
-        const examenIds = Array.from(document.querySelectorAll('.examenCheckbox:checked')).map(cb => Number(cb.value));
-        if (!examenIds.length) {
+        const checkboxes = Array.from(document.querySelectorAll('.examenCheckbox:checked'));
+        if (!checkboxes.length) {
             document.getElementById('mensajesOrdenLab').innerHTML =
                 '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Debe seleccionar al menos un examen de laboratorio.</div>';
             return;
         }
+
+        const examenIds = checkboxes.map(cb => Number(cb.value));
+        const nombresExamenes = checkboxes.map(cb => cb.getAttribute('data-nombre')).join(', ');
+
         const body = {
             examenIds,
             esExterna: document.getElementById('ordenEsExterna').checked,
             notas: document.getElementById('ordenNotas').value.trim()
         };
+
         try {
             const data = await apiFetch(`/api/medico/consultas/${consultaActualId}/orden-laboratorio?medicoId=${idMedicoActual()}`, {
                 method: 'POST', body: JSON.stringify(body)
             });
+
             cerrarModalOrdenLab();
-            mostrarMensajeConsulta(data.mensaje, 'exito');
+
+            const numeroOrden = data.ordenId || data.id || consultaActualId;
+            const msgExito = `Orden de laboratorio generada exitosamente. Número de orden: #${numeroOrden}. Exámenes: [${nombresExamenes}]. El paciente debe dirigirse al área de laboratorio.`;
+
+            mostrarMensajeConsulta(msgExito, 'exito');
         } catch (e) {
             document.getElementById('mensajesOrdenLab').innerHTML =
                 `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
@@ -511,10 +570,6 @@
     }
 
     async function abrirModalReceta() {
-        if (!consultaActualId) {
-            mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de generar una receta.', 'error');
-            return;
-        }
         document.getElementById('mensajesReceta').innerHTML = '';
         document.getElementById('listaMedicamentosReceta').innerHTML = '';
         try {
@@ -535,32 +590,63 @@
         div.className = 'lineaReceta border border-gray-200 rounded-md p-3 space-y-2';
         div.innerHTML = `
             <select class="rMedicamento w-full p-2 border border-gray-300 rounded-md">
-                ${medicamentosCatalogo.map(m => `<option value="${m.id}">${m.nombre} (${m.unidad})</option>`).join('')}
+                ${medicamentosCatalogo.map(m => `<option value="${m.id}" data-nombre="${m.nombre.replace(/"/g, '&quot;')}">${m.nombre} (${m.unidad})</option>`).join('')}
             </select>
             <div class="grid grid-cols-3 gap-2">
-                <input class="rDosis p-2 border border-gray-300 rounded-md text-sm" placeholder="Dosis">
-                <input class="rFrecuencia p-2 border border-gray-300 rounded-md text-sm" placeholder="Frecuencia">
-                <input class="rDuracion p-2 border border-gray-300 rounded-md text-sm" placeholder="Duración">
+                <input class="rDosis p-2 border border-gray-300 rounded-md text-sm" placeholder="Dosis (ej. 500mg)">
+                <input class="rFrecuencia p-2 border border-gray-300 rounded-md text-sm" placeholder="Frecuencia (ej. c/8h)">
+                <input class="rDuracion p-2 border border-gray-300 rounded-md text-sm" placeholder="Duración (ej. 5 días)">
             </div>
-            <input class="rIndicaciones w-full p-2 border border-gray-300 rounded-md text-sm" placeholder="Indicaciones (opcional)">
+            <input class="rIndicaciones w-full p-2 border border-gray-300 rounded-md text-sm" placeholder="Indicaciones especiales (opcional)">
             <button type="button" onclick="this.closest('.lineaReceta').remove()" class="text-xs text-red-600 hover:underline">Quitar</button>`;
         document.getElementById('listaMedicamentosReceta').appendChild(div);
     }
 
     async function guardarReceta() {
-        const detalles = Array.from(document.querySelectorAll('.lineaReceta')).map(linea => ({
-            medicamentoId: Number(linea.querySelector('.rMedicamento').value),
-            dosis: linea.querySelector('.rDosis').value.trim(),
-            frecuencia: linea.querySelector('.rFrecuencia').value.trim(),
-            duracion: linea.querySelector('.rDuracion').value.trim(),
-            indicaciones: linea.querySelector('.rIndicaciones').value.trim()
-        }));
+        const lineas = Array.from(document.querySelectorAll('.lineaReceta'));
+        if (!lineas.length) {
+            document.getElementById('mensajesReceta').innerHTML =
+                '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Debe ingresar al menos un medicamento.</div>';
+            return;
+        }
+
+        const detalles = [];
+        const listaNombres = [];
+
+        for (const linea of lineas) {
+            const select = linea.querySelector('.rMedicamento');
+            const medId = Number(select.value);
+            const medNombre = select.options[select.selectedIndex].getAttribute('data-nombre');
+            const dosis = linea.querySelector('.rDosis').value.trim();
+            const frecuencia = linea.querySelector('.rFrecuencia').value.trim();
+            const duracion = linea.querySelector('.rDuracion').value.trim();
+
+            if (!dosis || !frecuencia || !duracion) {
+                document.getElementById('mensajesReceta').innerHTML =
+                    '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Todos los campos de dosis, frecuencia y duración son obligatorios por medicamento.</div>';
+                return;
+            }
+
+            detalles.push({
+                medicamentoId: medId,
+                dosis: dosis,
+                frecuencia: frecuencia,
+                duracion: duracion,
+                indicaciones: linea.querySelector('.rIndicaciones').value.trim()
+            });
+
+            listaNombres.push(medNombre);
+        }
+
         try {
             const data = await apiFetch(`/api/medico/consultas/${consultaActualId}/receta?medicoId=${idMedicoActual()}`, {
                 method: 'POST', body: JSON.stringify({ detalles })
             });
+
             cerrarModalReceta();
-            mostrarMensajeConsulta(data.mensaje, 'exito');
+
+            const msgExito = `Receta médica generada exitosamente. Medicamentos: [${listaNombres.join(', ')}]. El paciente puede adquirirlos en la farmacia de la clínica.`;
+            mostrarMensajeConsulta(msgExito, 'exito');
         } catch (e) {
             document.getElementById('mensajesReceta').innerHTML =
                 `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
@@ -629,7 +715,7 @@
 
     async function confirmarSeguimiento() {
         document.getElementById('mensajesSeguimiento').innerHTML = '';
-        const horario = document.getElementById('segHorario').value;
+        let horario = document.getElementById('segHorario').value;
         const motivo = document.getElementById('segMotivo').value.trim();
 
         if (!horario) {
@@ -642,6 +728,9 @@
                 '<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">Las observaciones son obligatorias. Deben contener entre 10 y 2000 caracteres.</div>';
             return;
         }
+
+        if (horario.includes('.')) horario = horario.split('.')[0];
+        if (horario.endsWith('Z')) horario = horario.replace('Z', '');
 
         const body = {
             tipoSeguimiento: document.getElementById('segTipo').value,
