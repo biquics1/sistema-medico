@@ -36,61 +36,20 @@
             <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
         </div>
 
-        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
-             "*" significa: todos los roles internos autenticados. -->
         <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
-            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
-            </a>
-            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
-            </a>
-            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
-            </a>
-            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
-            </a>
-            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
-            </a>
-            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-flask w-6"></i> Laboratorio
-            </a>
-            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
-            </a>
-            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-pills w-6"></i> Farmacia
-            </a>
-            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
-            </a>
-            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
-            </a>
-            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
-            </a>
-            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
-            </a>
-            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
-            </a>
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-chart-line w-6"></i> Dashboard</a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-calendar-check w-6"></i> Control de Citas</a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales</a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica</a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica</a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-flask w-6"></i> Laboratorio</a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos</a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-pills w-6"></i> Farmacia</a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario</a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede</a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-users w-6"></i> Gestión de Usuarios</a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede</a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-book w-6"></i> Catálogos del Sistema</a>
         </nav>
     </div>
 </aside>
@@ -101,9 +60,7 @@
         <h1 id="page-title" class="text-xl font-bold text-brand-black">Registro de Signos Vitales (Triaje)</h1>
         <div class="flex items-center gap-4">
             <div class="flex items-center gap-3">
-                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
-                    --
-                </div>
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">--</div>
                 <div class="text-right leading-tight">
                     <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
                     <p id="rolUsuario" class="text-xs text-gray-500"></p>
@@ -121,9 +78,10 @@
     <div class="p-8" id="main-content">
         <section id="section-signos" class="space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Pacientes en Espera (Paciente Presente) -->
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold text-brand-black">Pacientes en Espera</h2>
+                        <h2 class="text-lg font-bold text-brand-black">Pacientes en Espera (Paciente Presente)</h2>
                         <button onclick="cargarColaSignos()" class="text-sm text-gray-500 hover:text-brand-black">
                             <i class="fa-solid fa-rotate"></i> Actualizar
                         </button>
@@ -132,81 +90,96 @@
                     <div id="listaPresentes" class="space-y-2"></div>
                 </div>
 
+                <!-- En Toma de Signos (Signos Vitales) -->
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                    <h2 class="text-lg font-bold text-brand-black mb-4">En Toma de Signos</h2>
+                    <h2 class="text-lg font-bold text-brand-black mb-4">En Toma de Signos (Signos Vitales)</h2>
                     <div id="listaEnProceso" class="space-y-2"></div>
                 </div>
             </div>
 
-            <div id="formSignosContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl">
-                <h2 id="formSignosTitulo" class="text-lg font-bold text-brand-black mb-4"></h2>
+            <!-- Formulario de Captura -->
+            <div id="formSignosContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-3xl">
+                <div class="border-b border-gray-200 pb-3 mb-4">
+                    <h2 id="formSignosTitulo" class="text-lg font-bold text-brand-black"></h2>
+                    <p class="text-sm text-gray-500">Ingrese las mediciones observadas. El sistema validará los límites clínicos en tiempo real.</p>
+                </div>
+
                 <div id="mensajesFormSignos"></div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <!-- Componente Visual: VitalSignAlertsDisplay (FA03) -->
+                <div id="vitalSignAlertsDisplay" class="hidden mb-4 p-4 rounded-lg bg-amber-50 border border-amber-300 space-y-1">
+                    <h4 class="text-sm font-bold text-amber-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Alertas de Rangos Clínicos
+                    </h4>
+                    <ul id="listaAlertasClinicas" class="text-xs text-amber-900 list-disc list-inside space-y-0.5"></ul>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Presión Sistólica (mmHg)</label>
-                        <input id="svSistolica" type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Presión Sistólica (60-250 mmHg)</label>
+                        <input id="svSistolica" type="number" min="60" max="250" oninput="evaluarAlertasClinicas()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow" placeholder="120">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Presión Diastólica (mmHg)</label>
-                        <input id="svDiastolica" type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Presión Diastólica (40-150 mmHg)</label>
+                        <input id="svDiastolica" type="number" min="40" max="150" oninput="evaluarAlertasClinicas()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow" placeholder="80">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Temperatura (°C)</label>
-                        <input id="svTemperatura" type="number" step="0.1" class="w-full p-2 border border-gray-300 rounded-md">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Temperatura (34.0 - 42.0 °C)</label>
+                        <input id="svTemperatura" type="number" step="0.1" min="34" max="42" oninput="evaluarAlertasClinicas()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow" placeholder="36.5">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Frecuencia Cardíaca (lpm)</label>
-                        <input id="svFrecuencia" type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Frecuencia Cardíaca (30-220 lpm)</label>
+                        <input id="svFrecuencia" type="number" min="30" max="220" oninput="evaluarAlertasClinicas()" class="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow" placeholder="75">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Peso (kg)</label>
-                        <input id="svPeso" type="number" step="0.01" class="w-full p-2 border border-gray-300 rounded-md">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Peso (0.5 - 300 kg)</label>
+                        <input id="svPeso" type="number" step="0.01" min="0.5" max="300" class="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow" placeholder="70.5">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Talla (cm)</label>
-                        <input id="svTalla" type="number" step="0.01" class="w-full p-2 border border-gray-300 rounded-md">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Talla (30 - 250 cm)</label>
+                        <input id="svTalla" type="number" step="0.01" min="30" max="250" class="w-full p-2 border border-gray-300 rounded-md focus:ring-brand-yellow focus:border-brand-yellow" placeholder="170">
                     </div>
                 </div>
 
-                <div class="mt-3 flex items-center gap-2">
-                    <input id="svEmergencia" type="checkbox" class="w-4 h-4">
-                    <label for="svEmergencia" class="text-sm font-medium text-gray-700">¿Es Emergencia?</label>
+                <!-- FA01: Marcador de Emergencia -->
+                <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+                    <input id="svEmergencia" type="checkbox" class="w-5 h-5 text-red-600 rounded focus:ring-red-500">
+                    <div>
+                        <label for="svEmergencia" class="text-sm font-bold text-red-700 block">¿Marcar como Emergencia? </label>
+                        <span class="text-xs text-red-600">Al marcar esta opción, el paciente pasará directamente a Consulta Médica sin esperar en sala.</span>
+                    </div>
                 </div>
 
-                <div class="mt-4 flex gap-2">
+                <div class="mt-6 flex gap-2">
                     <button onclick="registrarSignosVitales()"
-                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow transition">
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-5 py-2.5 rounded-lg shadow transition">
                         Registrar Signos Vitales
                     </button>
                     <button onclick="cerrarFormSignos()"
-                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg transition">
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2.5 rounded-lg transition">
                         Cancelar
                     </button>
                 </div>
             </div>
         </section>
-
-        <!-- 4. CONSULTA MÉDICA (CU-08) -->
-
     </div>
 </main>
 
 <script src="common.js"></script>
 <script>
-    // ============================================================
-    // Página: signos
-    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
-    // del HTML deben quedar declaradas en el nivel superior del
-    // <script>, nunca dentro de un bloque if/else (una función async
-    // declarada dentro de un bloque no queda expuesta en el ámbito
-    // global y el onclick del HTML no la encuentra). Por eso
-    // protegerPagina() solo decide si se ejecutan las llamadas
-    // iniciales que tocan el DOM, nunca si se declaran las funciones.
-    // ============================================================
     const tieneAccesoSignos = protegerPagina();
-
     let citaSignosActual = null;
+
+    // Anuncio por Voz mediante Web Speech API (TTS)
+    function reproducirTTS(texto) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'es-GT';
+            utterance.rate = 0.95;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
 
     function mostrarMensajeSignos(texto, tipo) {
         const colores = {
@@ -238,8 +211,8 @@
                     <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
                 </div>
                 <button onclick="llamarPaciente(${c.id})"
-                        class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-2 rounded-lg text-sm">
-                    Llamar y Tomar Signos
+                        class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-2 rounded-lg text-sm flex items-center gap-1">
+                    <i class="fa-solid fa-bullhorn"></i> Llamar y Tomar Signos
                 </button>
             </div>`).join('') : '<p class="text-sm text-gray-400">No hay pacientes en espera.</p>';
 
@@ -254,12 +227,12 @@
                     <p class="text-xs text-gray-500 mt-0.5">Llamado ${llamado} de 3</p>
                 </div>
                 <div class="flex flex-wrap gap-2 justify-end">
-                    <button onclick="abrirFormSignos(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}')"
+                    <button onclick="abrirFormSignos(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}', ${c.esEmergencia})"
                             class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-2 rounded-lg text-sm">
                         Registrar Signos Vitales
                     </button>
                     <button onclick="llamarDeNuevoEnfermeria(${c.id}, this)" ${llamarDeshabilitado ? 'disabled' : ''}
-                            class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-2 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white">
+                            class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-2 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">
                         Llamar de nuevo
                     </button>
                     <button onclick="marcarNoAsistioEnfermeria(${c.id})"
@@ -275,6 +248,7 @@
         try {
             const data = await apiFetch(`/api/enfermeria/citas/${idCita}/llamar`, { method: 'POST' });
             mostrarMensajeSignos(data.mensajeAnuncio, 'info');
+            reproducirTTS(data.mensajeAnuncio);
             cargarColaSignos();
         } catch (e) {
             mostrarMensajeSignos(e.message, 'error');
@@ -282,13 +256,11 @@
     }
 
     async function llamarDeNuevoEnfermeria(idCita, btn) {
-        // Se deshabilita el botón de inmediato (antes de esperar la respuesta
-        // del servidor) para que un doble clic rápido no dispare dos llamadas
-        // antes de que la cola se recargue con el contador actualizado.
         if (btn) btn.disabled = true;
         try {
             const data = await apiFetch(`/api/enfermeria/citas/${idCita}/llamar-de-nuevo`, { method: 'POST' });
             mostrarMensajeSignos(data.mensajeAnuncio, 'info');
+            reproducirTTS(data.mensajeAnuncio);
         } catch (e) {
             mostrarMensajeSignos(e.message, 'error');
         } finally {
@@ -306,13 +278,14 @@
         }
     }
 
-    function abrirFormSignos(idCita, nombrePaciente) {
+    function abrirFormSignos(idCita, nombrePaciente, esEmergencia) {
         citaSignosActual = idCita;
-        document.getElementById('formSignosTitulo').innerText = `Signos Vitales — ${nombrePaciente} (Cita #${idCita})`;
+        document.getElementById('formSignosTitulo').innerText = `Contexto: ${nombrePaciente} · Cita #${idCita}`;
         document.getElementById('mensajesFormSignos').innerHTML = '';
         ['svSistolica', 'svDiastolica', 'svTemperatura', 'svFrecuencia', 'svPeso', 'svTalla']
             .forEach(id => document.getElementById(id).value = '');
-        document.getElementById('svEmergencia').checked = false;
+        document.getElementById('svEmergencia').checked = esEmergencia || false;
+        evaluarAlertasClinicas(); // Oculta/Limpia alertas previas
         document.getElementById('formSignosContainer').classList.remove('hidden');
         document.getElementById('formSignosContainer').scrollIntoView({ behavior: 'smooth' });
     }
@@ -322,8 +295,41 @@
         document.getElementById('formSignosContainer').classList.add('hidden');
     }
 
+    // Componente: VitalSignAlertsDisplay (FA03 / RN-CU07-06) en Tiempo Real
+    function evaluarAlertasClinicas() {
+        const sistolica = Number(document.getElementById('svSistolica').value);
+        const diastolica = Number(document.getElementById('svDiastolica').value);
+        const temp = Number(document.getElementById('svTemperatura').value);
+        const fc = Number(document.getElementById('svFrecuencia').value);
+
+        const alertas = [];
+
+        // RN-CU07-06: Verificación de Rangos Clínicos Normales
+        if (sistolica && (sistolica < 90 || sistolica > 140)) {
+            alertas.push(`Presión sistólica fuera de rango normal (90 - 140 mmHg): Valor ingresado ${sistolica} mmHg.`);
+        }
+        if (diastolica && (diastolica < 60 || diastolica > 90)) {
+            alertas.push(`Presión diastólica fuera de rango normal (60 - 90 mmHg): Valor ingresado ${diastolica} mmHg.`);
+        }
+        if (temp && (temp < 36.0 || temp > 37.5)) {
+            alertas.push(`Temperatura fuera de rango normal (36.0 - 37.5 °C): Valor ingresado ${temp} °C.`);
+        }
+        if (fc && (fc < 60 || fc > 100)) {
+            alertas.push(`Frecuencia cardíaca fuera de rango normal (60 - 100 lpm): Valor ingresado ${fc} lpm.`);
+        }
+
+        const alertContainer = document.getElementById('vitalSignAlertsDisplay');
+        const listUl = document.getElementById('listaAlertasClinicas');
+
+        if (alertas.length > 0) {
+            listUl.innerHTML = alertas.map(a => `<li>${a}</li>`).join('');
+            alertContainer.classList.remove('hidden');
+        } else {
+            alertContainer.classList.add('hidden');
+        }
+    }
+
     async function registrarSignosVitales() {
-        const idEnfermero = sessionStorage.getItem('usuarioId');
         const body = {
             presionSistolica: Number(document.getElementById('svSistolica').value),
             presionDiastolica: Number(document.getElementById('svDiastolica').value),
@@ -331,8 +337,7 @@
             peso: Number(document.getElementById('svPeso').value),
             talla: Number(document.getElementById('svTalla').value),
             frecuenciaCardiaca: Number(document.getElementById('svFrecuencia').value),
-            esEmergencia: document.getElementById('svEmergencia').checked,
-            idEnfermero: idEnfermero ? Number(idEnfermero) : null
+            esEmergencia: document.getElementById('svEmergencia').checked
         };
 
         try {
@@ -340,11 +345,8 @@
                 method: 'POST',
                 body: JSON.stringify(body)
             });
-            let mensaje = data.mensaje;
-            if (data.alertasClinicas && data.alertasClinicas.length) {
-                mensaje += '<br><span class="font-semibold">⚠ ' + data.alertasClinicas.join(' ') + '</span>';
-            }
-            mostrarMensajeSignos(mensaje, 'exito');
+
+            mostrarMensajeSignos(data.mensaje, 'exito');
             cerrarFormSignos();
             cargarColaSignos();
         } catch (e) {
@@ -353,8 +355,6 @@
         }
     }
 
-    // Carga inicial de datos de este módulo: solo si el usuario tiene
-    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
     if (tieneAccesoSignos) {
         cargarColaSignos();
     }

@@ -80,33 +80,27 @@ public class FarmaciaDTOs {
     }
 
     // ---------------------------------------------------------------
-    // Carrito de compra (mezcla ítems con receta y sin receta) + pago
+    // Despacho de una receta (pasos 7-13 del flujo básico).
+    // El cobro físico se hace FUERA del sistema: no viaja método de pago.
     // ---------------------------------------------------------------
-    // Un ítem individual del carrito de despacho (puede venir de una receta o ser venta libre).
+    // Un ítem de la receta que el personal desea despachar.
     @Data
-    public static class CarritoItemDTO {
-        private String origen;                  // "RECETA" o "LIBRE"
-        private Integer recetaId;               // obligatorio si origen = RECETA
-        private Integer medicamentoId;
+    public static class DespachoItemDTO {
+        private Integer medicamentoId;          // medicamento tal como fue recetado
         private Integer cantidad;
-        private boolean sustituido;             // solo aplica si origen = RECETA (FA02)
+        private boolean sustituido;             // FA02
         private Integer medicamentoSustitutoId; // obligatorio si sustituido = true
         private String razonSustitucion;        // obligatorio si sustituido = true
     }
 
-    // Body que envía farmacia al confirmar todo el carrito (paso "Confirmar Despacho").
+    // Body de "Confirmar Despacho".
     @Data
-    public static class ConfirmarCarritoRequestDTO {
+    public static class ConfirmarDespachoRequestDTO {
         private Integer idSucursal;
-        private Integer idPaciente;       // opcional, solo para ítems de venta libre (comprobante)
-        private String metodoPago;        // EFECTIVO, VISA, MASTERCARD, DEBITO
-        private BigDecimal montoRecibido; // obligatorio si metodoPago = EFECTIVO
-        private String ultimosCuatroDigitos; // obligatorio si es tarjeta
-        private String uuidIdempotencia;  // opcional, evita cobros duplicados
-        private List<CarritoItemDTO> items;
+        private List<DespachoItemDTO> items;
     }
 
-    // Ítem ya despachado, para el resumen final del comprobante.
+    // Ítem ya despachado, para el resumen final (paso 12).
     @Data
     @Builder
     @AllArgsConstructor
@@ -117,22 +111,18 @@ public class FarmaciaDTOs {
         private BigDecimal subtotal;
         private boolean sustituido;
         private String nombreMedicamentoSustituto;
-        private Integer recetaId; // null si fue venta libre
     }
 
-    // Resumen del carrito ya pagado/confirmado
+    // Resumen del despacho (pasos 12-13).
     @Data
     @Builder
     @AllArgsConstructor
-    public static class ConfirmarCarritoResponseDTO {
+    public static class ConfirmarDespachoResponseDTO {
         private String mensaje;
-        private String numeroTransaccion;
+        private Integer despachoId;
         private BigDecimal montoTotal;
-        private BigDecimal montoRecibido;
-        private BigDecimal cambioDevuelto;
-        private String metodoPago;
         private List<ItemDespachadoDTO> itemsDespachados;
-        private List<String> alertas; // sin inventario / stock bajo / stock mínimo alcanzado / sustituciones
+        private List<String> alertas; // sin inventario / stock bajo / sustituciones / stock mínimo alcanzado (FA04)
     }
 
     // ---------------------------------------------------------------

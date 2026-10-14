@@ -45,12 +45,14 @@ public class FarmaciaController {
         return farmaciaService.buscarMedicamentos(nombre, idSucursal, usuario.sucursalScopeOrNull());
     }
 
-    // Confirmar y pagar el carrito (mezcla ítems con receta y sin receta).
-    // idFarmaceutico ya no viaja en el body: sale del JWT (rol Farmacéutico/Administrador).
-    @PostMapping("/carrito/pagar")
-    public ConfirmarCarritoResponseDTO confirmarCarrito(@RequestBody ConfirmarCarritoRequestDTO request,
-                                                        @AuthenticationPrincipal AuthUsuario usuario) {
-        return farmaciaService.confirmarCarrito(request, usuario.getId(), usuario.sucursalScopeOrNull());
+    // Pasos 10-13 FB: "Confirmar Despacho" de UNA receta.
+    // No hay cobro dentro del sistema (el cobro físico es externo).
+    // El farmacéutico sale del JWT.
+    @PostMapping("/recetas/{idReceta}/despachar")
+    public ConfirmarDespachoResponseDTO confirmarDespacho(@PathVariable Integer idReceta,
+                                                          @RequestBody ConfirmarDespachoRequestDTO request,
+                                                          @AuthenticationPrincipal AuthUsuario usuario) {
+        return farmaciaService.confirmarDespacho(idReceta, request, usuario.getId(), usuario.sucursalScopeOrNull());
     }
 
     // FA03: el paciente no desea adquirir los medicamentos de una receta

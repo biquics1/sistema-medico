@@ -13,20 +13,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class FarmaciaService {
     private final AuditoriaContexto auditoriaContexto;
-    private final EmailService emailService;
 
     private static final short RECETA_ACTIVA = 1;
     private static final long DIAS_VIGENCIA_RECETA = 7; // RN-CU10-01
 
-    private static final Pattern CUATRO_DIGITOS = Pattern.compile("^\\d{4}$");
-    private static final Set<String> METODOS_VALIDOS = Set.of("EFECTIVO", "VISA", "MASTERCARD", "DEBITO");
-    private static final String TARJETA_RECHAZO_SIMULADA = "0002"; // misma convención que CU-04/CU-06
     private static final Set<String> TIPOS_AJUSTE_VALIDOS = Set.of("COMPRA", "AJUSTE_POSITIVO", "AJUSTE_NEGATIVO");
 
     private final RecetaMedicaRepository recetaMedicaRepository;
@@ -38,7 +33,6 @@ public class FarmaciaService {
     private final MovimientoInventarioRepository movimientoInventarioRepository;
     private final DespachoMedicamentoRepository despachoMedicamentoRepository;
     private final DetalleDespachoMedicamentoRepository detalleDespachoMedicamentoRepository;
-    private final PagoRepository pagoRepository;
 
     // ---------------------------------------------------------------
     // Búsqueda de recetas activas por ID de Receta o ID de Consulta
@@ -157,15 +151,17 @@ public class FarmaciaService {
     }
 
     // ---------------------------------------------------------------
-    // NUEVO: confirmar y pagar el carrito (mezcla ítems con y sin receta)
-    // Administrador de Sede: solo puede despachar/cobrar desde su propia sede.
+    // Pasos 10-13 FB: confirmar el despacho de UNA receta.
+    // El cobro físico es externo al sistema: no se crea Pago ni se pide
+    // método de pago. Se registra el despacho, sus ítems, el movimiento
+    // de inventario y se devuelve el resumen.
     // ---------------------------------------------------------------
     @Transactional
-    public ConfirmarCarritoResponseDTO confirmarCarrito(ConfirmarCarritoRequestDTO request, Integer idFarmaceutico,
-                                                        Integer sucursalScope) {
+    public ConfirmarDespachoResponseDTO confirmarDespacho(Integer idReceta, ConfirmarDespachoRequestDTO request,
+                                                          Integer idFarmaceutico, Integer sucursalScope) {
         auditoriaContexto.aplicar();
         if (request.getItems() == null || request.getItems().isEmpty()) {
-            throw new ValidationException("El carrito está vacío.");
+            throw new ValidationException("Debe seleccionar al menos un medicamento a despachar.");
         }
         if (request.getIdSucursal() == null) {
             throw new ValidationException("Debe indicar la sucursal desde la que se despacha.");
@@ -175,175 +171,82 @@ public class FarmaciaService {
         }
         Sucursal sucursal = sucursalRepository.findById(request.getIdSucursal())
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la sucursal indicada."));
-
         Usuario farmaceutico = usuarioRepository.findById(idFarmaceutico)
                 .orElseThrow(() -> new ValidationException("Debe indicar el usuario de farmacia que realiza el despacho."));
 
-        String metodo = request.getMetodoPago();
-        if (metodo == null || !METODOS_VALIDOS.contains(metodo)) {
-            throw new ValidationException(
-                    "El método de pago seleccionado no está disponible. Los métodos aceptados son: efectivo (Quetzales), tarjeta de crédito (Visa/Mastercard) o tarjeta de débito.");
+        // Paso 5 FB / RN-CU10-01: la receta debe estar activa, ser de la sede y estar vigente
+        RecetaMedica receta = recetaMedicaRepository.findByIdAndEstado(idReceta, RECETA_ACTIVA)
+                .filter(r -> recetaPerteneceASede(r, sucursalScope))
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la receta #" + idReceta + "."));
+        long dias = ChronoUnit.DAYS.between(receta.getCreadoEn(), LocalDateTime.now());
+        if (dias > DIAS_VIGENCIA_RECETA) {
+            throw new ValidationException(String.format(
+                    "Receta Vencida. La receta #%d fue emitida hace %d días y ya no es válida para despacho.",
+                    idReceta, dias));
         }
 
-        if (request.getUuidIdempotencia() != null && !request.getUuidIdempotencia().isBlank()
-                && pagoRepository.existsByIdempotencyKey(request.getUuidIdempotencia())) {
-            throw new ValidationException("Este cobro ya fue procesado anteriormente.");
-        }
-
-        // Agrupar los ítems del carrito por receta (null = venta libre)
-        Map<Integer, List<CarritoItemDTO>> itemsPorReceta = new LinkedHashMap<>();
-        for (CarritoItemDTO item : request.getItems()) {
-            boolean esReceta = "RECETA".equalsIgnoreCase(item.getOrigen());
-            if (esReceta && item.getRecetaId() == null) {
-                throw new ValidationException("Cada medicamento con receta debe indicar el ID de receta.");
+        // Solo se pueden despachar medicamentos que realmente están en la receta
+        Set<Integer> medicamentosDeLaReceta = new HashSet<>();
+        detalleRecetaMedicaRepository.findByReceta_Id(idReceta)
+                .forEach(d -> medicamentosDeLaReceta.add(d.getMedicamento().getId()));
+        for (DespachoItemDTO item : request.getItems()) {
+            if (item.getMedicamentoId() == null || !medicamentosDeLaReceta.contains(item.getMedicamentoId())) {
+                throw new ValidationException("Uno de los medicamentos indicados no pertenece a la receta #" + idReceta + ".");
             }
-            Integer clave = esReceta ? item.getRecetaId() : null;
-            itemsPorReceta.computeIfAbsent(clave, k -> new ArrayList<>()).add(item);
         }
+
+        DespachoMedicamento despacho = new DespachoMedicamento();
+        despacho.setReceta(receta);
+        despacho.setFarmaceutico(farmaceutico);
+        despacho.setSucursal(sucursal);
+        despacho.setEsVentaLibre(false);
+        despacho.setPaciente(receta.getConsulta().getCita().getPaciente());
+        DespachoMedicamento despachoGuardado = despachoMedicamentoRepository.save(despacho);
 
         List<ItemDespachadoDTO> itemsDespachados = new ArrayList<>();
         List<String> alertas = new ArrayList<>();
-        List<DespachoMedicamento> despachosCreados = new ArrayList<>();
-        BigDecimal montoTotal = BigDecimal.ZERO;
-        Usuario pacienteParaPago = null;
-
-        for (Map.Entry<Integer, List<CarritoItemDTO>> grupo : itemsPorReceta.entrySet()) {
-            Integer idReceta = grupo.getKey();
-            RecetaMedica receta = null;
-
-            if (idReceta != null) {
-                receta = recetaMedicaRepository.findByIdAndEstado(idReceta, RECETA_ACTIVA)
-                        .orElseThrow(() -> new ResourceNotFoundException("No se encontró la receta #" + idReceta + "."));
-                long dias = ChronoUnit.DAYS.between(receta.getCreadoEn(), LocalDateTime.now());
-                if (dias > DIAS_VIGENCIA_RECETA) {
-                    throw new ValidationException(String.format(
-                            "Receta Vencida. La receta #%d fue emitida hace %d días y ya no es válida para despacho.",
-                            idReceta, dias));
-                }
-                if (pacienteParaPago == null) {
-                    pacienteParaPago = receta.getConsulta().getCita().getPaciente();
-                }
-            }
-
-            DespachoMedicamento despacho = new DespachoMedicamento();
-            despacho.setReceta(receta);
-            despacho.setFarmaceutico(farmaceutico);
-            despacho.setSucursal(sucursal);
-            despacho.setEsVentaLibre(idReceta == null);
-            if (idReceta == null && request.getIdPaciente() != null) {
-                usuarioRepository.findById(request.getIdPaciente()).ifPresent(despacho::setPaciente);
-            }
-            DespachoMedicamento despachoGuardado = despachoMedicamentoRepository.save(despacho);
-
-            BigDecimal montoDespacho = despacharItems(grupo.getValue(), despachoGuardado, sucursal, farmaceutico,
-                    itemsDespachados, alertas);
-
-            if (montoDespacho.compareTo(BigDecimal.ZERO) > 0) {
-                despachoGuardado.setMontoTotal(montoDespacho);
-                despachoMedicamentoRepository.save(despachoGuardado);
-                despachosCreados.add(despachoGuardado);
-                montoTotal = montoTotal.add(montoDespacho);
-            } else {
-                alertas.add("No fue posible despachar ningún medicamento del grupo "
-                        + (idReceta != null ? "receta #" + idReceta : "venta libre") + ".");
-            }
-        }
+        BigDecimal montoTotal = despacharItems(request.getItems(), despachoGuardado, sucursal, farmaceutico,
+                itemsDespachados, alertas);
 
         if (itemsDespachados.isEmpty()) {
             throw new ValidationException(
                     "No fue posible despachar ningún medicamento. Verifique el inventario de la sucursal.");
         }
 
-        if (request.getIdPaciente() != null && pacienteParaPago == null) {
-            pacienteParaPago = usuarioRepository.findById(request.getIdPaciente()).orElse(null);
-        }
+        despachoGuardado.setMontoTotal(montoTotal);
+        despachoMedicamentoRepository.save(despachoGuardado);
 
-        // ---- Pago (mismo patrón que CU-06/CU-10 en CajaService) ----
-        BigDecimal montoRecibido;
-        BigDecimal cambio = BigDecimal.ZERO;
-        String ultimosCuatro = null;
-
-        if ("EFECTIVO".equals(metodo)) {
-            montoRecibido = request.getMontoRecibido();
-            if (montoRecibido == null) {
-                throw new ValidationException("Debe ingresar el monto recibido.");
-            }
-            if (montoRecibido.compareTo(montoTotal) < 0) {
-                throw new ValidationException(String.format(
-                        "El monto recibido (Q%.2f) es menor al monto a cobrar (Q%.2f)", montoRecibido, montoTotal));
-            }
-            cambio = montoRecibido.subtract(montoTotal);
-        } else {
-            ultimosCuatro = request.getUltimosCuatroDigitos();
-            if (ultimosCuatro == null || !CUATRO_DIGITOS.matcher(ultimosCuatro).matches()) {
-                throw new ValidationException("Ingrese los últimos 4 dígitos de la tarjeta.");
-            }
-            if (TARJETA_RECHAZO_SIMULADA.equals(ultimosCuatro)) {
-                throw new ValidationException(
-                        "La transacción con tarjeta fue rechazada por el banco. Solicite al paciente otro método de pago.");
-            }
-            montoRecibido = montoTotal;
-        }
-
-        Pago pago = new Pago();
-        pago.setPaciente(pacienteParaPago);
-        pago.setCajero(farmaceutico);
-        pago.setNumeroTransaccion("TXN-" + UUID.randomUUID().toString().substring(0, 12).toUpperCase());
-        pago.setMonto(montoTotal);
-        pago.setMontoRecibido(montoRecibido);
-        pago.setCambioDevuelto(cambio);
-        pago.setMetodoPago(metodo);
-        pago.setUltimos4Tarjeta(ultimosCuatro);
-        pago.setEstado("APROBADO");
-        pago.setIdempotencyKey(request.getUuidIdempotencia());
-        Pago pagoGuardado = pagoRepository.save(pago);
-
-        for (DespachoMedicamento d : despachosCreados) {
-            d.setPago(pagoGuardado);
-            despachoMedicamentoRepository.save(d);
-        }
-
-        // Comprobante de farmacia al correo del paciente (si está identificado)
-        List<String> lineasCorreo = itemsDespachados.stream()
-                .map(i -> String.format("- %s x%d  (Q%.2f)%s", i.getNombreMedicamento(), i.getCantidad(), i.getSubtotal(),
-                        i.isSustituido() ? " [sustituido por " + i.getNombreMedicamentoSustituto() + "]" : ""))
-                .toList();
-        emailService.enviarComprobanteFarmacia(pacienteParaPago, pagoGuardado, lineasCorreo);
-
-        String mensaje = String.format(
-                "¡Pago registrado exitosamente! %d medicamento(s) despachado(s). Total: Q%.2f.",
+        // Paso 13 FB
+        String mensaje = String.format("Despacho registrado exitosamente. %d medicamento(s) despachado(s). Total: Q%.2f.",
                 itemsDespachados.size(), montoTotal);
 
-        return ConfirmarCarritoResponseDTO.builder()
+        return ConfirmarDespachoResponseDTO.builder()
                 .mensaje(mensaje)
-                .numeroTransaccion(pagoGuardado.getNumeroTransaccion())
+                .despachoId(despachoGuardado.getId())
                 .montoTotal(montoTotal)
-                .montoRecibido(montoRecibido)
-                .cambioDevuelto(cambio)
-                .metodoPago(metodo)
                 .itemsDespachados(itemsDespachados)
                 .alertas(alertas)
                 .build();
     }
 
-    // Despacha los ítems de UN grupo (una receta, o venta libre) y devuelve el monto total del grupo.
-    private BigDecimal despacharItems(List<CarritoItemDTO> items, DespachoMedicamento despacho, Sucursal sucursal,
+    // Despacha los ítems de la receta y devuelve el monto total.
+    private BigDecimal despacharItems(List<DespachoItemDTO> items, DespachoMedicamento despacho, Sucursal sucursal,
                                       Usuario farmaceutico, List<ItemDespachadoDTO> itemsDespachados, List<String> alertas) {
-        BigDecimal montoGrupo = BigDecimal.ZERO;
-        Integer idRecetaGrupo = despacho.getReceta() != null ? despacho.getReceta().getId() : null;
+        BigDecimal montoTotal = BigDecimal.ZERO;
+        Integer idReceta = despacho.getReceta().getId();
 
-        for (CarritoItemDTO item : items) {
-            if (item.getMedicamentoId() == null || item.getCantidad() == null || item.getCantidad() <= 0) {
+        for (DespachoItemDTO item : items) {
+            if (item.getCantidad() == null || item.getCantidad() <= 0) {
                 throw new ValidationException("Cada medicamento a despachar debe tener cantidad mayor a 0.");
             }
 
             Medicamento medicamentoBase = medicamentoRepository.findById(item.getMedicamentoId())
                     .orElseThrow(() -> new ResourceNotFoundException("Medicamento no encontrado en el catálogo."));
 
-            // FA02: sustitución de medicamento (solo aplica en ítems con receta)
+            // FA02: sustitución de medicamento
             Medicamento medicamentoAEntregar = medicamentoBase;
             Medicamento medicamentoSustituto = null;
-            boolean sustituido = idRecetaGrupo != null && item.isSustituido();
+            boolean sustituido = item.isSustituido();
             if (sustituido) {
                 if (item.getRazonSustitucion() == null || item.getRazonSustitucion().isBlank()) {
                     throw new ValidationException("Debe ingresar la razón de sustitución.");
@@ -356,7 +259,7 @@ public class FarmaciaService {
                 medicamentoAEntregar = medicamentoSustituto;
             }
 
-            // FA01: verificar inventario de la sucursal
+            // FA01: verificar inventario de la sucursal (se continúa con los disponibles)
             Optional<InventarioMedicamento> inventarioOpt = inventarioMedicamentoRepository
                     .findForUpdate(medicamentoAEntregar.getId(), sucursal.getId());
 
@@ -367,8 +270,11 @@ public class FarmaciaService {
 
             InventarioMedicamento inventario = inventarioOpt.get();
             if (inventario.getStockActual() < item.getCantidad()) {
-                alertas.add(String.format("%s: Stock insuficiente — disponible: %d (solicitado: %d).",
-                        medicamentoAEntregar.getNombre(), inventario.getStockActual(), item.getCantidad()));
+                // FA01 paso 2 (RN-CU10-03): stock bajo / insuficiente
+                alertas.add(String.format("%s: Stock bajo — disponible: %d (mínimo: %s). No alcanza para la cantidad solicitada (%d).",
+                        medicamentoAEntregar.getNombre(), inventario.getStockActual(),
+                        medicamentoAEntregar.getStockMinimo() != null ? medicamentoAEntregar.getStockMinimo() : "-",
+                        item.getCantidad()));
                 continue;
             }
 
@@ -377,24 +283,22 @@ public class FarmaciaService {
             inventario.setStockActual(stockNuevo);
             inventarioMedicamentoRepository.save(inventario);
 
-            // Movimiento de inventario automático: Despacho (receta) o Venta (libre)
+            // Movimiento de inventario automático (tipo Despacho)
             MovimientoInventario movimiento = new MovimientoInventario();
             movimiento.setMedicamento(medicamentoAEntregar);
             movimiento.setSucursal(sucursal);
-            movimiento.setTipoMovimiento(idRecetaGrupo != null ? MovimientoInventario.DESPACHO : MovimientoInventario.VENTA);
+            movimiento.setTipoMovimiento(MovimientoInventario.DESPACHO);
             movimiento.setCantidad(item.getCantidad());
             movimiento.setStockAnterior(stockAnterior);
             movimiento.setStockNuevo(stockNuevo);
-            movimiento.setNumeroReferencia(idRecetaGrupo != null ? "RECETA-" + idRecetaGrupo : "VENTA-LIBRE");
-            movimiento.setMotivo(idRecetaGrupo != null
-                    ? "Despacho automático - Receta #" + idRecetaGrupo
-                    : "Venta libre en farmacia");
+            movimiento.setNumeroReferencia("RECETA-" + idReceta);
+            movimiento.setMotivo("Despacho automático - Receta #" + idReceta);
             movimiento.setUsuario(farmaceutico);
             movimientoInventarioRepository.save(movimiento);
 
             BigDecimal precioUnitario = medicamentoAEntregar.getPrecio();
             BigDecimal subtotal = precioUnitario.multiply(BigDecimal.valueOf(item.getCantidad()));
-            montoGrupo = montoGrupo.add(subtotal);
+            montoTotal = montoTotal.add(subtotal);
 
             DetalleDespachoMedicamento detalle = new DetalleDespachoMedicamento();
             detalle.setDespacho(despacho);
@@ -425,11 +329,10 @@ public class FarmaciaService {
                     .subtotal(subtotal)
                     .sustituido(sustituido)
                     .nombreMedicamentoSustituto(medicamentoSustituto != null ? medicamentoSustituto.getNombre() : null)
-                    .recetaId(idRecetaGrupo)
                     .build());
         }
 
-        return montoGrupo;
+        return montoTotal;
     }
 
     // ---------------------------------------------------------------

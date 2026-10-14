@@ -36,61 +36,20 @@
             <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
         </div>
 
-        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
-             "*" significa: todos los roles internos autenticados. -->
         <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
-            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
-            </a>
-            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
-            </a>
-            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
-            </a>
-            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
-            </a>
-            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
-            </a>
-            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-flask w-6"></i> Laboratorio
-            </a>
-            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
-            </a>
-            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-pills w-6"></i> Farmacia
-            </a>
-            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
-            </a>
-            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
-            </a>
-            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
-            </a>
-            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
-            </a>
-            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
-            </a>
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-chart-line w-6"></i> Dashboard</a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-calendar-check w-6"></i> Control de Citas</a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales</a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica</a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica</a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-flask w-6"></i> Laboratorio</a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos</a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-pills w-6"></i> Farmacia</a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario</a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede</a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-users w-6"></i> Gestión de Usuarios</a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede</a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-book w-6"></i> Catálogos del Sistema</a>
         </nav>
     </div>
 </aside>
@@ -101,9 +60,7 @@
         <h1 id="page-title" class="text-xl font-bold text-brand-black">Consulta Médica y Expediente</h1>
         <div class="flex items-center gap-4">
             <div class="flex items-center gap-3">
-                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
-                    --
-                </div>
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">--</div>
                 <div class="text-right leading-tight">
                     <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
                     <p id="rolUsuario" class="text-xs text-gray-500"></p>
@@ -185,12 +142,6 @@
                     <button onclick="guardarConsulta()" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg shadow">
                         Guardar Consulta
                     </button>
-                    <button onclick="abrirModalOrdenLab()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">
-                        Generar Orden de Laboratorio
-                    </button>
-                    <button onclick="abrirModalReceta()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">
-                        Generar Receta Médica
-                    </button>
                     <button onclick="cerrarFormConsulta()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-4 py-2 rounded-lg">
                         Cerrar
                     </button>
@@ -198,7 +149,7 @@
             </div>
         </section>
 
-        <!-- Modal Orden de Laboratorio (FA01 de CU-08) -->
+        <!-- Modal Orden de Laboratorio (FA01) -->
         <div id="modalOrdenLab" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <h3 class="text-lg font-bold mb-4">Generar Orden de Laboratorio</h3>
@@ -219,7 +170,7 @@
             </div>
         </div>
 
-        <!-- Modal Receta Médica (FA04 de CU-08) -->
+        <!-- Modal Receta Médica (FA04) -->
         <div id="modalReceta" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <h3 class="text-lg font-bold mb-4">Generar Receta Médica</h3>
@@ -233,7 +184,7 @@
             </div>
         </div>
 
-        <!-- Modal Cita de Seguimiento (CU-12) -->
+        <!-- Modal Cita de Seguimiento (FA02) -->
         <div id="modalSeguimiento" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <h3 class="text-lg font-bold mb-2">Agendar Cita de Seguimiento</h3>
@@ -250,8 +201,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Fecha *</label>
-                        <input id="segFecha" type="date" onchange="cargarHorariosSeguimiento()"
-                               class="w-full p-2 border border-gray-300 rounded-md">
+                        <input id="segFecha" type="date" onchange="cargarHorariosSeguimiento()" class="w-full p-2 border border-gray-300 rounded-md">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Hora Disponible *</label>
@@ -261,8 +211,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Motivo del Seguimiento (Observaciones) *</label>
-                        <textarea id="segMotivo" rows="3" class="w-full p-2 border border-gray-300 rounded-md"
-                                  placeholder="Entre 10 y 2000 caracteres"></textarea>
+                        <textarea id="segMotivo" rows="3" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Entre 10 y 2000 caracteres"></textarea>
                     </div>
                 </div>
 
@@ -273,31 +222,27 @@
             </div>
         </div>
 
-        <!-- 4.5 LABORATORIO (CU-09) -->
-
     </div>
 </main>
 
 <script src="common.js"></script>
 <script>
-    // ============================================================
-    // Página: consulta
-    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
-    // del HTML deben quedar declaradas en el nivel superior del
-    // <script>, nunca dentro de un bloque if/else (una función async
-    // declarada dentro de un bloque no queda expuesta en el ámbito
-    // global y el onclick del HTML no la encuentra). Por eso
-    // protegerPagina() solo decide si se ejecutan las llamadas
-    // iniciales que tocan el DOM, nunca si se declaran las funciones.
-    // ============================================================
     const tieneAccesoConsulta = protegerPagina();
 
-    // CU-08: Consulta Médica
-    // ============================================================
     let citaConsultaActual = null;
     let consultaActualId = null;
     let examenesCatalogo = [];
     let medicamentosCatalogo = [];
+
+    function reproducirTTS(texto) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'es-GT';
+            utterance.rate = 0.95;
+            window.speechSynthesis.speak(utterance);
+        }
+    }
 
     function mostrarMensajeConsulta(texto, tipo) {
         const colores = {
@@ -342,12 +287,15 @@
                 const llamarDeshabilitado = llamado >= 3;
                 acciones = `
                     <button onclick="abrirFormConsulta(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-1.5 rounded-lg text-sm">Ver / Completar Consulta</button>
-                    <button onclick="llamarDeNuevoMedico(${c.id}, this)" ${llamarDeshabilitado ? 'disabled' : ''} class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white">Llamar de nuevo</button>
+                    <button onclick="llamarDeNuevoMedico(${c.id}, this)" ${llamarDeshabilitado ? 'disabled' : ''} class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed">Llamar de nuevo</button>
                     <button onclick="marcarNoAsistio(${c.id})" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-1.5 rounded-lg text-sm">No Asistió</button>`;
             } else {
+                // SECCIÓN EVALUADOS: FA01 (Lab), FA04 (Receta), FA02 (Seguimiento) y Finalizar
                 acciones = `
-                    <button onclick="finalizarAtencion(${c.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-sm">Finalizar Atención</button>
-                    <button onclick="abrirModalSeguimiento(${c.id})" class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-1.5 rounded-lg text-sm hover:bg-gray-50">Agendar Seguimiento</button>`;
+                    <button onclick="abrirModalOrdenLabPorCita(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-flask"></i> Orden Lab</button>
+                    <button onclick="abrirModalRecetaPorCita(${c.id})" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-pills"></i> Receta Médica</button>
+                    <button onclick="abrirModalSeguimiento(${c.id})" class="bg-white border border-brand-black text-brand-black font-semibold px-2.5 py-1.5 rounded-lg text-xs hover:bg-gray-50 flex items-center gap-1"><i class="fa-solid fa-calendar-plus"></i> Agendar Seguimiento</button>
+                    <button onclick="finalizarAtencion(${c.id})" class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1"><i class="fa-solid fa-check-double"></i> Finalizar Atención</button>`;
             }
             return `
                 <div class="border border-gray-200 rounded-lg p-3">
@@ -355,7 +303,7 @@
                     <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
                     <p class="text-sm text-gray-600">${new Date(c.fechaHora).toLocaleString('es-GT')}</p>
                     ${tipo === 'CONSULTA' ? `<p class="text-xs text-gray-500 mt-1">Llamado ${c.vecesLlamado || 0} de 3</p>` : ''}
-                    <div class="mt-2 flex flex-wrap gap-2">${acciones}</div>
+                    <div class="mt-3 flex flex-wrap gap-1.5">${acciones}</div>
                 </div>`;
         }).join('');
     }
@@ -364,6 +312,7 @@
         try {
             const data = await apiFetch(`/api/medico/citas/${idCita}/iniciar-consulta?medicoId=${idMedicoActual()}`, { method: 'POST' });
             mostrarMensajeConsulta(data.mensajeAnuncio, 'info');
+            reproducirTTS(data.mensajeAnuncio);
             cargarPanelMedico();
         } catch (e) {
             mostrarMensajeConsulta(e.message, 'error');
@@ -381,20 +330,14 @@
     }
 
     async function llamarDeNuevoMedico(idCita, btn) {
-        // Se deshabilita el botón de inmediato (antes de esperar la respuesta
-        // del servidor) para que un doble clic rápido no dispare dos llamadas
-        // antes de que el panel se recargue con el contador actualizado.
         if (btn) btn.disabled = true;
         try {
             const data = await apiFetch(`/api/medico/citas/${idCita}/llamar-de-nuevo?medicoId=${idMedicoActual()}`, { method: 'POST' });
             mostrarMensajeConsulta(data.mensajeAnuncio, 'info');
+            reproducirTTS(data.mensajeAnuncio);
         } catch (e) {
             mostrarMensajeConsulta(e.message, 'error');
         } finally {
-            // Siempre se recarga el panel: si hubo éxito, refleja el nuevo
-            // contador (y deshabilita el botón si ya llegó a 3); si hubo
-            // error, vuelve a habilitar el botón solo si en realidad seguía
-            // disponible (evita que quede bloqueado por el disable manual).
             cargarPanelMedico();
         }
     }
@@ -489,6 +432,20 @@
     }
 
     // ---- FA01: Orden de Laboratorio ----
+    async function abrirModalOrdenLabPorCita(idCita) {
+        try {
+            const ctx = await apiFetch(`/api/medico/citas/${idCita}/consulta?medicoId=${idMedicoActual()}`);
+            if (!ctx.consultaId) {
+                mostrarMensajeConsulta('Debe guardar la consulta antes de generar una orden.', 'error');
+                return;
+            }
+            consultaActualId = ctx.consultaId;
+            abrirModalOrdenLab();
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
     async function abrirModalOrdenLab() {
         if (!consultaActualId) {
             mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de generar una orden de laboratorio.', 'error');
@@ -539,6 +496,20 @@
     }
 
     // ---- FA04: Receta Médica ----
+    async function abrirModalRecetaPorCita(idCita) {
+        try {
+            const ctx = await apiFetch(`/api/medico/citas/${idCita}/consulta?medicoId=${idMedicoActual()}`);
+            if (!ctx.consultaId) {
+                mostrarMensajeConsulta('Debe guardar la consulta antes de generar una receta.', 'error');
+                return;
+            }
+            consultaActualId = ctx.consultaId;
+            abrirModalReceta();
+        } catch (e) {
+            mostrarMensajeConsulta(e.message, 'error');
+        }
+    }
+
     async function abrirModalReceta() {
         if (!consultaActualId) {
             mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de generar una receta.', 'error');
@@ -560,7 +531,6 @@
     }
 
     function agregarLineaReceta() {
-        const idx = document.querySelectorAll('.lineaReceta').length;
         const div = document.createElement('div');
         div.className = 'lineaReceta border border-gray-200 rounded-md p-3 space-y-2';
         div.innerHTML = `
@@ -597,14 +567,13 @@
         }
     }
 
-    // ---- CU-12: Agendamiento de Cita de Seguimiento ----
+    // ---- FA02: Cita de Seguimiento ----
     let seguimientoConsultaId = null;
     let seguimientoMedicoId = null;
 
     async function abrirModalSeguimiento(idCita) {
         document.getElementById('mensajesSeguimiento').innerHTML = '';
         try {
-            // Reutiliza el endpoint de contexto de CU-08 para obtener el consultaId real de la cita
             const ctxConsulta = await apiFetch(`/api/medico/citas/${idCita}/consulta?medicoId=${idMedicoActual()}`);
             if (!ctxConsulta.consultaId) {
                 mostrarMensajeConsulta('Debe guardar la consulta al menos una vez antes de agendar un seguimiento.', 'error');
@@ -637,7 +606,6 @@
         seguimientoMedicoId = null;
     }
 
-    // Paso 5 FB (CU-12): reutiliza el mismo endpoint de disponibilidad de CU-03
     async function cargarHorariosSeguimiento() {
         const fecha = document.getElementById('segFecha').value;
         const select = document.getElementById('segHorario');
@@ -659,7 +627,6 @@
         }
     }
 
-    // Paso 7 FB (CU-12): confirmar agendamiento
     async function confirmarSeguimiento() {
         document.getElementById('mensajesSeguimiento').innerHTML = '';
         const horario = document.getElementById('segHorario').value;
@@ -694,12 +661,10 @@
         }
     }
 
-
-
-    // Carga inicial de datos de este módulo: solo si el usuario tiene
-    // acceso (de lo contrario el DOM ya fue reemplazado por protegerPagina()).
+    // Carga inicial + actualización automática cada 30 segundos
     if (tieneAccesoConsulta) {
         cargarPanelMedico();
+        setInterval(cargarPanelMedico, 30000);
     }
 </script>
 </body>
