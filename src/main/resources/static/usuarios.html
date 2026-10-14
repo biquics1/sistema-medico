@@ -36,61 +36,20 @@
             <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
         </div>
 
-        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
-             "*" significa: todos los roles internos autenticados. -->
         <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
-            <a href="dashboard.html" data-tab="dashboard" data-roles="*"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-chart-line w-6"></i> Dashboard
-            </a>
-            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-calendar-check w-6"></i> Control de Citas
-            </a>
-            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales
-            </a>
-            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica
-            </a>
-            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica
-            </a>
-            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-flask w-6"></i> Laboratorio
-            </a>
-            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos
-            </a>
-            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-pills w-6"></i> Farmacia
-            </a>
-            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario
-            </a>
-            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede
-            </a>
-            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-users w-6"></i> Gestión de Usuarios
-            </a>
-            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede
-            </a>
-            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General"
-               class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
-                <i class="fa-solid fa-book w-6"></i> Catálogos del Sistema
-            </a>
+            <a href="dashboard.html" data-tab="dashboard" data-roles="*" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-chart-line w-6"></i> Dashboard</a>
+            <a href="citas.html" data-tab="citas" data-roles="Recepcionista,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-calendar-check w-6"></i> Control de Citas</a>
+            <a href="signos.html" data-tab="signos" data-roles="Enfermero,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-heart-pulse w-6"></i> Signos Vitales</a>
+            <a href="consulta.html" data-tab="consulta" data-roles="Médico,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-user-doctor w-6"></i> Consulta Médica</a>
+            <a href="agenda-medica.html" data-tab="agenda-medica" data-roles="Médico" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-calendar-days w-6"></i> Agenda Médica</a>
+            <a href="laboratorio.html" data-tab="laboratorio" data-roles="Laboratorista,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-flask w-6"></i> Laboratorio</a>
+            <a href="caja.html" data-tab="caja" data-roles="Cajero,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-cash-register w-6"></i> Caja y Pagos</a>
+            <a href="farmacia.html" data-tab="farmacia" data-roles="Farmacéutico,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-pills w-6"></i> Farmacia</a>
+            <a href="bitacora-inv.html" data-tab="bitacora-inv" data-roles="Farmacéutico,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-clipboard-list w-6"></i> Bitácora Inventario</a>
+            <a href="medicos-sede.html" data-tab="medicos-sede" data-roles="Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-user-doctor w-6"></i> Médicos y Citas por Sede</a>
+            <a href="usuarios.html" data-tab="usuarios" data-roles="Administrador,Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-users w-6"></i> Gestión de Usuarios</a>
+            <a href="sedes-esp.html" data-tab="sedes-esp" data-roles="Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-map-location-dot w-6"></i> Especialidades por Sede</a>
+            <a href="catalogos.html" data-tab="catalogos" data-roles="Administrador General" class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition"><i class="fa-solid fa-book w-6"></i> Catálogos del Sistema</a>
         </nav>
     </div>
 </aside>
@@ -101,9 +60,7 @@
         <h1 id="page-title" class="text-xl font-bold text-brand-black">Gestión de Usuarios</h1>
         <div class="flex items-center gap-4">
             <div class="flex items-center gap-3">
-                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
-                    --
-                </div>
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">--</div>
                 <div class="text-right leading-tight">
                     <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
                     <p id="rolUsuario" class="text-xs text-gray-500"></p>
@@ -119,144 +76,191 @@
     </header>
 
     <div class="p-8" id="main-content">
-        <section id="section-usuarios" class="space-y-6">
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                    <h2 class="text-lg font-bold text-brand-black">Listado de Usuarios</h2>
-                    <div class="flex gap-2">
-                        <select id="filtroCampo" class="p-2 border border-gray-300 rounded-md text-sm">
-                            <option value="ID">ID</option>
-                            <option value="NOMBRE">Nombre</option>
-                            <option value="USUARIO">Nombre de Usuario</option>
-                            <option value="CORREO">Correo Electrónico</option>
-                            <option value="ROL">Rol</option>
-                            <option value="DPI">DPI</option>
-                        </select>
-                        <input id="filtroTexto" maxlength="25" placeholder="Buscar..."
-                               class="p-2 border border-gray-300 rounded-md text-sm">
-                        <button onclick="renderTablaUsuarios()"
-                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                        <button onclick="abrirModalUsuario()"
-                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
-                            + Crear Usuario
-                        </button>
-                    </div>
-                </div>
 
-                <div id="mensajesUsuarios"></div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
-                        <tr>
-                            <th class="px-3 py-2">ID</th>
-                            <th class="px-3 py-2">Nombre</th>
-                            <th class="px-3 py-2">Correo</th>
-                            <th class="px-3 py-2">Rol</th>
-                            <th class="px-3 py-2">Usuario</th>
-                            <th class="px-3 py-2">Estado</th>
-                            <th class="px-3 py-2">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody id="tablaUsuariosBody"></tbody>
-                    </table>
-                </div>
-
-                <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
-                    <div>
-                        <span id="conteoUsuarios"></span>
-                        <select id="usuariosPorPagina" onchange="paginaUsuariosActual = 1; renderTablaUsuarios()" class="ml-2 border border-gray-300 rounded-md p-1">
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select> por página
-                    </div>
-                    <div class="flex gap-2 items-center">
-                        <button onclick="cambiarPaginaUsuarios(-1)" class="px-2 py-1 border rounded-md">‹</button>
-                        <span id="paginaUsuariosLabel"></span>
-                        <button onclick="cambiarPaginaUsuarios(1)" class="px-2 py-1 border rounded-md">›</button>
-                    </div>
-                </div>
+        <!-- PANTALLA DE BIENVENIDA / MENÚ DE OPCIONES INICIALES -->
+        <div id="pantallaOpcionesIniciales" class="max-w-2xl mx-auto space-y-6 pt-4">
+            <div class="text-center mb-6">
+                <h2 class="text-xl font-bold text-brand-black">Módulo de Gestión de Usuarios</h2>
+                <p class="text-gray-500 text-sm mt-1">Seleccione la opción que desea ejecutar</p>
             </div>
-        </section>
 
-        <!-- Modal crear/editar usuario -->
-        <div id="modalUsuario" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div class="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                <h3 id="modalUsuarioTitulo" class="text-lg font-bold text-brand-black mb-4">Crear Usuario</h3>
-                <div id="mensajesModalUsuario"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Tarjeta 1: Listar Usuarios -->
+                <button onclick="seleccionarOpcionModulo('LISTAR')"
+                        class="bg-white p-5 rounded-xl border border-gray-200 hover:border-brand-yellow shadow-sm hover:shadow transition text-left group flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 bg-yellow-50 text-brand-black rounded-lg flex items-center justify-center text-lg mb-3 group-hover:bg-brand-yellow transition">
+                            <i class="fa-solid fa-list"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-brand-black mb-1">Listar Usuarios</h3>
+                        <p class="text-gray-500 text-xs">Consultar, buscar, filtrar y administrar usuarios del sistema.</p>
+                    </div>
+                    <div class="mt-4 flex items-center text-xs font-bold text-brand-black group-hover:text-brand-yellowhover">
+                        Abrir listado <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
+                    </div>
+                </button>
 
-                <form id="formUsuario" class="space-y-3">
-                    <input type="hidden" id="usuarioId">
-
+                <!-- Tarjeta 2: Crear Usuario -->
+                <button onclick="seleccionarOpcionModulo('CREAR')"
+                        class="bg-white p-5 rounded-xl border border-gray-200 hover:border-brand-yellow shadow-sm hover:shadow transition text-left group flex flex-col justify-between">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                        <input id="uNombreCompleto" class="w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                        <input id="uCorreoElectronico" type="email" class="w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
-                        <input id="uNombreUsuario" maxlength="9" class="w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">
-                            Contraseña <span id="labelPasswordOpcional" class="text-gray-400 text-xs hidden">(dejar en blanco para no cambiarla)</span>
-                        </label>
-                        <input id="uPassword" type="password" class="w-full p-2 border border-gray-300 rounded-md">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">DPI (opcional)</label>
-                            <input id="uDpi" maxlength="13" class="w-full p-2 border border-gray-300 rounded-md">
+                        <div class="w-10 h-10 bg-yellow-50 text-brand-black rounded-lg flex items-center justify-center text-lg mb-3 group-hover:bg-brand-yellow transition">
+                            <i class="fa-solid fa-user-plus"></i>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Teléfono (opcional)</label>
-                            <input id="uTelefono" maxlength="8" class="w-full p-2 border border-gray-300 rounded-md">
-                        </div>
+                        <h3 class="text-base font-bold text-brand-black mb-1">Crear Usuario</h3>
+                        <p class="text-gray-500 text-xs">Registrar un nuevo usuario asignándole rol y sucursal.</p>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">NIT (opcional)</label>
-                            <input id="uNit" maxlength="9" class="w-full p-2 border border-gray-300 rounded-md">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">No. Seguro (opcional)</label>
-                            <input id="uNumeroSeguro" class="w-full p-2 border border-gray-300 rounded-md">
-                        </div>
+                    <div class="mt-4 flex items-center text-xs font-bold text-brand-black group-hover:text-brand-yellowhover">
+                        Crear nuevo <i class="fa-solid fa-chevron-right ml-1 text-xs"></i>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Rol</label>
-                        <select id="uRolId" onchange="toggleCampoEspecialidad()" class="w-full p-2 border border-gray-300 rounded-md"></select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Sucursal</label>
-                        <select id="uSucursalId" class="w-full p-2 border border-gray-300 rounded-md"></select>
-                    </div>
-                    <div id="campoEspecialidadUsuario" class="hidden">
-                        <label class="block text-sm font-medium text-gray-700">Especialidad (solo médicos)</label>
-                        <select id="uEspecialidadId" class="w-full p-2 border border-gray-300 rounded-md"></select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Estado</label>
-                        <select id="uEstado" class="w-full p-2 border border-gray-300 rounded-md">
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select>
-                    </div>
-
-                    <div class="flex gap-2 pt-2">
-                        <button type="button" onclick="cerrarModalUsuario()"
-                                class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
-                        <button type="button" onclick="guardarUsuario()"
-                                class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Guardar</button>
-                    </div>
-                </form>
+                </button>
             </div>
+        </div>
+
+        <!-- CONTENEDOR VISTAS SECUNDARIAS -->
+        <div id="contenedorModuloDinamico" class="hidden space-y-4 max-w-5xl mx-auto">
+            <!-- Encabezado simple con botón para regresar -->
+            <div class="flex items-center justify-between bg-white px-5 py-3 rounded-xl border border-gray-200 shadow-sm">
+                <button onclick="volverAInicioModulo()" class="text-gray-600 hover:text-brand-black font-semibold text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-brand-yellow"></i> Volver a Opciones
+                </button>
+                <span id="labelSeccionActiva" class="text-xs font-bold uppercase tracking-wider text-gray-400"></span>
+            </div>
+
+            <div id="mensajesUsuarios"></div>
+
+            <!-- VISTA 1: LISTAR USUARIOS -->
+            <section id="vistaListarUsuarios" class="hidden space-y-6">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                        <h2 class="text-lg font-bold text-brand-black">Listado de Usuarios</h2>
+                        <div class="flex gap-2">
+                            <select id="filtroCampo" class="p-2 border border-gray-300 rounded-md text-sm">
+                                <option value="ID">ID</option>
+                                <option value="NOMBRE">Nombre</option>
+                                <option value="USUARIO">Nombre de Usuario</option>
+                                <option value="CORREO">Correo Electrónico</option>
+                                <option value="ROL">Rol</option>
+                                <option value="DPI">DPI</option>
+                            </select>
+                            <input id="filtroTexto" maxlength="25" placeholder="Buscar..." class="p-2 border border-gray-300 rounded-md text-sm">
+                            <button onclick="renderTablaUsuarios()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-3 py-2 rounded-md text-sm">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                            <tr>
+                                <th class="px-3 py-2">ID</th>
+                                <th class="px-3 py-2">Nombre</th>
+                                <th class="px-3 py-2">Correo</th>
+                                <th class="px-3 py-2">Rol</th>
+                                <th class="px-3 py-2">Usuario</th>
+                                <th class="px-3 py-2">Estado</th>
+                                <th class="px-3 py-2">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tablaUsuariosBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+                        <div>
+                            <span id="conteoUsuarios"></span>
+                            <select id="usuariosPorPagina" onchange="paginaUsuariosActual = 1; renderTablaUsuarios()" class="ml-2 border border-gray-300 rounded-md p-1">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select> por página
+                        </div>
+                        <div class="flex gap-2 items-center">
+                            <button onclick="cambiarPaginaUsuarios(-1)" class="px-2 py-1 border rounded-md">‹</button>
+                            <span id="paginaUsuariosLabel"></span>
+                            <button onclick="cambiarPaginaUsuarios(1)" class="px-2 py-1 border rounded-md">›</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA 2: FORMULARIO CREAR / EDITAR -->
+            <section id="vistaCrearUsuario" class="hidden">
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-2xl mx-auto">
+                    <h2 id="tituloVistaFormulario" class="text-lg font-bold text-brand-black mb-4">Crear Usuario</h2>
+                    <div id="mensajesVistaFormulario"></div>
+
+                    <form id="formUsuario" class="space-y-4">
+                        <input type="hidden" id="usuarioId">
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nombre Completo *</label>
+                            <input id="uNombreCompleto" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Correo Electrónico *</label>
+                            <input id="uCorreoElectronico" type="email" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nombre de Usuario *</label>
+                            <input id="uNombreUsuario" maxlength="9" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Contraseña <span id="labelPasswordOpcional" class="text-gray-400 text-xs hidden">(dejar en blanco para no cambiarla)</span>
+                            </label>
+                            <input id="uPassword" type="password" class="w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">DPI (opcional)</label>
+                                <input id="uDpi" maxlength="13" class="w-full p-2 border border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Teléfono (opcional)</label>
+                                <input id="uTelefono" maxlength="8" class="w-full p-2 border border-gray-300 rounded-md">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">NIT (opcional)</label>
+                                <input id="uNit" maxlength="9" class="w-full p-2 border border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">No. Seguro (opcional)</label>
+                                <input id="uNumeroSeguro" class="w-full p-2 border border-gray-300 rounded-md">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Rol *</label>
+                                <select id="uRolId" onchange="toggleCampoEspecialidad()" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Sucursal *</label>
+                                <select id="uSucursalId" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                            </div>
+                        </div>
+                        <div id="campoEspecialidadUsuario" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700">Especialidad (solo médicos) *</label>
+                            <select id="uEspecialidadId" class="w-full p-2 border border-gray-300 rounded-md"></select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Estado *</label>
+                            <select id="uEstado" class="w-full p-2 border border-gray-300 rounded-md">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+
+                        <div class="flex gap-2 pt-4">
+                            <button type="button" onclick="volverAInicioModulo()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                            <button type="button" onclick="guardarUsuario()" class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Guardar Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
         </div>
 
         <!-- Modal confirmar eliminación -->
@@ -276,28 +280,41 @@
 
 <script src="common.js"></script>
 <script>
-    // ============================================================
-    // Página: usuarios
-    //
-    // IMPORTANTE (fix del error "abrirModalUsuario is not defined"):
-    // Las funciones que se invocan desde atributos onclick="..." del
-    // HTML DEBEN quedar declaradas en el nivel superior del <script>,
-    // NUNCA dentro de un bloque if/else. Una función declarada dentro
-    // de un bloque puede no quedar expuesta de forma global, y por
-    // eso el botón "Editar" (generado dinámicamente en el <tbody>)
-    // no la encontraba. Aquí solo usamos el resultado de
-    // protegerPagina() para decidir si cargamos los datos al final,
-    // pero las funciones siempre se definen.
-    // ============================================================
     const tieneAccesoUsuarios = protegerPagina();
 
-    // CU-01: Gestión de Usuarios
     let usuariosCache = [];
     let rolesCache = [];
     let sucursalesCache = [];
     let especialidadesCache = [];
     let paginaUsuariosActual = 1;
     let idUsuarioAEliminar = null;
+
+    function volverAInicioModulo() {
+        document.getElementById('pantallaOpcionesIniciales').classList.remove('hidden');
+        document.getElementById('contenedorModuloDinamico').classList.add('hidden');
+        document.getElementById('mensajesUsuarios').innerHTML = '';
+    }
+
+    function seleccionarOpcionModulo(opcion) {
+        document.getElementById('pantallaOpcionesIniciales').classList.add('hidden');
+        document.getElementById('contenedorModuloDinamico').classList.remove('hidden');
+
+        const vistaListar = document.getElementById('vistaListarUsuarios');
+        const vistaCrear = document.getElementById('vistaCrearUsuario');
+        const labelSeccion = document.getElementById('labelSeccionActiva');
+
+        if (opcion === 'LISTAR') {
+            labelSeccion.innerText = 'Listado de Usuarios';
+            vistaListar.classList.remove('hidden');
+            vistaCrear.classList.add('hidden');
+            renderTablaUsuarios();
+        } else {
+            labelSeccion.innerText = 'Crear Usuario';
+            prepararFormularioCrear();
+            vistaCrear.classList.remove('hidden');
+            vistaListar.classList.add('hidden');
+        }
+    }
 
     function mostrarMensajeUsuarios(texto, tipo) {
         const colores = {
@@ -309,17 +326,13 @@
     }
 
     async function cargarCatalogosUsuario() {
+        if (rolesCache.length) return;
         [rolesCache, sucursalesCache, especialidadesCache] = await Promise.all([
             apiFetch('/api/roles'),
             apiFetch('/api/sucursales'),
             apiFetch('/api/especialidades')
         ]);
 
-        // NUEVO: un Administrador de Sede (rol "Administrador", no "Administrador
-        // General") no puede crear/asignar el rol "Administrador General", y solo
-        // puede trabajar dentro de su propia sucursal. El backend ya lo valida
-        // (UsuarioService.crear/actualizar), esto es solo para que el formulario
-        // no ofrezca opciones que de todos modos van a ser rechazadas.
         const esAdminDeSede = rolActual === 'Administrador';
         const rolesParaFormulario = esAdminDeSede
             ? rolesCache.filter(r => r.nombre !== 'Administrador General')
@@ -351,12 +364,6 @@
         document.getElementById('campoEspecialidadUsuario').classList.toggle('hidden', !esMedico);
     }
 
-    async function cargarUsuarios() {
-        paginaUsuariosActual = 1;
-        await renderTablaUsuarios();
-    }
-
-    // CU-01 FB paso 6/7 (RN-CU01-01/02): búsqueda server-side vía GET /api/users/buscar
     async function renderTablaUsuarios() {
         const campo = document.getElementById('filtroCampo').value;
         const valor = document.getElementById('filtroTexto').value.trim();
@@ -366,7 +373,7 @@
         try {
             const params = new URLSearchParams({
                 campo,
-                pagina: String(paginaUsuariosActual - 1), // backend es 0-based
+                pagina: String(paginaUsuariosActual - 1),
                 tamano: String(tamano)
             });
             if (valor) params.set('valor', valor);
@@ -375,11 +382,11 @@
             usuariosCache = resp.contenido;
 
             if (usuariosCache.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">No se encontraron datos usuarios.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-gray-500 py-4">No se encontraron usuarios.</td></tr>`;
             } else {
                 tbody.innerHTML = usuariosCache.map(u => `
-                <tr class="border-t border-gray-100">
-                    <td class="px-3 py-2">${u.id}</td>
+                <tr class="border-t border-gray-100 hover:bg-gray-50">
+                    <td class="px-3 py-2 font-medium">${u.id}</td>
                     <td class="px-3 py-2">${u.nombreCompleto}</td>
                     <td class="px-3 py-2">${u.correoElectronico}</td>
                     <td class="px-3 py-2">${u.rolNombre}</td>
@@ -390,8 +397,8 @@
                         </span>
                     </td>
                     <td class="px-3 py-2">
-                        <button onclick="abrirModalUsuario(${u.id})" class="text-blue-600 hover:underline mr-2">Editar</button>
-                        <button onclick="abrirModalEliminarUsuario(${u.id}, '${u.nombreUsuario}')" class="text-orange-600 hover:underline">Eliminar</button>
+                        <button onclick="cargarEditarUsuario(${u.id})" class="text-blue-600 hover:underline mr-2 font-semibold">Editar</button>
+                        <button onclick="abrirModalEliminarUsuario(${u.id}, '${u.nombreUsuario}')" class="text-red-600 hover:underline font-semibold">Eliminar</button>
                     </td>
                 </tr>
             `).join('');
@@ -400,7 +407,7 @@
             document.getElementById('conteoUsuarios').innerText = `${resp.totalElementos} registro(s)`;
             document.getElementById('paginaUsuariosLabel').innerText = `${resp.pagina + 1} / ${Math.max(1, resp.totalPaginas)}`;
         } catch (e) {
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">No se encontraron datos usuarios.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">Error al cargar listado de usuarios.</td></tr>`;
             mostrarMensajeUsuarios(e.message, 'error');
         }
     }
@@ -410,46 +417,58 @@
         renderTablaUsuarios();
     }
 
-    async function abrirModalUsuario(id) {
+    async function prepararFormularioCrear() {
         document.getElementById('formUsuario').reset();
-        document.getElementById('mensajesModalUsuario').innerHTML = '';
+        document.getElementById('mensajesVistaFormulario').innerHTML = '';
         document.getElementById('usuarioId').value = '';
+        document.getElementById('tituloVistaFormulario').innerText = 'Crear Nuevo Usuario';
+        document.getElementById('labelPasswordOpcional').classList.add('hidden');
+        document.getElementById('uEstado').value = '1';
         await cargarCatalogosUsuario();
-
-        if (id) {
-            document.getElementById('modalUsuarioTitulo').innerText = 'Editar Usuario';
-            document.getElementById('labelPasswordOpcional').classList.remove('hidden');
-            try {
-                const u = await apiFetch(`/api/users/${id}`);
-                document.getElementById('usuarioId').value = u.id;
-                document.getElementById('uNombreCompleto').value = u.nombreCompleto;
-                document.getElementById('uCorreoElectronico').value = u.correoElectronico;
-                document.getElementById('uNombreUsuario').value = u.nombreUsuario;
-                document.getElementById('uDpi').value = u.dpi || '';
-                document.getElementById('uTelefono').value = u.telefono || '';
-                const rol = rolesCache.find(r => r.nombre === u.rolNombre);
-                if (rol) document.getElementById('uRolId').value = rol.id;
-                const sucursal = sucursalesCache.find(s => s.nombre === u.sucursalNombre);
-                if (sucursal) document.getElementById('uSucursalId').value = sucursal.id;
-                const especialidad = especialidadesCache.find(e => e.nombre === u.especialidadNombre);
-                if (especialidad) document.getElementById('uEspecialidadId').value = especialidad.id;
-                document.getElementById('uEstado').value = u.estado;
-                toggleCampoEspecialidad();
-            } catch (e) {
-                mostrarMensajeUsuarios(e.message, 'error');
-                return;
-            }
-        } else {
-            document.getElementById('modalUsuarioTitulo').innerText = 'Crear Usuario';
-            document.getElementById('labelPasswordOpcional').classList.add('hidden');
-            document.getElementById('uEstado').value = '1';
-        }
-
-        document.getElementById('modalUsuario').classList.remove('hidden');
+        toggleCampoEspecialidad();
     }
 
-    function cerrarModalUsuario() {
-        document.getElementById('modalUsuario').classList.add('hidden');
+    async function cargarEditarUsuario(id) {
+        await cargarCatalogosUsuario();
+        document.getElementById('mensajesVistaFormulario').innerHTML = '';
+        try {
+            const u = await apiFetch(`/api/users/${id}`);
+
+            // Llenar campos con los datos obtenidos
+            document.getElementById('usuarioId').value = u.id;
+            document.getElementById('uNombreCompleto').value = u.nombreCompleto || '';
+            document.getElementById('uCorreoElectronico').value = u.correoElectronico || '';
+            document.getElementById('uNombreUsuario').value = u.nombreUsuario || '';
+            document.getElementById('uPassword').value = '';
+            document.getElementById('uDpi').value = u.dpi || '';
+            document.getElementById('uTelefono').value = u.telefono || '';
+            document.getElementById('uNit').value = u.nit || '';
+            document.getElementById('uNumeroSeguro').value = u.numeroSeguro || '';
+
+            const rol = rolesCache.find(r => r.nombre === u.rolNombre);
+            if (rol) document.getElementById('uRolId').value = rol.id;
+
+            const sucursal = sucursalesCache.find(s => s.nombre === u.sucursalNombre);
+            if (sucursal) document.getElementById('uSucursalId').value = sucursal.id;
+
+            const especialidad = especialidadesCache.find(e => e.nombre === u.especialidadNombre);
+            if (especialidad) document.getElementById('uEspecialidadId').value = especialidad.id;
+
+            document.getElementById('uEstado').value = u.estado;
+            document.getElementById('tituloVistaFormulario').innerText = `Editar Usuario: ${u.nombreUsuario}`;
+            document.getElementById('labelPasswordOpcional').classList.remove('hidden');
+
+            toggleCampoEspecialidad();
+
+            // Mostrar formulario de edición sin resetear datos
+            document.getElementById('pantallaOpcionesIniciales').classList.add('hidden');
+            document.getElementById('contenedorModuloDinamico').classList.remove('hidden');
+            document.getElementById('labelSeccionActiva').innerText = `Editar Usuario #${u.id}`;
+            document.getElementById('vistaCrearUsuario').classList.remove('hidden');
+            document.getElementById('vistaListarUsuarios').classList.add('hidden');
+        } catch (e) {
+            mostrarMensajeUsuarios(e.message, 'error');
+        }
     }
 
     async function guardarUsuario() {
@@ -477,10 +496,9 @@
                 await apiFetch('/api/users', { method: 'POST', body: JSON.stringify(body) });
                 mostrarMensajeUsuarios('Usuario creado correctamente.', 'exito');
             }
-            cerrarModalUsuario();
-            cargarUsuarios();
+            seleccionarOpcionModulo('LISTAR');
         } catch (e) {
-            document.getElementById('mensajesModalUsuario').innerHTML =
+            document.getElementById('mensajesVistaFormulario').innerHTML =
                 `<div class="p-3 rounded-md mb-3 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
         }
     }
@@ -502,16 +520,11 @@
             await apiFetch(`/api/users/${idUsuarioAEliminar}`, { method: 'DELETE' });
             cerrarModalEliminarUsuario();
             mostrarMensajeUsuarios('El usuario ha sido eliminado correctamente.', 'exito');
-            cargarUsuarios();
+            renderTablaUsuarios();
         } catch (e) {
             cerrarModalEliminarUsuario();
             mostrarMensajeUsuarios(e.message, 'error');
         }
-    }
-
-    // Carga inicial de datos: solo si el usuario tiene acceso a este módulo.
-    if (tieneAccesoUsuarios) {
-        cargarUsuarios();
     }
 </script>
 </body>
