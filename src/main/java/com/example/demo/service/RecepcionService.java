@@ -4,20 +4,17 @@ import com.example.demo.dto.CitaRecepcionDTO;
 import com.example.demo.dto.RecepcionDTOs.*;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.ValidationException;
-import com.example.demo.modelo.Cita;
-import com.example.demo.modelo.EstadoCita;
-import com.example.demo.modelo.ReasignacionMedico;
-import com.example.demo.modelo.Usuario;
-import com.example.demo.repository.CitaRepository;
-import com.example.demo.repository.EstadoCitaRepository;
-import com.example.demo.repository.ReasignacionMedicoRepository;
-import com.example.demo.repository.UsuarioRepository;
+import com.example.demo.modelo.*;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -27,17 +24,19 @@ public class RecepcionService {
 
     private static final Pattern DPI_PATTERN = Pattern.compile("^\\d{13}$");
 
+    private static final LocalTime INICIO_JORNADA = LocalTime.of(8, 0);
+    private static final LocalTime FIN_JORNADA = LocalTime.of(17, 0);
+    private static final List<String> ESTADOS_LIBERAN_HORARIO = List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO);
+
     private final CitaRepository citaRepository;
     private final UsuarioRepository usuarioRepository;
     private final EstadoCitaRepository estadoCitaRepository;
     private final ReasignacionMedicoRepository reasignacionMedicoRepository;
     private final EmailService emailService;
+    private final AuditoriaContexto auditoriaContexto;
 
     // ---------------------------------------------------------------
     // Paso 3 FB: búsqueda por número de cita o DPI (RN-CU05-01)
-    // sucursalScope != null -> Administrador de Sede o Recepcionista: solo ve
-    // citas de su propia sucursal. null -> Administrador General: sin
-    // restricción.
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
     public BusquedaResultadoDTO buscarCita(String tipo, String valor, Integer sucursalScope) {
@@ -80,19 +79,28 @@ public class RecepcionService {
             throw new ValidationException("El DPI debe contener exactamente 13 dígitos numéricos.");
         }
 
-        List<Cita> citas = citaRepository.buscarPorDpiPaciente(dpi.trim())
-                .stream().filter(c -> perteneceASede(c, sucursalScope)).toList();
-        if (!citas.isEmpty()) {
+        List<String> estadosActivos = List.of(
+                EstadoCita.PENDIENTE_PAGO,
+                EstadoCita.CONFIRMADA,
+                EstadoCita.PACIENTE_PRESENTE
+        );
+
+        List<Cita> citasActivas = citaRepository.buscarPorDpiPaciente(dpi.trim())
+                .stream()
+                .filter(c -> perteneceASede(c, sucursalScope))
+                .filter(c -> estadosActivos.contains(c.getEstadoCita().getNombre()))
+                .toList();
+
+        if (!citasActivas.isEmpty()) {
             return BusquedaResultadoDTO.builder()
                     .citaEncontrada(true)
                     .pacienteExiste(true)
-                    .cita(toDTO(elegirCitaMasRelevante(citas)))
+                    .cita(toDTO(elegirCitaMasRelevante(citasActivas)))
                     .mensaje(null)
                     .accionSugerida(null)
                     .build();
         }
 
-        // Sin citas: distinguir FA03 (no existe el paciente) de FA04 (existe sin citas)
         boolean pacienteExiste = usuarioRepository.findByDpi(dpi.trim()).isPresent();
         if (!pacienteExiste) {
             return BusquedaResultadoDTO.builder()
@@ -104,25 +112,16 @@ public class RecepcionService {
                     .build();
         }
 
+        Usuario paciente = usuarioRepository.findByDpi(dpi.trim()).get();
         return BusquedaResultadoDTO.builder()
                 .citaEncontrada(false)
                 .pacienteExiste(true)
                 .cita(null)
-                .mensaje("El paciente está registrado pero no tiene citas activas. Puede crear una nueva cita para este paciente.")
+                .mensaje("El paciente " + paciente.getNombreCompleto() + " está registrado pero no tiene citas activas. Puede crear una nueva cita para este paciente.")
                 .accionSugerida("NUEVA_CITA_WALKIN")
                 .build();
     }
 
-    // buscarPorDpiPaciente ordena las citas activas por fechaHora
-    // DESC, así que si el paciente tenía más de una cita activa (ej. la de
-    // hoy, ya con llegada registrada, y otra futura todavía "Confirmada"),
-    // se devolvía la MÁS FUTURA en vez de la de HOY. Con dos personas
-    // (recepción y luego admin) buscando al mismo paciente, cada una podía
-    // terminar registrando la llegada de una cita DISTINTA sin darse cuenta,
-    // pareciendo "doble registro" cuando en realidad cada una era válida
-    // para una cita diferente. Ahora, si existe una cita de hoy entre las
-    // activas, esa es la que se muestra; si no hay ninguna de hoy, se
-    // mantiene el comportamiento anterior (la más próxima).
     private Cita elegirCitaMasRelevante(List<Cita> citasOrdenadas) {
         var hoy = java.time.LocalDate.now();
         return citasOrdenadas.stream()
@@ -143,11 +142,9 @@ public class RecepcionService {
 
         String estadoActual = cita.getEstadoCita().getNombre();
 
-        // FA06
         if (EstadoCita.CANCELADA.equals(estadoActual)) {
             throw new ValidationException("La cita fue cancelada. El paciente debe agendar una nueva cita.");
         }
-        // FA05
         if (EstadoCita.PENDIENTE_PAGO.equals(estadoActual)) {
             throw new ValidationException(
                     "La cita del paciente tiene estado 'Pendiente de pago'. Debe realizar el pago en caja antes de ser atendido.");
@@ -167,7 +164,6 @@ public class RecepcionService {
 
             String nombre = actualizada.getPaciente().getNombreCompleto();
             String mensaje = actualizada.isEsEmergencia()
-                    // FA08
                     ? "Paciente " + nombre + " registrado con prioridad de EMERGENCIA. "
                     + "El paciente debe pasar directamente a toma de signos vitales."
                     : "La llegada del paciente " + nombre + " ha sido registrada exitosamente. "
@@ -179,17 +175,82 @@ public class RecepcionService {
                     .build();
 
         } catch (ObjectOptimisticLockingFailureException e) {
-            // FA09
             throw new ValidationException("Operación no permitida");
         }
     }
 
     // ---------------------------------------------------------------
-    // NUEVO — Cancelación de cita desde Recepción (a solicitud del paciente
-    // o por indicación administrativa). Solo procede mientras la cita no ha
-    // iniciado el proceso clínico: se permite en "Pendiente de pago",
-    // "Confirmada" y "Paciente Presente". Una vez que enfermería la pasó a
-    // "Signos Vitales" (o estados posteriores), ya no se cancela desde aquí.
+    // FA04 / CU-03: Agendar cita Walk-in desde Recepción
+    // ---------------------------------------------------------------
+    @Transactional
+    public CitaRecepcionDTO agendarCitaWalkIn(AgendarWalkInRequestDTO request, Integer sucursalScope) {
+        auditoriaContexto.aplicar();
+
+        if (request.getDpiPaciente() == null || request.getDpiPaciente().isBlank()) {
+            throw new ValidationException("El DPI del paciente es obligatorio.");
+        }
+
+        if (request.getFechaHora() == null || request.getFechaHora().isBlank()) {
+            throw new ValidationException("Debe seleccionar la fecha y hora de la cita.");
+        }
+
+        LocalDateTime fechaHora = LocalDateTime.parse(request.getFechaHora());
+
+        if (!fechaHora.isAfter(LocalDateTime.now())) {
+            throw new ValidationException("Debe seleccionar una fecha y hora futuras.");
+        }
+
+        DayOfWeek dia = fechaHora.getDayOfWeek();
+        if (dia == DayOfWeek.SATURDAY || dia == DayOfWeek.SUNDAY) {
+            throw new ValidationException("Las citas solo pueden agendarse de lunes a viernes.");
+        }
+
+        LocalTime hora = fechaHora.toLocalTime();
+        if (hora.isBefore(INICIO_JORNADA) || hora.isAfter(FIN_JORNADA) || hora.equals(FIN_JORNADA)) {
+            throw new ValidationException("El horario de atención es de 08:00 AM a 05:00 PM.");
+        }
+
+        if (hora.getMinute() != 0 && hora.getMinute() != 30) {
+            throw new ValidationException("Las citas deben agendarse en bloques de 30 minutos (ej. 08:00, 08:30).");
+        }
+
+        Usuario paciente = usuarioRepository.findByDpi(request.getDpiPaciente().trim())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró al paciente con el DPI proporcionado."));
+
+        Usuario medico = usuarioRepository.findById(request.getMedicoId())
+                .orElseThrow(() -> new ResourceNotFoundException("El médico seleccionado no existe."));
+
+        boolean horarioOcupado = citaRepository.existsByMedico_IdAndFechaHoraAndEstadoCita_NombreNotIn(
+                medico.getId(), fechaHora, ESTADOS_LIBERAN_HORARIO);
+        if (horarioOcupado) {
+            throw new ValidationException("El médico seleccionado ya tiene una cita agendada en ese horario. Por favor, seleccione otro horario.");
+        }
+
+        EstadoCita estadoPendiente = estadoCitaRepository.findByNombre("Pendiente de pago")
+                .orElseThrow(() -> new ResourceNotFoundException("Estado 'Pendiente de pago' no configurado."));
+
+        Cita nuevaCita = new Cita();
+        nuevaCita.setPaciente(paciente);
+        nuevaCita.setMedico(medico);
+        nuevaCita.setEspecialidad(medico.getEspecialidad());
+        nuevaCita.setSucursal(medico.getSucursal());
+        nuevaCita.setEstadoCita(estadoPendiente);
+        nuevaCita.setFechaHora(fechaHora);
+        nuevaCita.setMotivoConsulta(request.getMotivoConsulta() != null && !request.getMotivoConsulta().isBlank()
+                ? request.getMotivoConsulta()
+                : "Consulta Walk-in presencial");
+        nuevaCita.setMonto(new BigDecimal("150.00"));
+        nuevaCita.setExpiraEn(fechaHora.toLocalDate().atTime(LocalTime.MAX));
+        nuevaCita.setEsEmergencia(false);
+
+        Cita guardada = citaRepository.save(nuevaCita);
+        emailService.enviarCitaAgendada(guardada);
+
+        return toDTO(guardada);
+    }
+
+    // ---------------------------------------------------------------
+    // Cancelación de cita desde Recepción
     // ---------------------------------------------------------------
     @Transactional
     public CancelarCitaResponseDTO cancelarCita(Integer idCita, String motivo, Integer sucursalScope) {
@@ -230,8 +291,6 @@ public class RecepcionService {
                     .cita(toDTO(actualizada))
                     .build();
         } catch (ObjectOptimisticLockingFailureException e) {
-            // Mismo criterio que registrarLlegada(): otro usuario modificó la
-            // cita (rowVersion) entre que se leyó y se intentó guardar.
             throw new ValidationException("Operación no permitida");
         }
     }
@@ -256,12 +315,6 @@ public class RecepcionService {
                 .orElseThrow(() -> new ResourceNotFoundException("El médico seleccionado no existe."));
         Usuario medicoAnterior = cita.getMedico();
 
-        // CORREGIDO: antes se aceptaba cualquier idMedicoNuevo sin validar
-        // que fuera realmente un Médico activo de la misma especialidad y
-        // sucursal de la cita (FA07: "lista de médicos disponibles de la
-        // misma sede y especialidad"). El endpoint de "médicos disponibles"
-        // sí filtraba correctamente, pero nada impedía llamar directamente
-        // a este endpoint con cualquier otro id de usuario.
         if (medicoNuevo.getRol() == null || !"Médico".equalsIgnoreCase(medicoNuevo.getRol().getNombre())) {
             throw new ValidationException("El usuario seleccionado no es un médico.");
         }
@@ -299,14 +352,12 @@ public class RecepcionService {
     }
 
     // ---------------------------------------------------------------
-    // FA07 paso 2: médicos disponibles (misma sede + especialidad, activos)
-    // Reutiliza el método que YA tienes en UsuarioRepository.
+    // FA07 paso 2: médicos disponibles
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
     public List<MedicoDisponibleDTO> medicosDisponiblesParaReasignacion(Integer idSucursal, Integer idEspecialidad,
                                                                         Integer idMedicoActual, Integer sucursalScope) {
         if (sucursalScope != null && !sucursalScope.equals(idSucursal)) {
-            // Administrador de Sede intentando consultar médicos de otra sucursal.
             throw new ValidationException("No tiene permiso para consultar médicos de otra sucursal.");
         }
         return usuarioRepository

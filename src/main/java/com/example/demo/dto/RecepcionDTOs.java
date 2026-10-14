@@ -63,4 +63,13 @@ public class RecepcionDTOs {
         private String mensaje;
         private CitaRecepcionDTO cita;
     }
+    // DTO para agendar cita rápida/walk-in desde Recepción (FA04 / CU-03)
+    @Data
+    public static class AgendarWalkInRequestDTO {
+        private String dpiPaciente;
+        private Integer especialidadId;
+        private Integer medicoId;
+        private String fechaHora; // Formato ISO "YYYY-MM-DDTHH:mm"
+        private String motivoConsulta;
+    }
 }

@@ -113,7 +113,7 @@
         </button>
         <div class="text-center">
             <a href="#" id="linkVolverPortal" class="text-sm text-gray-500 hover:text-brand-black hover:underline">
-                <i class="fa-solid fa-arrow-left mr-1"></i> Volver al portal
+                <i class="fa-solid fa-arrow-left mr-1"></i> Volver
             </a>
         </div>
 
@@ -129,7 +129,14 @@
     const btnRegistrar = document.getElementById('btnRegistrar');
     const mensajeGlobal = document.getElementById('mensajeGlobal');
 
-    // Contador de dígitos del DPI en tiempo real (igual que en CU-00)
+    const urlParams = new URLSearchParams(window.location.search);
+    const dpiParam = urlParams.get('dpi');
+    if (dpiParam) {
+        const dpiInput = document.getElementById('dpi');
+        dpiInput.value = dpiParam;
+        document.getElementById('dpiContador').textContent = dpiParam.length;
+    }
+
     document.getElementById('dpi').addEventListener('input', (e) => {
         e.target.value = e.target.value.replace(/\D/g, '');
         document.getElementById('dpiContador').textContent = e.target.value.length;
@@ -152,9 +159,6 @@
         mensajeGlobal.classList.remove('hidden');
     }
 
-    // Mapea el campo que devuelve el error del backend (si viene) a un input.
-    // Si tu ValidationException no trae el nombre del campo, el mensaje se
-    // muestra igual arriba del formulario (mensajeGlobal), sin marcar un campo específico.
     function mostrarErrorCampo(idCampo, texto) {
         const input = document.getElementById(idCampo);
         const p = input?.nextElementSibling?.classList?.contains('error-text')
@@ -191,10 +195,7 @@
             const data = await resp.json().catch(() => ({}));
 
             if (!resp.ok) {
-                // El GlobalExceptionHandler puede devolver un solo mensaje (ValidationException)
-                // o una lista de errores de campo (si usas @Valid con MethodArgumentNotValidException).
                 if (data.errors) {
-                    // Formato típico de Spring: { errors: { campo: "mensaje" } } o similar
                     Object.entries(data.errors).forEach(([campo, msg]) => mostrarErrorCampo(campo, msg));
                     mostrarMensajeGlobal('Revisa los campos marcados en rojo.', 'error');
                 } else {
@@ -204,7 +205,13 @@
             }
 
             mostrarMensajeGlobal(data.mensaje, 'exito');
-            setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+            setTimeout(() => {
+                if (sessionStorage.getItem('jwt')) {
+                    window.location.href = 'citas.html';
+                } else {
+                    window.location.href = 'login.html';
+                }
+            }, 1500);
 
         } catch (err) {
             mostrarMensajeGlobal('No se pudo conectar con el servidor. Intente de nuevo más tarde.', 'error');
@@ -213,12 +220,17 @@
             btnRegistrar.textContent = 'Registrarse';
         }
     });
+
     document.getElementById('linkVolverPortal').addEventListener('click', (e) => {
         e.preventDefault();
-        const confirmado = window.confirm('¿Está seguro que desea salir? Se perderán los datos ingresados en el formulario.');
-        if (confirmado) {
-            form.reset();
-            window.location.href = 'index.html';
+        if (sessionStorage.getItem('jwt')) {
+            window.location.href = 'citas.html';
+        } else {
+            const confirmado = window.confirm('¿Está seguro que desea salir? Se perderán los datos ingresados en el formulario.');
+            if (confirmado) {
+                form.reset();
+                window.location.href = 'index.html';
+            }
         }
     });
 </script>

@@ -27,7 +27,13 @@ public class RecepcionController {
                                        @AuthenticationPrincipal AuthUsuario usuario) {
         return recepcionService.buscarCita(tipo, valor, usuario.sucursalScopeOrNull());
     }
-
+    // FA04 / CU-03: Agendar cita Walk-in desde Recepción
+    @PostMapping("/citas/agendar-walkin")
+    public CitaRecepcionDTO agendarWalkIn(
+            @RequestBody AgendarWalkInRequestDTO request,
+            @AuthenticationPrincipal AuthUsuario usuario) {
+        return recepcionService.agendarCitaWalkIn(request, usuario.sucursalScopeOrNull());
+    }
     // Paso 6 FB
     @PostMapping("/citas/{idCita}/registrar-llegada")
     public RegistrarLlegadaResponseDTO registrarLlegada(@PathVariable Integer idCita,

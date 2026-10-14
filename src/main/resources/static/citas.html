@@ -36,8 +36,6 @@
             <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
         </div>
 
-        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
-             "*" significa: todos los roles internos autenticados. -->
         <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
             <a href="dashboard.html" data-tab="dashboard" data-roles="*"
                class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
@@ -144,10 +142,40 @@
             </div>
         </section>
 
-        <!-- 3. SIGNOS VITALES — pendiente (CU-07) -->
-        <!-- 3. SIGNOS VITALES (CU-07) -->
+        <!-- Modal: Nueva Cita Walk-in (FA04 / CU-03) -->
+        <div id="modalWalkIn" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl p-6 w-full max-w-md">
+                <h3 class="text-lg font-bold text-brand-black mb-1">Nueva Cita (Walk-in)</h3>
+                <p class="text-sm text-gray-500 mb-4">Agendamiento de cita presencial para paciente registrado.</p>
+                <div id="mensajesModalWalkIn"></div>
 
-        <!-- NUEVO — Modal: Reasignar Médico (FA07 de CU-05) -->
+                <label class="block text-sm font-semibold text-gray-700 mb-1">DPI Paciente</label>
+                <input id="walkInDpi" readonly class="w-full p-2 bg-gray-100 border border-gray-300 rounded-md mb-3 text-gray-700 font-medium">
+
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Especialidad</label>
+                <select id="walkInEspecialidad" onchange="cargarMedicosWalkIn()" class="w-full p-2 border border-gray-300 rounded-md mb-3 focus:ring-brand-yellow focus:border-brand-yellow">
+                    <option value="">Seleccione especialidad...</option>
+                </select>
+
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Médico</label>
+                <select id="walkInMedico" class="w-full p-2 border border-gray-300 rounded-md mb-3 focus:ring-brand-yellow focus:border-brand-yellow">
+                    <option value="">Seleccione médico...</option>
+                </select>
+
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Fecha y Hora</label>
+                <input type="datetime-local" id="walkInFechaHora" class="w-full p-2 border border-gray-300 rounded-md mb-3 focus:ring-brand-yellow focus:border-brand-yellow">
+
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Motivo de consulta</label>
+                <textarea id="walkInMotivo" rows="2" class="w-full p-2 border border-gray-300 rounded-md mb-4 focus:ring-brand-yellow focus:border-brand-yellow" placeholder="Breve descripción del motivo de la consulta"></textarea>
+
+                <div class="flex gap-2">
+                    <button type="button" onclick="cerrarModalWalkIn()" class="flex-1 bg-gray-200 text-gray-800 font-semibold py-2 rounded-lg">Cancelar</button>
+                    <button type="button" onclick="confirmarAgendamientoWalkIn()" class="flex-1 bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold py-2 rounded-lg">Agendar Cita</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal: Reasignar Médico (FA07 de CU-05) -->
         <div id="modalReasignarMedico" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl p-6 w-full max-w-md">
                 <h3 class="text-lg font-bold text-brand-black mb-1">Reasignar Médico</h3>
@@ -173,7 +201,7 @@
             </div>
         </div>
 
-        <!-- NUEVO — Modal: Cancelar Cita -->
+        <!-- Modal: Cancelar Cita -->
         <div id="modalCancelarCita" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl p-6 w-full max-w-sm text-center">
                 <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-3"></i>
@@ -194,16 +222,6 @@
 
 <script src="common.js"></script>
 <script>
-    // ============================================================
-    // Página: citas
-    // IMPORTANTE: las funciones invocadas desde atributos onclick="..."
-    // del HTML deben quedar declaradas en el nivel superior del
-    // <script>, nunca dentro de un bloque if/else (una función async
-    // declarada dentro de un bloque no queda expuesta en el ámbito
-    // global y el onclick del HTML no la encuentra). Por eso
-    // protegerPagina() solo decide si se ejecutan las llamadas
-    // iniciales que tocan el DOM, nunca si se declaran las funciones.
-    // ============================================================
     const tieneAccesoCitas = protegerPagina();
 
     let tipoBusqueda = 'DPI';
@@ -242,22 +260,21 @@
                 citaActual = data.cita;
                 renderCita(data.cita);
             } else if (data.accionSugerida === 'REGISTRAR_PACIENTE') {
+                // FA03: Redirige a registro pasando el DPI
                 mostrarMensajeCita(data.mensaje, 'info');
                 document.getElementById('resultadoCita').innerHTML =
-                    `<button onclick="location.href='register.html'" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Registrar Paciente</button>`;
+                    `<button onclick="location.href='register.html?dpi=${encodeURIComponent(valor)}'" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Registrar Paciente</button>`;
             } else if (data.accionSugerida === 'NUEVA_CITA_WALKIN') {
+                // FA04: Abre el modal Walk-in en la misma pantalla
                 mostrarMensajeCita(data.mensaje, 'info');
                 document.getElementById('resultadoCita').innerHTML =
-                    `<button onclick="location.href='agendar.html?walkin=true'" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Nueva Cita (Walk-in)</button>`;
+                    `<button onclick="abrirModalWalkIn('${valor}')" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Nueva Cita (Walk-in)</button>`;
             }
         } catch (e) {
             mostrarMensajeCita(e.message, 'error');
         }
     }
 
-    // NUEVO — estados desde los que Recepción puede reasignar médico (FA07)
-    // y estados desde los que puede cancelar la cita. Se centralizan aquí
-    // para no repetir la lista de estados en cada botón.
     const ESTADOS_REASIGNABLES = ['Confirmada', 'Paciente Presente'];
     const ESTADOS_CANCELABLES = ['Pendiente de pago', 'Confirmada', 'Paciente Presente'];
 
@@ -272,14 +289,14 @@
             mostrarMensajeCita("La cita tiene estado 'Pendiente de pago'. Debe realizar el pago en caja antes de ser atendido.", 'error');
         } else if (cita.estado === 'Cancelada') {
             mostrarMensajeCita('La cita fue cancelada. El paciente debe agendar una nueva cita.', 'error');
+        } else if (cita.estado === 'Paciente Presente') {
+            mostrarMensajeCita('Llegada registrada — esperando llamado de enfermería.', 'info');
         }
 
-        // NUEVO — Reasignar Médico (FA07): visible en "Confirmada" o "Paciente Presente"
         if (ESTADOS_REASIGNABLES.includes(cita.estado)) {
             botones.push(`<button onclick="abrirModalReasignar()" class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-lg">Reasignar Médico</button>`);
         }
 
-        // NUEVO — Cancelar Cita: visible mientras la cita no haya iniciado atención clínica
         if (ESTADOS_CANCELABLES.includes(cita.estado)) {
             botones.push(`<button onclick="abrirModalCancelar()" class="bg-white border border-red-300 hover:bg-red-50 text-red-600 font-semibold px-4 py-2 rounded-lg">Cancelar Cita</button>`);
         }
@@ -308,7 +325,105 @@
     }
 
     // ============================================================
-    // NUEVO — Reasignar Médico (FA07 de CU-05)
+    // FA04 / CU-03: Agendar Cita Walk-in desde Recepción
+    // ============================================================
+    async function abrirModalWalkIn(dpi) {
+        document.getElementById('walkInDpi').value = dpi;
+        document.getElementById('walkInMotivo').value = '';
+        document.getElementById('mensajesModalWalkIn').innerHTML = '';
+
+        // Preselecciona la fecha/hora actual local
+        const ahora = new Date();
+        ahora.setMinutes(ahora.getMinutes() - ahora.getTimezoneOffset());
+        document.getElementById('walkInFechaHora').value = ahora.toISOString().slice(0, 16);
+
+        document.getElementById('modalWalkIn').classList.remove('hidden');
+
+        try {
+            const especialidades = await apiFetchCached('/api/especialidades');
+            const selectEsp = document.getElementById('walkInEspecialidad');
+            selectEsp.innerHTML = '<option value="">Seleccione especialidad...</option>' +
+                especialidades.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('');
+            document.getElementById('walkInMedico').innerHTML = '<option value="">Seleccione médico...</option>';
+        } catch (e) {
+            document.getElementById('mensajesModalWalkIn').innerHTML =
+                `<div class="p-3 rounded-md mb-4 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    async function cargarMedicosWalkIn() {
+        const espId = document.getElementById('walkInEspecialidad').value;
+        const selectMed = document.getElementById('walkInMedico');
+        selectMed.innerHTML = '<option value="">Cargando médicos...</option>';
+
+        if (!espId) {
+            selectMed.innerHTML = '<option value="">Seleccione médico...</option>';
+            return;
+        }
+
+        try {
+            // Usar la sucursal del contexto actual o de la sesión (ej. sessionStorage)
+            const sucursalId = sessionStorage.getItem('sucursalId') || 1;
+
+            // Se reutiliza el endpoint que ya existe y funciona en RecepcionController
+            const medicos = await apiFetch(`/api/recepcion/medicos-disponibles?sucursalId=${sucursalId}&especialidadId=${espId}&medicoActualId=0`);
+
+            if (!medicos.length) {
+                selectMed.innerHTML = '<option value="">No hay médicos disponibles en esta sede</option>';
+                return;
+            }
+            selectMed.innerHTML = '<option value="">Seleccione médico...</option>' +
+                medicos.map(m => `<option value="${m.id}">${m.nombreCompleto}</option>`).join('');
+        } catch (e) {
+            selectMed.innerHTML = '<option value="">Error al cargar médicos</option>';
+        }
+    }
+
+    function cerrarModalWalkIn() {
+        document.getElementById('modalWalkIn').classList.add('hidden');
+    }
+
+    async function confirmarAgendamientoWalkIn() {
+        const dpi = document.getElementById('walkInDpi').value;
+        const espId = document.getElementById('walkInEspecialidad').value;
+        const medicoId = document.getElementById('walkInMedico').value;
+        const fechaHora = document.getElementById('walkInFechaHora').value;
+        const motivo = document.getElementById('walkInMotivo').value.trim();
+        const mensajesModal = document.getElementById('mensajesModalWalkIn');
+        mensajesModal.innerHTML = '';
+
+        if (!espId || !medicoId || !fechaHora) {
+            mensajesModal.innerHTML =
+                `<div class="p-3 rounded-md mb-4 bg-red-50 text-red-700 border border-red-200">Complete la especialidad, médico y fecha/hora.</div>`;
+            return;
+        }
+
+        try {
+            const nuevaCita = await apiFetch('/api/recepcion/citas/agendar-walkin', {
+                method: 'POST',
+                body: JSON.stringify({
+                    dpiPaciente: dpi,
+                    especialidadId: Number(espId),
+                    medicoId: Number(medicoId),
+                    fechaHora: fechaHora,
+                    motivoConsulta: motivo || null
+                })
+            });
+
+            cerrarModalWalkIn();
+
+            // Continuación automática al Paso 3 del Flujo Normal Básico
+            citaActual = nuevaCita;
+            mostrarMensajeCita('Cita creada exitosamente. Puede proceder a registrar la llegada del paciente.', 'exito');
+            renderCita(nuevaCita);
+        } catch (e) {
+            mensajesModal.innerHTML =
+                `<div class="p-3 rounded-md mb-4 bg-red-50 text-red-700 border border-red-200">${e.message}</div>`;
+        }
+    }
+
+    // ============================================================
+    // Reasignar Médico (FA07 de CU-05)
     // ============================================================
     async function abrirModalReasignar() {
         if (!citaActual) return;
@@ -370,7 +485,7 @@
     }
 
     // ============================================================
-    // NUEVO — Cancelar Cita
+    // Cancelar Cita
     // ============================================================
     function abrirModalCancelar() {
         if (!citaActual) return;
@@ -400,9 +515,6 @@
         }
     }
 
-    // Carga inicial / estado por defecto de los controles: solo si el
-    // usuario tiene acceso a este módulo (de lo contrario esos
-    // elementos del DOM ya fueron reemplazados por protegerPagina()).
     if (tieneAccesoCitas) {
         cambiarTipoBusqueda('DPI');
         document.getElementById('valorBusqueda').addEventListener('keypress', (e) => { if (e.key === 'Enter') buscarCita(); });
