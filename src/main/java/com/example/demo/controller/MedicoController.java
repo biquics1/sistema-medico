@@ -107,15 +107,14 @@ public class MedicoController {
         return consultaMedicaService.generarReceta(idConsulta, usuario, request);
     }
 
-    //  Agendamiento de Cita de Seguimiento
-
+    // Agendamiento de Cita de Seguimiento
     // Paso 2-3 FB: banner con los datos precargados (paciente, médico, especialidad, sucursal).
     // El calendario de disponibilidad (paso 5) reutiliza el mismo endpoint de CU-03:
     // GET /api/doctors/{medicoId}/available-slots?date=YYYY-MM-DD
     @GetMapping("/consultas/{idConsulta}/seguimiento/contexto")
     public ContextoSeguimientoDTO contextoSeguimiento(@PathVariable Integer idConsulta,
                                                       @AuthenticationPrincipal AuthUsuario usuario) {
-        return seguimientoService.obtenerContexto(idConsulta, usuario.getId());
+        return seguimientoService.obtenerContexto(idConsulta, usuario);
     }
 
     // Paso 7 FB: confirmar el agendamiento de la cita de seguimiento
@@ -123,6 +122,6 @@ public class MedicoController {
     public SeguimientoResponseDTO crearSeguimiento(@PathVariable Integer idConsulta,
                                                    @RequestBody CrearSeguimientoRequestDTO request,
                                                    @AuthenticationPrincipal AuthUsuario usuario) {
-        return seguimientoService.crearSeguimiento(idConsulta, usuario.getId(), request);
+        return seguimientoService.crearSeguimiento(idConsulta, usuario, request);
     }
 }

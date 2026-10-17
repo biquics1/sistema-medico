@@ -1,10 +1,3 @@
-// ============================================================
-// REPOSITORY: CitaRepository
-// Acceso a datos de la entidad Cita: es el repositorio más
-// usado del sistema, ya que casi todos los casos de uso
-// (CU-03, CU-05, CU-06, CU-07, CU-08, CU-14) consultan citas
-// bajo distintos filtros (paciente, médico, estado, fechas).
-// ============================================================
 package com.example.demo.repository;
 
 import com.example.demo.modelo.Cita;
@@ -54,6 +47,9 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     // CU-03: job de expiración de reservas (FA03 / RNF-019)
     // Citas en cierto estado cuya reserva ya expiró (para liberarlas automáticamente)
     List<Cita> findByEstadoCita_NombreAndExpiraEnBefore(String estadoNombre, LocalDateTime momento);
+
+    // Pago en línea abandonado: citas "Pendiente de pago" cuya sesión de pago (5 min) ya venció
+    List<Cita> findByEstadoCita_NombreAndSesionPagoExpiraEnBefore(String estadoNombre, LocalDateTime momento);
 
     // CU-06, RN-CU06-01: solo citas "Pendiente de pago"
     Optional<Cita> findByIdAndEstadoCita_Nombre(Integer id, String estadoNombre);

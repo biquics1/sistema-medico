@@ -46,7 +46,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Front-end estático de prueba
                         .requestMatchers("/", "/*.html", "/*.css", "/*.js", "/favicon.ico").permitAll()
-
                         .requestMatchers("/error").permitAll()
 
                         // CU-00 / CU-02: acceso público antes de iniciar sesión
@@ -85,6 +84,13 @@ public class SecurityConfig {
 
                         // CU-08: consulta médica -> panel de trabajo propio del médico (no aplica
                         // acotar por sede porque no es una vista de "solo consulta" del Administrador).
+                        // CU-11: cita de seguimiento -> además del médico y Admin General, el
+                        // Administrador de Sede (acotado a su sede en SeguimientoService).
+                        // Debe ir ANTES de "/api/medico/**".
+                        .requestMatchers("/api/medico/consultas/*/seguimiento",
+                                "/api/medico/consultas/*/seguimiento/contexto")
+                        .hasAnyAuthority(ROLE_MEDICO, ROLE_ADMIN, ROLE_ADMIN_GENERAL)
+
                         .requestMatchers("/api/medico/**").hasAnyAuthority(ROLE_MEDICO, ROLE_ADMIN_GENERAL)
 
                         // CU-09: laboratorio -> Administrador de Sede ve solo las órdenes cuyo
@@ -98,17 +104,20 @@ public class SecurityConfig {
 
                         // Catálogos de solo lectura restantes (roles, medicamentos)
                         .requestMatchers(HttpMethod.GET, "/api/roles/**", "/api/medicamentos/**").permitAll()
+
                         // Sedes/especialidades: configuración de catálogo global -> solo Admin General
                         .requestMatchers("/api/branch-specialty/**").hasAuthority(ROLE_ADMIN_GENERAL)
+
                         // Bitácora/inventario de medicamentos: Administrador de Sede y Farmacéutico
                         // vuelven a tener acceso, acotado a su propia sucursal (InventarioMedicamentoService /
                         // MovimientoInventarioService). El @PreAuthorize de cada endpoint valida el rol exacto.
-                        .requestMatchers("/api/inventario-medicamentos/**", "/api/movimientos-inventario/**")
+                        .requestMatchers("/api/inventario-medicamentos/**", "/api/movimientosinventario/**")
                         .hasAnyAuthority(ROLE_ADMIN, ROLE_ADMIN_GENERAL, ROLE_FARMACEUTICO)
 
                         // Todo lo demás requiere sesión válida
                         .anyRequest().authenticated()
                 )
+
                 // TEMPORAL - solo para diagnosticar el 403 de CU-12. Quitar cuando ya no se necesite.
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {

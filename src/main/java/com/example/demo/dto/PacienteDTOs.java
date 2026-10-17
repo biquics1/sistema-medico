@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import lombok.Data;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +20,7 @@ public class PacienteDTOs {
         private String sucursal;
         private LocalDateTime fechaHora;
         private String estado;
+        private boolean esSeguimiento; // true si la cita fue agendada por el médico como seguimiento
     }
 
     // Detalle completo de una cita: incluye consulta médica, orden de laboratorio y receta(s) si existen
@@ -35,6 +35,7 @@ public class PacienteDTOs {
         private String estado;
         private String motivoConsulta;
         private BigDecimal monto;
+        private boolean esSeguimiento;
 
         // null si el médico aún no ha iniciado/registrado la consulta
         private ConsultaResumenDTO consulta;
@@ -71,6 +72,7 @@ public class PacienteDTOs {
     public static class ExamenResultadoDTO {
         private String nombreExamen;
         private boolean publicado;
+
         // Los siguientes solo vienen informados si publicado = true (RN-CU09-02: resultados
         // no publicados no deben ser visibles para el paciente).
         private String valorResultado;
@@ -98,7 +100,7 @@ public class PacienteDTOs {
     }
 
     // NUEVO -- Reagendar cita (paciente): solo permite cambiar fecha/hora,
-    // NO permite cambiar el medico asignado.
+    // NO permite cambiar el médico asignado.
     @Data
     public static class ReagendarCitaRequestDTO {
         private LocalDateTime fechaHora;

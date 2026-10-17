@@ -81,13 +81,10 @@ public class CitaService {
         if (fecha.getDayOfWeek() == DayOfWeek.SATURDAY || fecha.getDayOfWeek() == DayOfWeek.SUNDAY) {
             return List.of();
         }
-
         LocalDateTime desde = fecha.atTime(INICIO_JORNADA);
         LocalDateTime hasta = fecha.atTime(FIN_JORNADA);
-
         List<Cita> ocupadas = citaRepository.findByMedico_IdAndFechaHoraBetweenAndEstadoCita_NombreNotIn(
                 medicoId, desde, hasta, ESTADOS_LIBERAN_HORARIO);
-
         Set<LocalDateTime> ocupadasSet = ocupadas.stream()
                 .map(Cita::getFechaHora).collect(Collectors.toSet());
 
@@ -162,6 +159,7 @@ public class CitaService {
             throw new ValidationException(
                     "El horario o la especialidad seleccionados ya no están disponibles. Por favor, intente nuevamente.");
         }
+
         emailService.enviarCitaAgendada(cita);
         return toDto(cita);
     }
@@ -181,6 +179,7 @@ public class CitaService {
         if (!EstadoCita.PENDIENTE_PAGO.equals(cita.getEstadoCita().getNombre())) {
             throw new ValidationException("Esta cita ya no está pendiente de pago.");
         }
+
         if (cita.getExpiraEn() != null && cita.getExpiraEn().isBefore(LocalDateTime.now())) {
             throw new ValidationException(
                     "El tiempo para confirmar su cita ha expirado. El horario seleccionado ha sido liberado. " +
@@ -222,6 +221,7 @@ public class CitaService {
             cita = citaRepository.save(cita);
             emailService.enviarCitaCancelada(cita, "Venció el tiempo para completar el pago en línea.");
         }
+
         return toDto(cita);
     }
 
@@ -242,12 +242,19 @@ public class CitaService {
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void cancelarCitasExpiradas() {
-        List<Cita> expiradas = citaRepository
-                .findByEstadoCita_NombreAndExpiraEnBefore("Pendiente de pago", LocalDateTime.now());
-        if (expiradas.isEmpty()) return;
+        // Cita vencida por fin del día de la cita, o por pago en línea abandonado (sesión de 5 min vencida)
+        Map<Integer, Cita> porId = new LinkedHashMap<>();
+        citaRepository.findByEstadoCita_NombreAndExpiraEnBefore("Pendiente de pago", LocalDateTime.now())
+                .forEach(c -> porId.put(c.getId(), c));
+        citaRepository.findByEstadoCita_NombreAndSesionPagoExpiraEnBefore("Pendiente de pago", LocalDateTime.now())
+                .forEach(c -> porId.put(c.getId(), c));
 
+        if (porId.isEmpty()) return;
+
+        Collection<Cita> expiradas = porId.values();
         EstadoCita cancelada = estadoCitaRepository.findByNombre("Cancelada")
                 .orElseThrow(() -> new ResourceNotFoundException("Estado 'Cancelada' no configurado."));
+
         for (Cita c : expiradas) {
             c.setEstadoCita(cancelada);
             citaRepository.save(c);

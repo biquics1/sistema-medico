@@ -1,9 +1,3 @@
-// ============================================================
-// ENTIDAD JPA: Cita -> tabla "cita"
-// Entidad central del sistema: representa una cita médica
-// (agendada, walk-in o de seguimiento) y su ciclo de vida
-// completo mediante estadoCita. CU-03, CU-05, CU-06, CU-08.
-// ============================================================
 package com.example.demo.modelo;
 
 import jakarta.persistence.*;
@@ -55,6 +49,9 @@ public class Cita {
     @Column(name = "es_walk_in", nullable = false)
     private boolean esWalkIn = false; // true si fue creada directamente en recepción (sin agendamiento previo)
 
+    @Column(name = "es_seguimiento", nullable = false)
+    private boolean esSeguimiento = false; // true si la creó el médico/admin como seguimiento (CU-11); no cuenta para el índice único paciente+especialidad
+
     @Column(name = "hora_llegada")
     private LocalDateTime horaLlegada; // Se registra cuando recepción confirma la llegada (CU-05)
 
@@ -62,25 +59,21 @@ public class Cita {
     private BigDecimal monto = new BigDecimal("150.00"); // Monto a cobrar por la consulta
 
     @Column(name = "expira_en")
-    private LocalDateTime expiraEn; // Fin del día de la cita (fechaHora). Si sigue "Pendiente de pago" al pasar
-    // la medianoche de ese día, el job la cancela automáticamente.
+    private LocalDateTime expiraEn; // Fin del día de la cita (fechaHora). Si sigue "Pendiente de pago" al pasar la medianoche de ese día, el job la cancela automáticamente.
 
     @Column(name = "sesion_pago_expira_en")
-    private LocalDateTime sesionPagoExpiraEn; // Ventana de 5 min para completar el pago EN LÍNEA (CU-04).
-    // Es independiente de expiraEn: si vence, NO cancela la cita,
-    // solo invalida esa sesión de pago con tarjeta.
+    private LocalDateTime sesionPagoExpiraEn; // Ventana de 5 min para completar el pago EN LÍNEA (CU-04). Es independiente de expiraEn: si vence, NO cancela la cita, solo invalida esa sesión de pago con tarjeta.
 
     @Column(name = "creado_en", nullable = false)
     private LocalDateTime creadoEn = LocalDateTime.now();
 
     @Column(name = "veces_llamado_enfermeria", nullable = false)
-    private Short vecesLlamadoEnfermeria = 0; // CU-07: cuantas veces se ha llamado al paciente (maximo 3: 1 inicial + 2 "Llamar de nuevo")
+    private Short vecesLlamadoEnfermeria = 0; // CU-07: cuantas veces se ha llamado al paciente (máximo 3: 1 inicial + 2 "Llamar de nuevo")
 
     @Column(name = "veces_llamado_medico", nullable = false)
-    private Short vecesLlamadoMedico = 0; // CU-08: cuantas veces se ha llamado al paciente a consulta (maximo 3: 1 inicial + 2 "Llamar de nuevo")
+    private Short vecesLlamadoMedico = 0; // CU-08: cuantas veces se ha llamado al paciente a consulta (máximo 3: 1 inicial + 2 "Llamar de nuevo")
 
-    // Bloqueo optimista (RNF-025): evita que caja y recepción
-    // pisen el mismo cambio de estado sin darse cuenta.
+    // Bloqueo optimista (RNF-025): evita que caja y recepción pisen el mismo cambio de estado sin darse cuenta.
     @Version
     private Integer version; // Incrementado automáticamente por JPA en cada UPDATE
 }

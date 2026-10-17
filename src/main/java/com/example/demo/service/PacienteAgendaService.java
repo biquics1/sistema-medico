@@ -23,11 +23,11 @@ public class PacienteAgendaService {
     private final EmailService emailService;
 
     // Estados desde los cuales el paciente puede reagendar por su cuenta
-    // (aun no llega a recepcion/consulta ni fue cancelada/atendida).
+    // (aún no llega a recepción/consulta ni fue cancelada/atendida).
     private static final List<String> ESTADOS_REAGENDABLES =
             List.of(EstadoCita.PENDIENTE_PAGO, EstadoCita.CONFIRMADA);
 
-    // Estados que "liberan" un horario del medico (igual que en CitaService).
+    // Estados que "liberan" un horario del médico (igual que en CitaService).
     private static final List<String> ESTADOS_LIBERAN_HORARIO =
             List.of(EstadoCita.CANCELADA, EstadoCita.NO_ASISTIO);
 
@@ -58,6 +58,7 @@ public class PacienteAgendaService {
         dto.setEstado(cita.getEstadoCita().getNombre());
         dto.setMotivoConsulta(cita.getMotivoConsulta());
         dto.setMonto(cita.getMonto());
+        dto.setEsSeguimiento(cita.isEsSeguimiento());
         dto.setRecetas(Collections.emptyList());
 
         consultaMedicaRepository.findByCita_Id(citaId).ifPresent(consulta -> {
@@ -79,16 +80,17 @@ public class PacienteAgendaService {
         return dto;
     }
 
-    // ---------------------------------------------------------------
+    // --------------------------------------------------------------
     // NUEVO -- Reagendar cita (portal del paciente): permite mover una
-    // cita propia a otra fecha/hora del MISMO medico ya asignado. No
-    // permite cambiar de medico, sucursal ni especialidad.
-    // Solo aplica mientras la cita este en 'Pendiente de pago' o
-    // 'Confirmada' (aun no inicio el proceso clinico presencial).
-    // ---------------------------------------------------------------
+    // cita propia a otra fecha/hora del MISMO médico ya asignado. No
+    // permite cambiar de médico, sucursal ni especialidad.
+    // Solo aplica mientras la cita esté en 'Pendiente de pago' o
+    // 'Confirmada' (aún no inició el proceso clínico presencial).
+    // --------------------------------------------------------------
     @Transactional
     public MiCitaResumenDTO reagendarCita(Integer citaId, Integer pacienteId, LocalDateTime nuevaFechaHora) {
         auditoriaContexto.aplicar();
+
         Cita cita = citaRepository.findByIdAndPaciente_Id(citaId, pacienteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cita no encontrada."));
 
@@ -97,17 +99,20 @@ public class PacienteAgendaService {
                     "Solo se pueden reagendar citas en estado 'Pendiente de pago' o 'Confirmada'. " +
                             "Esta cita se encuentra en estado '" + cita.getEstadoCita().getNombre() + "'.");
         }
+
         if (nuevaFechaHora == null || !nuevaFechaHora.isAfter(LocalDateTime.now())) {
             throw new ValidationException(
                     "Debe seleccionar una fecha y hora futuras. Las citas no pueden agendarse en fechas pasadas o presentes.");
         }
+
         if (nuevaFechaHora.equals(cita.getFechaHora())) {
             throw new ValidationException("Debe seleccionar una fecha u hora distinta a la actual de la cita.");
         }
 
-        // El horario nuevo debe estar libre para el MISMO medico (no se permite cambiar de medico).
+        // El horario nuevo debe estar libre para el MISMO médico (no se permite cambiar de médico).
         boolean horarioOcupado = citaRepository.existsByMedico_IdAndFechaHoraAndEstadoCita_NombreNotIn(
                 cita.getMedico().getId(), nuevaFechaHora, ESTADOS_LIBERAN_HORARIO);
+
         if (horarioOcupado) {
             throw new ValidationException(
                     "El horario seleccionado ya no está disponible para el médico asignado. Por favor, elija otro horario.");
@@ -115,6 +120,7 @@ public class PacienteAgendaService {
 
         LocalDateTime fechaAnterior = cita.getFechaHora();
         cita.setFechaHora(nuevaFechaHora);
+
         Cita actualizada;
         try {
             actualizada = citaRepository.save(cita);
@@ -122,7 +128,9 @@ public class PacienteAgendaService {
             throw new ValidationException(
                     "El horario seleccionado ya no está disponible. Por favor, intente nuevamente.");
         }
+
         emailService.enviarCitaReagendada(actualizada, fechaAnterior);
+
         return toResumenDTO(actualizada);
     }
 
@@ -190,6 +198,7 @@ public class PacienteAgendaService {
         dto.setSucursal(c.getSucursal().getNombre());
         dto.setFechaHora(c.getFechaHora());
         dto.setEstado(c.getEstadoCita().getNombre());
+        dto.setEsSeguimiento(c.isEsSeguimiento());
         return dto;
     }
 }
