@@ -234,6 +234,7 @@ public class EmailService {
         filas.add(fila("Hora", citaSeguimiento.getFechaHora().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")), true));
         filas.add(fila("Razón", seguimiento.getMotivoSeguimiento(), false));
         filas.add(fila("Estado", "Pendiente de pago (Q" + citaSeguimiento.getMonto() + ")", true));
+
         enviarPlantilla(citaSeguimiento.getPaciente().getCorreoElectronico(),
                 "Cita de Seguimiento Agendada - Hospital " + nombreHospital,
                 "Cita de seguimiento agendada",
@@ -311,6 +312,7 @@ public class EmailService {
     public void enviarReceta(RecetaMedica receta, List<DetalleRecetaMedica> detalles) {
         ConsultaMedica consulta = receta.getConsulta();
         Cita cita = consulta.getCita();
+
         StringBuilder filas = new StringBuilder();
         int i = 0;
         for (DetalleRecetaMedica d : detalles) {
@@ -323,6 +325,7 @@ public class EmailService {
                     .append(tdReceta(d.getIndicaciones() == null || d.getIndicaciones().isBlank() ? "-" : d.getIndicaciones(), false))
                     .append("</tr>");
         }
+
         String[] cabeceras = {"Medicamento", "Dosis", "Frecuencia", "Duración", "Indicaciones"};
         StringBuilder th = new StringBuilder();
         for (String c : cabeceras) {
@@ -330,6 +333,7 @@ public class EmailService {
                     .append(";color:#ffffff;font-size:11px;letter-spacing:1px;text-transform:uppercase\">")
                     .append(c).append("</th>");
         }
+
         String medico = esc(consulta.getMedico().getNombreCompleto());
         String html = "<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:" + BG + ";padding:24px 0\"><tr><td align=\"center\">"
                 + "<table role=\"presentation\" width=\"640\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:640px;max-width:100%;background:#ffffff;border:1px solid " + LINE + ";font-family:" + FUENTE + ";color:" + TEXTO + "\">"
@@ -353,13 +357,14 @@ public class EmailService {
                 + "<tr><td style=\"padding:14px 28px 4px\"><span style=\"font-family:" + FUENTE_TITULO + ";font-size:34px;font-style:italic;color:" + ACENTO + ";font-weight:bold\">&#8478;</span></td></tr>"
                 + "<tr><td style=\"padding:0 28px\"><table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"font-size:13px;border:1px solid " + LINE + ";border-collapse:collapse\"><tr>" + th + "</tr>" + filas + "</table></td></tr>"
                 // vigencia y firma
-                + "<tr><td style=\"padding:26px 28px 20px\"><table role=\"presentation\" width=\"100%\"> <tr>"
+                + "<tr><td style=\"padding:26px 28px 20px\"><table role=\"presentation\" width=\"100%\"><tr>"
                 + "<td style=\"font-size:12px;color:" + MUTED + ";line-height:1.6;vertical-align:bottom;width:60%\">V&aacute;lida por <b style=\"color:" + TEXTO + "\">7 d&iacute;as</b> desde su emisi&oacute;n.<br>Puede adquirir sus medicamentos en la farmacia de la cl&iacute;nica.</td>"
                 + "<td align=\"center\" style=\"vertical-align:bottom\"><div style=\"border-top:1px solid " + TEXTO + ";padding-top:6px;font-size:12px\"><b>" + medico + "</b><br><span style=\"color:" + MUTED + "\">Firma y sello</span></div></td>"
                 + "</tr></table></td></tr>"
                 // pie
                 + "<tr><td align=\"center\" style=\"background:" + BOX + ";border-top:1px solid " + LINE + ";padding:16px;font-size:11px;color:" + MUTED + ";line-height:1.6\">" + esc(piePagina()) + "</td></tr>"
                 + "</table></td></tr></table>";
+
         enviarHtml(cita.getPaciente().getCorreoElectronico(),
                 "Receta Médica #" + receta.getId() + " - Hospital " + nombreHospital, html);
     }
@@ -382,6 +387,7 @@ public class EmailService {
     // =====================================================================
     // PLANTILLA (Opción C · Elegante Sobrio)
     // =====================================================================
+
     private static final String BG = "#F4F3F0";
     private static final String HEAD = "#1B1B1F";
     private static final String ACENTO = "#B8924A";
@@ -444,10 +450,10 @@ public class EmailService {
                 + "<div style=\"font-size:12px;color:" + ACENTO + ";letter-spacing:2px;text-transform:uppercase;margin-top:4px\">Sistema Inform&aacute;tico Hospitalario</div></td></tr>"
                 + "<tr><td style=\"padding:32px\">"
                 + "<div style=\"font-family:" + FUENTE_TITULO + ";font-size:21px;font-weight:bold;color:" + HEAD + ";margin-bottom:6px\">" + esc(titulo) + "</div>"
-                + "<div style=\"font-size:15px;line-height:1.6;color:" + TEXTO + "\">" + introHtml + " </div>"
+                + "<div style=\"font-size:15px;line-height:1.6;color:" + TEXTO + "\">" + introHtml + "</div>"
                 + detalle
                 + (nota != null && !nota.isBlank()
-                ? "<div style=\"font-size:13px;color:" + MUTED + ";line-height:1.6\">" + esc(nota) + " </div>" : "")
+                ? "<div style=\"font-size:13px;color:" + MUTED + ";line-height:1.6\">" + esc(nota) + "</div>" : "")
                 + "</td></tr>"
                 + "<tr><td align=\"center\" style=\"background:" + BOX + ";border-top:1px solid " + LINE + ";padding:18px 32px;font-size:11px;line-height:1.6;color:" + MUTED + "\">"
                 + "Correo autom&aacute;tico del Sistema Inform&aacute;tico Hospitalario, no responda a este mensaje.<br>Consultas: " + esc(telefonoHospital) + "</td></tr>"

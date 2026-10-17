@@ -130,7 +130,7 @@ public class PacienteAgendaService {
         }
 
         emailService.enviarCitaReagendada(actualizada, fechaAnterior);
-
+        emailService.enviarCitaReagendada(actualizada, fechaAnterior);
         return toResumenDTO(actualizada);
     }
 

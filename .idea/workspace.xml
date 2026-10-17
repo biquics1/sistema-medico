@@ -4,76 +4,78 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d29d1273-0fb7-4b74-82de-84679c237ad6" name="Changes" comment="">
+    <list default="true" id="249c1ad7-bfb7-4328-b3ad-121c49eafb99" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/data_sources_history.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/PacienteDTOs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/PacienteDTOs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Cita.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CitaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EmailService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/SeguimientoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/SeguimientoService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/MedicoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/MedicoController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ConsultaResumenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ConsultaResumenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ExamenResultadoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ExamenResultadoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MedicamentoRecetaDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MedicamentoRecetaDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MiCitaDetalleDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MiCitaDetalleDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MiCitaResumenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MiCitaResumenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$OrdenLaboratorioResumenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$OrdenLaboratorioResumenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ReagendarCitaRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ReagendarCitaRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$RecetaResumenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$RecetaResumenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/modelo/Cita.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/modelo/Cita.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CitaRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CitaRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CitaService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EmailService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/SeguimientoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/SeguimientoService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/example/demo/DemoApplicationTests.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="210" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "biquics1"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/biquics1/sistema-medico.git",
+    "accountId": "fbe995b5-197e-4c7f-96f6-3cd8f1cad6b5"
+  }
+}]]></component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3,
+  "associatedIndex": 4,
   "fromUser": false
 }]]></component>
-  <component name="ProjectId" id="3KbXHflnac2JjoSLGxqsiCFBy0y" />
+  <component name="ProjectId" id="3KpunZIdKOLIwWPzmtKHpiyV4yT" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "JavaScript Debug.dashboard-paciente.html.executor": "Run",
-    "JavaScript Debug.usuarios.html.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.DemoApplication.executor": "Run",
     "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true"
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true"
   }
 }]]></component>
   <component name="RunManager">
@@ -88,22 +90,39 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
-        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.337" />
+        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.258" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.258" />
       </set>
     </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="d29d1273-0fb7-4b74-82de-84679c237ad6" name="Changes" comment="" />
-      <created>1791827167999</created>
+      <changelist id="249c1ad7-bfb7-4328-b3ad-121c49eafb99" name="Changes" comment="" />
+      <created>1792267009192</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1791827167999</updated>
+      <updated>1792267009192</updated>
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="NONE" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java</url>
+          <line>134</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="NONE" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java</url>
+          <line>134</line>
+          <placement>INTER_LINE</placement>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
