@@ -12,6 +12,16 @@ import java.util.List;
 // Medicamentos): búsqueda de recetas vigentes, carrito de despacho (recetados +
 // venta libre), confirmación de despacho con cobro integrado, y gestión de
 // catálogo/stock de medicamentos por el Administrador.
+// ============================================================================
+// CU-11 - DTOs (11_CU_Despacho_de_Medicamentos.docx). Este archivo NO valida: no usa @NotBlank/@Size.
+// Las validaciones (>>> VALIDACION) están en FarmaciaService.
+//   RecetaBusquedaDTO .... FB paso 2
+//   RecetaDetalleDTO / ItemRecetaDTO ... FB pasos 3-5 (vigencia, inventario, FA01)
+//   DespachoItemDTO / ConfirmarDespachoRequestDTO ... FB pasos 6-9 (FA02 sustitución)
+//   ItemDespachadoDTO / ConfirmarDespachoResponseDTO ... FB pasos 10-12 (alertas FA01/FA02/FA04)
+//   CancelarDespachoResponseDTO ... FA03
+//   MedicamentoCatalogoDTO, CrearMedicamentoRequestDTO, AjustarStock* ... NO son de CU-11 (venta libre / CU-14 / CU-15)
+// ============================================================================
 public class FarmaciaDTOs {
 
     // ---------------------------------------------------------------
@@ -80,14 +90,16 @@ public class FarmaciaDTOs {
     }
 
     // ---------------------------------------------------------------
-    // Despacho de una receta (pasos 7-13 del flujo básico).
+    // Despacho de una receta (pasos 6 a 12 del flujo básico).
     // El cobro físico se hace FUERA del sistema: no viaja método de pago.
     // ---------------------------------------------------------------
     // Un ítem de la receta que el personal desea despachar.
     @Data
     public static class DespachoItemDTO {
         private Integer medicamentoId;          // medicamento tal como fue recetado
+        // >>> VALIDACION (en service, paso 6): cantidad > 0.
         private Integer cantidad;
+        // >>> FA02 - si es true, razonSustitucion y medicamentoSustitutoId son obligatorios (se validan en el service).
         private boolean sustituido;             // FA02
         private Integer medicamentoSustitutoId; // obligatorio si sustituido = true
         private String razonSustitucion;        // obligatorio si sustituido = true
@@ -113,7 +125,7 @@ public class FarmaciaDTOs {
         private String nombreMedicamentoSustituto;
     }
 
-    // Resumen del despacho (pasos 12-13).
+    // Resumen del despacho (pasos 11-12).
     @Data
     @Builder
     @AllArgsConstructor

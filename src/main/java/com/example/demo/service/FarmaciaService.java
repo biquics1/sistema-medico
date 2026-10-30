@@ -14,6 +14,21 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+// ============================================================================
+// CU-11 DESPACHO DE MEDICAMENTOS - lógica y VALIDACIONES  (11_CU_Despacho_de_Medicamentos.docx; reglas RN-CU10-01/02/03)
+// Cómo buscar en este archivo (Ctrl+F / Ctrl+Shift+F):
+//   >>> INICIO FB     = donde empieza cada paso del Flujo Básico
+//   >>> INICIO FA     = donde empieza cada Flujo Alterno
+//   >>> VALIDACION    = donde se valida una regla de negocio (RN) o una precondición
+//
+// MAPA DE MÉTODOS
+//   FB paso 2       buscarRecetas()
+//   FB pasos 3-5    obtenerDetalleReceta()      (vigencia = paso 4, inventario = paso 5 / FA01)
+//   FB pasos 6-12   confirmarDespacho() -> despacharItems()   (FA01, FA02 y FA04 ocurren dentro de despacharItems)
+//   FA03            cancelarDespacho()          (solo arma el mensaje; NO guarda nada)
+// FUERA DE CU-11: buscarMedicamentos() (venta libre), crearMedicamento() (CU-14 catálogos) y ajustarStock() (CU-15 bitácora).
+// El cobro es externo al sistema (no se crea Pago): por eso este CU no usa PagoService.
+// ============================================================================
 @Service
 @RequiredArgsConstructor
 public class FarmaciaService {
@@ -35,16 +50,18 @@ public class FarmaciaService {
     private final DetalleDespachoMedicamentoRepository detalleDespachoMedicamentoRepository;
 
     // ---------------------------------------------------------------
-    // Búsqueda de recetas activas por ID de Receta o ID de Consulta
+    // >>> INICIO FB - PASO 2: búsqueda de recetas activas por ID de Receta o ID de Consulta
     // sucursalScope != null -> Administrador de Sede: solo recetas cuya cita
     // de origen pertenece a su sucursal (receta -> consulta -> cita -> sucursal).
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
     public List<RecetaBusquedaDTO> buscarRecetas(String tipo, String valor, Integer sucursalScope) {
+        // >>> VALIDACION (paso 2): debe ingresar un ID de Receta o de Consulta.
         if (valor == null || valor.isBlank()) {
             throw new ValidationException("Debe ingresar un ID de Receta o ID de Consulta para buscar.");
         }
 
+        // >>> VALIDACION (paso 2): el criterio debe ser numérico (si no -> 'El criterio de búsqueda debe ser un número.').
         Integer id;
         try {
             id = Integer.parseInt(valor.trim());
@@ -53,12 +70,14 @@ public class FarmaciaService {
         }
 
         List<RecetaMedica> recetas;
+        // >>> VALIDACION: solo se buscan recetas activas (estado = RECETA_ACTIVA = 1). tipo = CONSULTA busca por consulta; otro valor busca por receta.
         if ("CONSULTA".equalsIgnoreCase(tipo)) {
             recetas = recetaMedicaRepository.findByConsulta_IdAndEstado(id, RECETA_ACTIVA);
         } else {
             recetas = recetaMedicaRepository.findByIdAndEstado(id, RECETA_ACTIVA).map(List::of).orElseGet(List::of);
         }
 
+        // >>> VALIDACION (acceso): el Administrador de Sede solo ve recetas de citas de su sucursal.
         recetas = recetas.stream().filter(r -> recetaPerteneceASede(r, sucursalScope)).toList();
         return recetas.stream().map(this::toBusquedaDTO).toList();
     }
@@ -70,12 +89,13 @@ public class FarmaciaService {
     }
 
     // ---------------------------------------------------------------
-    // Detalle de la receta para armar el carrito (valida vigencia)
+    // >>> INICIO FB - PASOS 3, 4 y 5: detalle de la receta (valida vigencia = paso 4; inventario por ítem = paso 5 / FA01)
     // Administrador de Sede: idSucursal debe ser su propia sede (o se usa por defecto),
     // y la receta debe pertenecer a esa misma sede.
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
     public RecetaDetalleDTO obtenerDetalleReceta(Integer idReceta, Integer idSucursal, Integer sucursalScope) {
+        // >>> VALIDACION (acceso): un Administrador de Sede no puede consultar el inventario de otra sucursal.
         if (sucursalScope != null) {
             if (idSucursal != null && !sucursalScope.equals(idSucursal)) {
                 throw new ValidationException("No tiene permiso para consultar el inventario de otra sucursal.");
@@ -88,6 +108,7 @@ public class FarmaciaService {
         // `final` nueva, que es la que se captura dentro del lambda.
         final Integer idSucursalResuelto = (sucursalScope != null) ? sucursalScope : idSucursal;
 
+        // >>> VALIDACION: la receta debe estar activa y ser de la sede del usuario (si no -> 404).
         RecetaMedica receta = recetaMedicaRepository.findByIdAndEstado(idReceta, RECETA_ACTIVA)
                 .filter(r -> recetaPerteneceASede(r, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la receta indicada."));
@@ -95,6 +116,7 @@ public class FarmaciaService {
         long dias = ChronoUnit.DAYS.between(receta.getCreadoEn(), LocalDateTime.now());
         boolean vigente = dias <= DIAS_VIGENCIA_RECETA;
 
+        // >>> VALIDACION RN-CU10-01 (FB paso 4): receta con más de 7 días -> 'Receta Vencida...' (el front deshabilita 'Despachar' con vigente=false).
         if (!vigente) {
             throw new ValidationException(String.format(
                     "Receta Vencida. La receta #%d fue emitida hace %d días y ya no es válida para despacho.",
@@ -102,6 +124,7 @@ public class FarmaciaService {
         }
 
         List<DetalleRecetaMedica> detalles = detalleRecetaMedicaRepository.findByReceta_Id(idReceta);
+        // >>> VALIDACION: la receta debe tener al menos un medicamento.
         if (detalles.isEmpty()) {
             throw new ValidationException("La receta no tiene medicamentos registrados.");
         }
@@ -110,6 +133,7 @@ public class FarmaciaService {
                 .map(d -> toItemDTO(d, idSucursalResuelto))
                 .toList();
 
+        // >>> FB PASO 7 (vista previa): monto ESTIMADO = suma de precios unitarios (sin multiplicar por cantidades). El total real se calcula en despacharItems().
         BigDecimal montoEstimado = items.stream()
                 .map(ItemRecetaDTO::getPrecioUnitario)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -127,7 +151,7 @@ public class FarmaciaService {
     }
 
     // ---------------------------------------------------------------
-    // NUEVO: catálogo/búsqueda de medicamentos con stock (venta libre)
+    // >>> FUERA del CU-11 escrito (venta libre): catálogo/búsqueda de medicamentos con stock.
     // Administrador de Sede: solo puede consultar el stock de su propia sede.
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
@@ -151,7 +175,7 @@ public class FarmaciaService {
     }
 
     // ---------------------------------------------------------------
-    // Pasos 10-13 FB: confirmar el despacho de UNA receta.
+    // >>> INICIO FB - PASOS 9 a 12: confirmar el despacho de UNA receta (el CU escrito llega hasta el paso 12).
     // El cobro físico es externo al sistema: no se crea Pago ni se pide
     // método de pago. Se registra el despacho, sus ítems, el movimiento
     // de inventario y se devuelve el resumen.
@@ -160,6 +184,7 @@ public class FarmaciaService {
     public ConfirmarDespachoResponseDTO confirmarDespacho(Integer idReceta, ConfirmarDespachoRequestDTO request,
                                                           Integer idFarmaceutico, Integer sucursalScope) {
         auditoriaContexto.aplicar();
+        // >>> VALIDACION (paso 9 'Confirmar Despacho'): hay al menos un ítem, se indicó sucursal y el usuario tiene permiso sobre esa sucursal (3 ifs siguientes).
         if (request.getItems() == null || request.getItems().isEmpty()) {
             throw new ValidationException("Debe seleccionar al menos un medicamento a despachar.");
         }
@@ -174,18 +199,19 @@ public class FarmaciaService {
         Usuario farmaceutico = usuarioRepository.findById(idFarmaceutico)
                 .orElseThrow(() -> new ValidationException("Debe indicar el usuario de farmacia que realiza el despacho."));
 
-        // Paso 5 FB / RN-CU10-01: la receta debe estar activa, ser de la sede y estar vigente
+        // >>> VALIDACION (FB paso 4): la receta debe estar activa, ser de la sede y estar vigente (RN-CU10-01).
         RecetaMedica receta = recetaMedicaRepository.findByIdAndEstado(idReceta, RECETA_ACTIVA)
                 .filter(r -> recetaPerteneceASede(r, sucursalScope))
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró la receta #" + idReceta + "."));
         long dias = ChronoUnit.DAYS.between(receta.getCreadoEn(), LocalDateTime.now());
+        // >>> VALIDACION RN-CU10-01: receta con más de 7 días = 'Receta Vencida' -> no se despacha.
         if (dias > DIAS_VIGENCIA_RECETA) {
             throw new ValidationException(String.format(
                     "Receta Vencida. La receta #%d fue emitida hace %d días y ya no es válida para despacho.",
                     idReceta, dias));
         }
 
-        // Solo se pueden despachar medicamentos que realmente están en la receta
+        // >>> VALIDACION: solo se pueden despachar medicamentos que realmente están en la receta
         Set<Integer> medicamentosDeLaReceta = new HashSet<>();
         detalleRecetaMedicaRepository.findByReceta_Id(idReceta)
                 .forEach(d -> medicamentosDeLaReceta.add(d.getMedicamento().getId()));
@@ -195,6 +221,7 @@ public class FarmaciaService {
             }
         }
 
+        // >>> FB PASO 10: se crea el registro de despacho (luego los ítems y el inventario se registran en despacharItems).
         DespachoMedicamento despacho = new DespachoMedicamento();
         despacho.setReceta(receta);
         despacho.setFarmaceutico(farmaceutico);
@@ -205,9 +232,11 @@ public class FarmaciaService {
 
         List<ItemDespachadoDTO> itemsDespachados = new ArrayList<>();
         List<String> alertas = new ArrayList<>();
+        // >>> FB PASOS 6, 7 y 10: sustituciones (FA02), inventario (FA01), cálculo del total y descuento de stock -> ver despacharItems().
         BigDecimal montoTotal = despacharItems(request.getItems(), despachoGuardado, sucursal, farmaceutico,
                 itemsDespachados, alertas);
 
+        // >>> VALIDACION (FA01 extremo): si NINGÚN medicamento se pudo despachar por falta de inventario se aborta (la excepción hace rollback del despacho).
         if (itemsDespachados.isEmpty()) {
             throw new ValidationException(
                     "No fue posible despachar ningún medicamento. Verifique el inventario de la sucursal.");
@@ -216,7 +245,7 @@ public class FarmaciaService {
         despachoGuardado.setMontoTotal(montoTotal);
         despachoMedicamentoRepository.save(despachoGuardado);
 
-        // Paso 13 FB
+        // >>> FB PASOS 11 y 12: resumen + mensaje 'Despacho registrado exitosamente. [X] medicamento(s) despachado(s). Total: Q[monto].'
         String mensaje = String.format("Despacho registrado exitosamente. %d medicamento(s) despachado(s). Total: Q%.2f.",
                 itemsDespachados.size(), montoTotal);
 
@@ -229,13 +258,14 @@ public class FarmaciaService {
                 .build();
     }
 
-    // Despacha los ítems de la receta y devuelve el monto total.
+    // >>> INICIO FB - PASOS 6, 7 y 10 (ciclo por ítem): despacha los ítems de la receta y devuelve el monto total.
     private BigDecimal despacharItems(List<DespachoItemDTO> items, DespachoMedicamento despacho, Sucursal sucursal,
                                       Usuario farmaceutico, List<ItemDespachadoDTO> itemsDespachados, List<String> alertas) {
         BigDecimal montoTotal = BigDecimal.ZERO;
         Integer idReceta = despacho.getReceta().getId();
 
         for (DespachoItemDTO item : items) {
+            // >>> VALIDACION (paso 6): cada ítem debe tener cantidad > 0.
             if (item.getCantidad() == null || item.getCantidad() <= 0) {
                 throw new ValidationException("Cada medicamento a despachar debe tener cantidad mayor a 0.");
             }
@@ -243,14 +273,16 @@ public class FarmaciaService {
             Medicamento medicamentoBase = medicamentoRepository.findById(item.getMedicamentoId())
                     .orElseThrow(() -> new ResourceNotFoundException("Medicamento no encontrado en el catálogo."));
 
-            // FA02: sustitución de medicamento
+            // >>> INICIO FA02 - Sustitución de medicamento (casilla 'sustituido')
             Medicamento medicamentoAEntregar = medicamentoBase;
             Medicamento medicamentoSustituto = null;
             boolean sustituido = item.isSustituido();
             if (sustituido) {
+                // >>> VALIDACION FA02: la razón de sustitución es obligatoria.
                 if (item.getRazonSustitucion() == null || item.getRazonSustitucion().isBlank()) {
                     throw new ValidationException("Debe ingresar la razón de sustitución.");
                 }
+                // >>> VALIDACION FA02: debe indicar el medicamento alternativo.
                 if (item.getMedicamentoSustitutoId() == null) {
                     throw new ValidationException("Debe seleccionar el medicamento alternativo para la sustitución.");
                 }
@@ -259,7 +291,7 @@ public class FarmaciaService {
                 medicamentoAEntregar = medicamentoSustituto;
             }
 
-            // FA01: verificar inventario de la sucursal (se continúa con los disponibles)
+            // >>> INICIO FA01 - Medicamento sin inventario o con stock insuficiente: se agrega alerta y se continúa con los demás ítems (paso 6)
             Optional<InventarioMedicamento> inventarioOpt = inventarioMedicamentoRepository
                     .findForUpdate(medicamentoAEntregar.getId(), sucursal.getId());
 
@@ -269,6 +301,7 @@ public class FarmaciaService {
             }
 
             InventarioMedicamento inventario = inventarioOpt.get();
+            // >>> VALIDACION FA01: stock menor a lo solicitado -> alerta 'Stock bajo...' y se omite el ítem.
             if (inventario.getStockActual() < item.getCantidad()) {
                 // FA01 paso 2 (RN-CU10-03): stock bajo / insuficiente
                 alertas.add(String.format("%s: Stock bajo — disponible: %d (mínimo: %s). No alcanza para la cantidad solicitada (%d).",
@@ -283,7 +316,7 @@ public class FarmaciaService {
             inventario.setStockActual(stockNuevo);
             inventarioMedicamentoRepository.save(inventario);
 
-            // Movimiento de inventario automático (tipo Despacho)
+            // >>> FB PASO 10: descuento de inventario + movimiento automático tipo Despacho (6) en la bitácora (CU-15)
             MovimientoInventario movimiento = new MovimientoInventario();
             movimiento.setMedicamento(medicamentoAEntregar);
             movimiento.setSucursal(sucursal);
@@ -315,7 +348,7 @@ public class FarmaciaService {
                         medicamentoBase.getNombre(), medicamentoSustituto.getNombre()));
             }
 
-            // FA04: alerta de stock mínimo alcanzado tras el despacho
+            // >>> INICIO FA04 - Stock mínimo alcanzado tras el despacho (RN-CU10-03): alerta 'ALERTA: El medicamento ... nivel de stock mínimo'
             if (medicamentoAEntregar.getStockMinimo() != null && stockNuevo <= medicamentoAEntregar.getStockMinimo()) {
                 alertas.add(String.format(
                         "ALERTA: El medicamento %s ha alcanzado el nivel de stock mínimo (%d unidades restantes). Se recomienda generar orden de reabastecimiento.",
@@ -336,7 +369,8 @@ public class FarmaciaService {
     }
 
     // ---------------------------------------------------------------
-    // FA03: el paciente no desea adquirir los medicamentos de una receta
+    // >>> INICIO FA03 - El paciente no desea adquirir los medicamentos de una receta.
+    // NOTA: solo valida que la receta exista/sea de la sede y arma el mensaje (readOnly): NO guarda nada, aunque el CU diga 'el sistema registra'.
     // ---------------------------------------------------------------
     @Transactional(readOnly = true)
     public CancelarDespachoResponseDTO cancelarDespacho(Integer idReceta, Integer sucursalScope) {
@@ -353,11 +387,12 @@ public class FarmaciaService {
     }
 
     // ---------------------------------------------------------------
-    // NUEVO: alta de medicamentos al catálogo (Administrador), CU-15 (RN-CU15-01/02)
+    // >>> FUERA de CU-11: pertenece a CU-14 'Mantenimiento de Catálogos' (RN-CU15-01 / RN-CU15-02).
     // ---------------------------------------------------------------
     @Transactional
     public MedicamentoCatalogoDTO crearMedicamento(CrearMedicamentoRequestDTO request) {
         auditoriaContexto.aplicar();
+        // >>> VALIDACION RN-CU15-01/02: nombre, descripción, precio > 0, unidad, stock mínimo >= 0 y nombre único (ifs siguientes).
         if (request.getNombre() == null || request.getNombre().isBlank()) {
             throw new ValidationException("El nombre es obligatorio.");
         }
@@ -391,11 +426,12 @@ public class FarmaciaService {
     }
 
     // ---------------------------------------------------------------
-    // NUEVO: ajuste/carga de stock (Administrador), mismo patrón que CU-13 Bitácora
+    // >>> FUERA de CU-11: versión simplificada del registro de movimientos de CU-15 (Bitácora); ver MovimientoInventarioService.
     // ---------------------------------------------------------------
     @Transactional
     public AjustarStockResponseDTO ajustarStock(AjustarStockRequestDTO request, Integer idUsuario, Integer sucursalScope) {
         auditoriaContexto.aplicar();
+        // >>> VALIDACION (reglas RN-CU13-01/02 de la Bitácora): medicamento, sucursal, permiso de sede, cantidad > 0, tipo válido, costo (COMPRA) o motivo (ajustes).
         if (request.getMedicamentoId() == null) {
             throw new ValidationException("Debe seleccionar un medicamento.");
         }

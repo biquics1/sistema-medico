@@ -9,11 +9,18 @@ import java.time.LocalDateTime;
 // Contenedor de DTOs de la Bitácora de Movimientos de Inventario (CU-13):
 // registro manual de movimientos (Compra, Devolución, Venta, Reclamo, Ajuste+/-)
 // y su respuesta con el detalle ya resuelto para la tabla.
+// ============================================================================
+// CU-15 - DTOs (15_CU_Bitacora_Movimientos_Inventario.docx; en el código: CU-13).
+//   CreateDTO ..... FB paso 4-6 (formulario) y FA03 nivel 1: validación por anotaciones (Bean Validation)
+//   ResponseDTO ... FB paso 2 (columnas de la tabla) y paso 9 (respuesta del registro)
+// ============================================================================
 public class MovimientoInventarioDTO {
 
     // Body para registrar un movimiento manual (el tipo 6=Despacho es automático y no se expone aquí).
     @Data
     public static class CreateDTO {
+        // >>> VALIDACION FA03 (nivel 1, la dispara @Valid en el controller): medicamento, sucursal, tipo (0 a 5) y cantidad positiva.
+        // Si falla, GlobalExceptionHandler responde 400 con estos mensajes. Las reglas de costo y motivo se validan en el service (validarCampos).
         @NotNull(message = "Debe seleccionar un medicamento.")
         private Integer medicamentoId;
 
@@ -31,6 +38,7 @@ public class MovimientoInventarioDTO {
         private Integer cantidad;
 
         // Obligatorio solo para Compra (0), > 0, máx 2 decimales
+        // >>> VALIDACION (en service, FA03): costo unitario obligatorio solo para Compra, > 0 y máx. 2 decimales (RN-CU13-01).
         private BigDecimal costoUnitario;
 
         private String numeroReferencia;

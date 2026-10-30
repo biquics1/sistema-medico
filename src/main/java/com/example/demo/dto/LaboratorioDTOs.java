@@ -11,6 +11,15 @@ import java.util.List;
 // Contenedor de todos los DTOs del módulo de Gestión de Laboratorio (CU-09):
 // listado y detalle de órdenes, exámenes dentro de una orden, y registro/publicación
 // de resultados (publicación individual por examen, no masiva).
+// ============================================================================
+// CU-09 - DTOs (9_CU_Gestion_de_Laboratorio.docx). Este archivo NO valida: no usa @NotBlank/@Size.
+// Las validaciones (>>> VALIDACION) están en LaboratorioService.
+//   OrdenListaDTO ........ FB paso 1 (fila de la tabla; esExterna = FA01)
+//   OrdenDetalleDTO ...... FB pasos 2-3
+//   ExamenOrdenDTO ....... exámenes de la orden, con resultado, fueraDeRango (FA02) y publicado
+//   ResultadoRequestDTO .. FB pasos 9-10
+//   PublicarResponseDTO .. FB pasos 11-14 (ordenCompletada = paso 14)
+// ============================================================================
 public class LaboratorioDTOs {
 
     // Paso 1 FB: fila de la tabla "Órdenes de Laboratorio"
@@ -70,8 +79,10 @@ public class LaboratorioDTOs {
     // Paso 9-10 FB: registrar resultado de un examen (RN-CU09-02)
     @Data
     public static class ResultadoRequestDTO {
+        // >>> VALIDACION (en service): valorResultado es obligatorio; unidad, notasResultado y fechaResultado son opcionales. RN-CU09-02.
         private String valorResultado;
         private String unidad;
+        // >>> FA02: casilla 'Fuera de Rango' marcada manualmente por el laboratorista.
         private boolean fueraDeRango;
         private String notasResultado;
         private LocalDateTime fechaResultado; // opcional; si es null se usa now()

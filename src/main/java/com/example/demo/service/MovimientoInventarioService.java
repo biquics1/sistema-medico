@@ -21,6 +21,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// ============================================================================
+// CU-15 BITÁCORA DE MOVIMIENTOS DE INVENTARIO - lógica y VALIDACIONES  (15_CU_Bitacora_Movimientos_Inventario.docx;
+// en el código: CU-13, RN-CU13-01 / RN-CU13-02 / RNF-025)
+// Cómo buscar en este archivo (Ctrl+F / Ctrl+Shift+F):
+//   >>> INICIO FB     = donde empieza cada paso del Flujo Básico
+//   >>> INICIO FA     = donde empieza cada Flujo Alterno
+//   >>> VALIDACION    = donde se valida una regla de negocio (RN) o una precondición
+//
+// MAPA DE MÉTODOS
+//   FB paso 2        listar()  y  cambiarEstado()  (acción 'Desactivar/Activar')
+//   FB pasos 6-9     registrar()   (FA02 stock insuficiente se valida dentro)
+//   FA03             validarCampos()  (+ anotaciones de MovimientoInventarioDTO.CreateDTO)
+//   FA01 / FA04 / FA05  NO están aquí: son del front (tabla vacía, cancelar, alerta preventiva de stock mínimo)
+// Tipos: 0 Compra, 1 Devolución, 2 Venta, 3 Reclamo, 4 Ajuste+, 5 Ajuste-, 6 Despacho (automático, lo crea FarmaciaService / CU-11).
+// ============================================================================
 @Service
 @RequiredArgsConstructor
 public class MovimientoInventarioService {
@@ -36,6 +51,8 @@ public class MovimientoInventarioService {
             "Compra", "Devolución", "Venta", "Reclamo", "Ajuste+", "Ajuste-", "Despacho"
     };
 
+    // >>> INICIO FB - PASO 2: listado paginado de movimientos (FA01: si no hay datos devuelve página vacía; el mensaje lo pone el front).
+    // >>> VALIDACION (acceso): sucursalIdEs(sucursalScope) limita al Admin de Sede / Farmacéutico a su sucursal; null = Admin General.
     public PageResponseDTO<MovimientoInventarioDTO.ResponseDTO> listar(Pageable pageable, Integer sucursalScope) {
         Page<MovimientoInventario> page = repository.findAll(
                 MovimientoInventarioSpecifications.sucursalIdEs(sucursalScope), pageable);
@@ -48,15 +65,19 @@ public class MovimientoInventarioService {
                 page.getTotalElements(), page.getTotalPages());
     }
 
+    // >>> INICIO FB - PASOS 6 a 9: 'Registrar Movimiento' (pasos 7 y 8: validar, registrar y actualizar el stock).
     @Transactional
     public MovimientoInventarioDTO.ResponseDTO registrar(MovimientoInventarioDTO.CreateDTO dto, Integer usuarioIdActual,
                                                          Integer sucursalScope) {
         auditoriaContexto.aplicar();
+        // >>> VALIDACION FA03 (FB paso 7): reglas de campos de RN-CU13-01 -> ver validarCampos() al final del archivo.
         validarCampos(dto);
+        // >>> VALIDACION (acceso): no se registran movimientos en otra sucursal.
         if (sucursalScope != null && !sucursalScope.equals(dto.getSucursalId())) {
             throw new ValidationException("No tiene permiso para registrar movimientos en otra sucursal.");
         }
 
+        // >>> VALIDACION: medicamento, sucursal y usuario deben existir (3 búsquedas siguientes).
         Medicamento medicamento = medicamentoRepository.findById(dto.getMedicamentoId())
                 .orElseThrow(() -> new ValidationException("Debe seleccionar un medicamento."));
         Sucursal sucursal = sucursalRepository.findById(dto.getSucursalId())
@@ -64,6 +85,7 @@ public class MovimientoInventarioService {
         Usuario usuario = usuarioRepository.findById(usuarioIdActual)
                 .orElseThrow(() -> new ValidationException("Usuario no válido."));
 
+        // >>> FB PASO 8 (preparación): busca el inventario medicamento+sucursal; si no existe lo crea con stock 0.
         InventarioMedicamento inventario = inventarioRepository
                 .findByMedicamentoIdAndSucursalId(dto.getMedicamentoId(), dto.getSucursalId())
                 .orElseGet(() -> {
@@ -74,12 +96,14 @@ public class MovimientoInventarioService {
                     return inventarioRepository.save(nuevo);
                 });
 
+        // >>> FB PASO 8: calcula el stock nuevo: las salidas (Venta, Reclamo, Ajuste-) restan; las entradas (Compra, Devolución, Ajuste+) suman.
         int stockAnterior = inventario.getStockActual();
         int stockNuevo;
         boolean esSalida = esTipoSalida(dto.getTipoMovimiento());
 
         if (esSalida) {
-            // RN-CU13-02: Venta, Reclamo y Ajuste- no pueden exceder el stock actual
+            // >>> INICIO FA02 - Salida (Venta, Reclamo o Ajuste-) con stock insuficiente.
+            // >>> VALIDACION RN-CU13-02: la cantidad no puede exceder el stock actual -> 'Stock insuficiente. Stock actual: ...'
             if (dto.getCantidad() > stockAnterior) {
                 throw new ValidationException("Stock insuficiente. Stock actual: " + stockAnterior
                         + ". No se puede registrar una salida de " + dto.getCantidad() + " unidades.");
@@ -89,6 +113,8 @@ public class MovimientoInventarioService {
             stockNuevo = stockAnterior + dto.getCantidad();
         }
 
+        // >>> FB PASO 8: se actualiza el stock en inventario_medicamento. RNF-025 / RN-CU13-02: control de concurrencia optimista (campo version);
+        // si otro proceso lo modificó -> 'El inventario fue modificado por otra operación. Intente nuevamente.'
         inventario.setStockActual(stockNuevo);
         try {
             inventarioRepository.save(inventario);
@@ -96,6 +122,7 @@ public class MovimientoInventarioService {
             throw new ValidationException("El inventario fue modificado por otra operación. Intente nuevamente.");
         }
 
+        // >>> FB PASO 7: se registra el movimiento en la bitácora con stock anterior/nuevo, usuario (del JWT), activo=true y fecha (creadoEn).
         MovimientoInventario movimiento = new MovimientoInventario();
         movimiento.setMedicamento(medicamento);
         movimiento.setSucursal(sucursal);
@@ -109,9 +136,12 @@ public class MovimientoInventarioService {
         movimiento.setUsuario(usuario);
         movimiento.setActivo(true);
 
+        // >>> FB PASO 9: devuelve el movimiento creado (HTTP 201). El texto 'Movimiento registrado exitosamente. Medicamento: ...' del CU NO se arma aquí.
+        // FA05 (alerta preventiva de stock mínimo): no existe en backend.
         return toResponseDTO(repository.save(movimiento));
     }
 
+    // >>> ACCIÓN POR FILA del FB PASO 2 ('Desactivar/Activar'): cambia solo el flag 'activo'; NO revierte el stock.
     @Transactional
     public MovimientoInventarioDTO.ResponseDTO cambiarEstado(Integer id, boolean activo, Integer sucursalScope) {
         auditoriaContexto.aplicar();
@@ -124,6 +154,9 @@ public class MovimientoInventarioService {
         return toResponseDTO(repository.save(movimiento));
     }
 
+    // >>> INICIO FA03 - Validación de campos fallida. VALIDACION RN-CU13-01, orden de ejecución:
+    //   1 medicamento, 2 sucursal, 3 tipo, 4 tipo Despacho prohibido, 5 cantidad, 6 costo unitario (solo Compra), 7 motivo según tipo.
+    //   Complementa las anotaciones de MovimientoInventarioDTO.CreateDTO (nivel 1).
     private void validarCampos(MovimientoInventarioDTO.CreateDTO dto) {
         if (dto.getMedicamentoId() == null) {
             throw new ValidationException("Debe seleccionar un medicamento.");
@@ -134,16 +167,18 @@ public class MovimientoInventarioService {
         if (dto.getTipoMovimiento() == null) {
             throw new ValidationException("Debe seleccionar el tipo de movimiento.");
         }
+        // >>> VALIDACION RN-CU13-01: el tipo 6 (Despacho) es automático (lo genera CU-11) y no se acepta en creación manual.
         if (dto.getTipoMovimiento() == MovimientoInventario.DESPACHO) {
             throw new ValidationException("El tipo Despacho es generado automáticamente por el módulo de farmacia.");
         }
+        // >>> VALIDACION RN-CU13-01: la cantidad debe ser un entero positivo.
         if (dto.getCantidad() == null || dto.getCantidad() <= 0) {
             throw new ValidationException("La cantidad debe ser un número entero positivo.");
         }
 
         short tipo = dto.getTipoMovimiento();
 
-        // Costo unitario obligatorio solo para Compra
+        // >>> VALIDACION RN-CU13-01: costo unitario obligatorio solo para Compra (> 0 y máximo 2 decimales).
         if (tipo == MovimientoInventario.COMPRA) {
             if (dto.getCostoUnitario() == null) {
                 throw new ValidationException("El costo unitario es obligatorio para compras.");
@@ -156,7 +191,8 @@ public class MovimientoInventarioService {
             }
         }
 
-        // Motivo/Notas dinámico según tipo
+        // >>> VALIDACION RN-CU13-01: Motivo/Notas dinámico según tipo: obligatorio (10 a 500 caracteres) en Devolución, Reclamo, Ajuste+ y Ajuste-;
+        // opcional en Compra; no aplica en Venta.
         boolean motivoObligatorio = tipo == MovimientoInventario.DEVOLUCION
                 || tipo == MovimientoInventario.RECLAMO
                 || tipo == MovimientoInventario.AJUSTE_POSITIVO
@@ -170,6 +206,7 @@ public class MovimientoInventarioService {
         }
     }
 
+    // >>> Usado por FA02 / FB paso 8: tipos de salida = Venta (2), Reclamo (3) y Ajuste- (5).
     private boolean esTipoSalida(short tipo) {
         return tipo == MovimientoInventario.VENTA
                 || tipo == MovimientoInventario.RECLAMO

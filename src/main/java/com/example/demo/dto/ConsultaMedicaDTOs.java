@@ -11,6 +11,18 @@ import java.util.List;
 // Contenedor de todos los DTOs del módulo de Consulta Médica (CU-08): panel del
 // médico agrupado por estado, formulario de consulta, catálogo CIE-10, generación
 // de órdenes de laboratorio y recetas, y acciones de cierre de la cita.
+// ============================================================================
+// CU-08 - DTOs (8_CU_Consulta_Medica.docx). Este archivo NO valida: no usa @NotBlank/@Size.
+// Todas las validaciones (>>> VALIDACION) están en ConsultaMedicaService.
+//   PanelMedicoDTO / CitaPanelDTO ........ FB paso 1
+//   IniciarConsultaResponseDTO ........... FB paso 2
+//   ConsultaContextoDTO .................. FB pasos 3-4 (formulario precargado)
+//   GuardarConsulta Request/Response ..... FB pasos 5-10 (y FA05)
+//   Cie10DTO ............................. FB paso 7
+//   Examen*/OrdenLaboratorio* ............ FA01
+//   Medicamento*/Receta* ................. FA04
+//   AccionCitaResponseDTO ................ FA06 y FB pasos 11-12
+// ============================================================================
 public class ConsultaMedicaDTOs {
 
     // Tarjeta de cita en el panel del médico
@@ -64,7 +76,14 @@ public class ConsultaMedicaDTOs {
         private boolean finalizada;
     }
 
-    // Body para guardar la consulta (borrador o cierre)
+    // Body para guardar la consulta (borrador o cierre) - FB pasos 5 a 9:
+    //   motivoVisita .... paso 5  - obligatorio siempre (RN-CU08-02)
+    //   hallazgosClinicos paso 6  - obligatorio al finalizar (RN-CU08-02)
+    //   cie10Id ......... paso 7  - opcional; si viene debe existir en el catálogo
+    //   diagnostico ..... paso 8  - obligatorio al finalizar, 10-5000 caracteres (RN-CU08-01, FA05)
+    //   planTratamiento . paso 8  - obligatorio al finalizar (RN-CU08-02)
+    //   notasAdicionales  opcional
+    //   estadoConsulta .. paso 9  - "EN_CURSO" | "FINALIZADA" (FINALIZADA activa las validaciones de cierre)
     @Data
     public static class GuardarConsultaRequestDTO {
         private String motivoVisita;
@@ -109,6 +128,7 @@ public class ConsultaMedicaDTOs {
 
     @Data
     public static class OrdenLaboratorioRequestDTO {
+        // >>> FA01: obligatorio con al menos 1 examen (se valida en el service). esExterna = casilla 'Orden Externa' (CU-09 FA01); notas = observaciones del médico.
         private List<Integer> examenIds;
         private boolean esExterna;
         private String notas;
@@ -137,6 +157,7 @@ public class ConsultaMedicaDTOs {
 
     @Data
     public static class DetalleRecetaRequestDTO {
+        // >>> RN-CU08-03 (se valida en el service): medicamentoId, dosis, frecuencia y duracion obligatorios; indicaciones opcional.
         private Integer medicamentoId;
         private String dosis;
         private String frecuencia;
@@ -146,6 +167,7 @@ public class ConsultaMedicaDTOs {
 
     @Data
     public static class RecetaRequestDTO {
+        // >>> FA04: al menos 1 detalle (se valida en el service).
         private List<DetalleRecetaRequestDTO> detalles;
     }
 
