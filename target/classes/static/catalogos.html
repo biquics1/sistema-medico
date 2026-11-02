@@ -123,7 +123,7 @@
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
                     <h2 class="text-lg font-bold text-brand-black">Mantenimiento de Catálogos del Sistema</h2>
-                    <button onclick="abrirModalCatalogo()"
+                    <button id="btnCrearCatalogo" onclick="abrirModalCatalogo()"
                             class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
                         + Crear
                     </button>
@@ -264,6 +264,29 @@
                 {name: 'laboratorioId', label: 'Laboratorio', type: 'select', optionsSource: 'laboratorios', required: true}
             ]
         },
+        tarjeta_marca: {
+            label: 'Marcas de Tarjeta', singular: 'Marca de Tarjeta', adminPath: 'tarjetas/admin', basePath: 'tarjetas',
+            columns: [
+                {field: 'nombre', label: 'Marca'}, {field: 'descripcion', label: 'Descripción'},
+                {field: 'totalUsos', label: 'Pagos realizados'}
+            ],
+            campos: [
+                {name: 'nombre', label: 'Nombre (no editable una vez creado)', type: 'text', maxlength: 30, required: true},
+                {name: 'descripcion', label: 'Descripción (opcional)', type: 'text', maxlength: 200},
+                {name: 'patron', label: 'Patrón del número (regex)', type: 'text', maxlength: 200, required: true}
+            ]
+        },
+        tarjeta_registrada: {
+            label: 'Tarjetas Usadas', singular: 'Tarjeta', soloLectura: true, sort: 'ultimoUso,desc',
+            adminPath: 'tarjetas/registradas', basePath: 'tarjetas',
+            columns: [
+                {field: 'marca', label: 'Marca'}, {field: 'tarjeta', label: 'Tarjeta'},
+                {field: 'nombreTitular', label: 'Titular'}, {field: 'vecesUsada', label: 'Veces usada'},
+                {field: 'primerUso', label: 'Primer uso', formatter: v => v ? new Date(v).toLocaleString('es-GT') : '-'},
+                {field: 'ultimoUso', label: 'Último uso', formatter: v => v ? new Date(v).toLocaleString('es-GT') : '-'}
+            ],
+            campos: []
+        },
         rol: {
             label: 'Roles', adminPath: 'roles/admin', basePath: 'roles',
             columns: [{field: 'nombre', label: 'Nombre'}, {field: 'descripcion', label: 'Descripción'}],
@@ -319,7 +342,8 @@
         document.getElementById('catalogoTheadRow').innerHTML =
             `<th class="px-3 py-2">ID</th>` +
             cfg.columns.map(c => `<th class="px-3 py-2">${c.label}</th>`).join('') +
-            `<th class="px-3 py-2">Estado</th><th class="px-3 py-2">Acciones</th>`;
+            (cfg.soloLectura ? '' : `<th class="px-3 py-2">Estado</th><th class="px-3 py-2">Acciones</th>`);
+        document.getElementById('btnCrearCatalogo').classList.toggle('hidden', !!cfg.soloLectura);
     }
 
     function debounceFiltrarCatalogo() {
@@ -335,7 +359,7 @@
         const cfg = CATALOGOS_CONFIG[catalogoActivo];
         try {
             const query = new URLSearchParams({
-                page: catalogoPagina, size: catalogoTamano, sort: 'nombre'
+                page: catalogoPagina, size: catalogoTamano, sort: cfg.sort || 'nombre'
             });
             if (catalogoFiltro) query.set('filtro', catalogoFiltro);
 
@@ -353,14 +377,14 @@
         const tbody = document.getElementById('catalogoTbody');
 
         if (catalogoRegistrosCache.length === 0) {
-            const colspan = cfg.columns.length + 3;
+            const colspan = cfg.columns.length + (cfg.soloLectura ? 1 : 3);
             tbody.innerHTML = `<tr><td colspan="${colspan}" class="text-center text-gray-400 py-4">No se encontraron resultados.</td></tr>`;
         } else {
             tbody.innerHTML = catalogoRegistrosCache.map(r => `
                 <tr class="border-t border-gray-100">
                     <td class="px-3 py-2">${r.id}</td>
                     ${cfg.columns.map(c => `<td class="px-3 py-2">${c.formatter ? c.formatter(r[c.field]) : (r[c.field] ?? '-')}</td>`).join('')}
-                    <td class="px-3 py-2">
+                    ${cfg.soloLectura ? '' : `<td class="px-3 py-2">
                         <span class="px-2 py-1 rounded-full text-xs font-bold ${r.estado === 1 ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}">
                             ${r.estado === 1 ? 'Activo' : 'Inactivo'}
                         </span>
@@ -368,7 +392,7 @@
                     <td class="px-3 py-2 whitespace-nowrap">
                         <button onclick="abrirModalCatalogo(${r.id})" class="text-blue-600 hover:underline mr-2">Editar</button>
                         <button onclick="abrirModalEliminarCatalogo(${r.id}, '${(r.nombre || '').replace(/'/g, "\\'")}')" class="text-orange-600 hover:underline">Eliminar</button>
-                    </td>
+                    </td>`}
                 </tr>
             `).join('');
         }
@@ -428,7 +452,7 @@
         const cfg = CATALOGOS_CONFIG[catalogoActivo];
         catalogoEditandoId = id || null;
         document.getElementById('mensajesModalCatalogo').innerHTML = '';
-        document.getElementById('modalCatalogoTitulo').innerText = id ? `Editar ${cfg.label.slice(0, -1)}` : `Nuevo Registro — ${cfg.label}`;
+        document.getElementById('modalCatalogoTitulo').innerText = id ? `Editar ${cfg.singular || cfg.label.slice(0, -1)}` : `Nuevo Registro — ${cfg.label}`;
         document.getElementById('btnGuardarCatalogo').innerText = id ? 'Actualizar' : 'Crear';
 
         const registro = id ? catalogoRegistrosCache.find(r => r.id === id) : {};

@@ -97,6 +97,20 @@
                 </div>
             </div>
 
+            <!-- Historial de citas del paciente (CU-07) -->
+            <div id="historialContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <div class="flex justify-between items-start border-b border-gray-200 pb-3 mb-4">
+                    <div>
+                        <h2 id="historialTitulo" class="text-lg font-bold text-brand-black"></h2>
+                        <p class="text-sm text-gray-500">Citas anteriores del paciente (máx. 20, las más recientes primero).</p>
+                    </div>
+                    <button onclick="cerrarHistorial()" class="text-gray-400 hover:text-gray-700" title="Cerrar">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="historialLista" class="space-y-3"></div>
+            </div>
+
             <!-- Formulario de Captura -->
             <div id="formSignosContainer" class="hidden bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-3xl">
                 <div class="border-b border-gray-200 pb-3 mb-4">
@@ -210,10 +224,16 @@
                     <p class="font-semibold">${c.nombrePaciente} ${c.esEmergencia ? '<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">EMERGENCIA</span>' : ''}</p>
                     <p class="text-sm text-gray-600">No. Cita: ${c.id} · ${c.especialidad}</p>
                 </div>
-                <button onclick="llamarPaciente(${c.id})"
-                        class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-2 rounded-lg text-sm flex items-center gap-1">
-                    <i class="fa-solid fa-bullhorn"></i> Llamar y Tomar Signos
-                </button>
+                <div class="flex flex-wrap gap-2 justify-end">
+                    <button onclick="verHistorial(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}')"
+                            class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-2 rounded-lg text-sm hover:bg-gray-50">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
+                    </button>
+                    <button onclick="llamarPaciente(${c.id})"
+                            class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-3 py-2 rounded-lg text-sm flex items-center gap-1">
+                        <i class="fa-solid fa-bullhorn"></i> Llamar y Tomar Signos
+                    </button>
+                </div>
             </div>`).join('') : '<p class="text-sm text-gray-400">No hay pacientes en espera.</p>';
 
         listaEnProceso.innerHTML = enProceso.length ? enProceso.map(c => {
@@ -227,6 +247,10 @@
                     <p class="text-xs text-gray-500 mt-0.5">Llamado ${llamado} de 3</p>
                 </div>
                 <div class="flex flex-wrap gap-2 justify-end">
+                    <button onclick="verHistorial(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}')"
+                            class="bg-white border border-brand-black text-brand-black font-semibold px-3 py-2 rounded-lg text-sm hover:bg-gray-50">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Historial
+                    </button>
                     <button onclick="abrirFormSignos(${c.id}, '${c.nombrePaciente.replace(/'/g, "\\'")}', ${c.esEmergencia})"
                             class="bg-brand-black hover:bg-brand-dark text-white font-semibold px-3 py-2 rounded-lg text-sm">
                         Registrar Signos Vitales
@@ -242,6 +266,64 @@
                 </div>
             </div>`;
         }).join('') : '<p class="text-sm text-gray-400">No hay pacientes en toma de signos.</p>';
+    }
+
+    // ===== Historial de citas del paciente =====
+    function esc(v) {
+        return String(v ?? '').replace(/[&<>"']/g, ch =>
+            ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[ch]));
+    }
+
+    function cerrarHistorial() {
+        document.getElementById('historialContainer').classList.add('hidden');
+    }
+
+    async function verHistorial(idCita, nombrePaciente) {
+        const cont = document.getElementById('historialContainer');
+        document.getElementById('historialTitulo').innerText = `Historial de citas: ${nombrePaciente}`;
+        document.getElementById('historialLista').innerHTML = '<p class="text-sm text-gray-400">Cargando...</p>';
+        cont.classList.remove('hidden');
+        cont.scrollIntoView({ behavior: 'smooth' });
+        try {
+            const citas = await apiFetch(`/api/enfermeria/citas/${idCita}/historial-paciente`);
+            document.getElementById('historialLista').innerHTML = citas.length
+                ? citas.map(renderHistorialCita).join('')
+                : '<p class="text-sm text-gray-400">El paciente no tiene citas anteriores.</p>';
+        } catch (e) {
+            document.getElementById('historialLista').innerHTML =
+                `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200">${esc(e.message)}</div>`;
+        }
+    }
+
+    function renderHistorialCita(c) {
+        const fecha = new Date(c.fechaHora).toLocaleString('es-GT', { dateStyle: 'medium', timeStyle: 'short' });
+        const sv = c.signosVitales;
+        const signos = sv
+            ? `<div class="mt-2 grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+                   <div class="bg-gray-50 rounded p-2"><span class="text-gray-500">Presión</span><br><strong>${sv.presionSistolica}/${sv.presionDiastolica} mmHg</strong></div>
+                   <div class="bg-gray-50 rounded p-2"><span class="text-gray-500">Temp.</span><br><strong>${sv.temperatura} °C</strong></div>
+                   <div class="bg-gray-50 rounded p-2"><span class="text-gray-500">FC</span><br><strong>${sv.frecuenciaCardiaca} lpm</strong></div>
+                   <div class="bg-gray-50 rounded p-2"><span class="text-gray-500">Peso</span><br><strong>${sv.peso} kg</strong></div>
+                   <div class="bg-gray-50 rounded p-2"><span class="text-gray-500">Talla</span><br><strong>${sv.talla} cm</strong></div>
+               </div>
+               <p class="text-xs text-gray-400 mt-1">Registrado por ${esc(sv.registradoPor)}</p>`
+            : '<p class="text-xs text-gray-400 mt-2">Sin signos vitales registrados.</p>';
+        return `
+            <div class="border border-gray-200 rounded-lg p-3">
+                <div class="flex justify-between items-start gap-2">
+                    <div>
+                        <p class="font-semibold">Cita #${c.id} · ${esc(c.especialidad)}
+                            ${c.esEmergencia ? '<span class="ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">EMERGENCIA</span>' : ''}
+                            ${c.esSeguimiento ? '<span class="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">SEGUIMIENTO</span>' : ''}
+                        </p>
+                        <p class="text-sm text-gray-600">${fecha} · ${esc(c.sucursal)} · Dr(a). ${esc(c.medico)}</p>
+                    </div>
+                    <span class="px-2 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700 whitespace-nowrap">${esc(c.estado)}</span>
+                </div>
+                <p class="text-sm mt-2"><span class="text-gray-500">Motivo:</span> ${esc(c.motivoConsulta)}</p>
+                ${c.diagnostico ? `<p class="text-sm mt-1"><span class="text-gray-500">Diagnóstico:</span> ${esc(c.diagnostico)}</p>` : ''}
+                ${signos}
+            </div>`;
     }
 
     async function llamarPaciente(idCita) {

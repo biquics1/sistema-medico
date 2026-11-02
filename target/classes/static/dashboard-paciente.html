@@ -465,6 +465,22 @@
                 </div>
             `;
 
+            if (c.signosVitales) {
+                const sv = c.signosVitales;
+                html += `
+                    <div class="border-t border-gray-100 pt-3 mb-4">
+                        <h4 class="font-bold text-brand-black text-sm mb-2"><i class="fa-solid fa-heart-pulse mr-1"></i> Signos Vitales</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+                            <div class="bg-gray-50 rounded p-2"><span class="text-gray-500 text-xs">Presión</span><br><strong>${sv.presionSistolica}/${sv.presionDiastolica} mmHg</strong></div>
+                            <div class="bg-gray-50 rounded p-2"><span class="text-gray-500 text-xs">Temperatura</span><br><strong>${sv.temperatura} °C</strong></div>
+                            <div class="bg-gray-50 rounded p-2"><span class="text-gray-500 text-xs">Frec. cardíaca</span><br><strong>${sv.frecuenciaCardiaca} lpm</strong></div>
+                            <div class="bg-gray-50 rounded p-2"><span class="text-gray-500 text-xs">Peso</span><br><strong>${sv.peso} kg</strong></div>
+                            <div class="bg-gray-50 rounded p-2"><span class="text-gray-500 text-xs">Talla</span><br><strong>${sv.talla} cm</strong></div>
+                        </div>
+                    </div>
+                `;
+            }
+
             if (c.consulta) {
                 html += `
                     <div class="border-t border-gray-100 pt-3 mb-4">

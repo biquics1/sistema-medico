@@ -21,6 +21,7 @@ public class PacienteAgendaService {
 
     private final AuditoriaContexto auditoriaContexto;
     private final EmailService emailService;
+    private final HistorialPacienteService historialPacienteService;
 
     // Estados desde los cuales el paciente puede reagendar por su cuenta
     // (aún no llega a recepción/consulta ni fue cancelada/atendida).
@@ -60,6 +61,7 @@ public class PacienteAgendaService {
         dto.setMonto(cita.getMonto());
         dto.setEsSeguimiento(cita.isEsSeguimiento());
         dto.setRecetas(Collections.emptyList());
+        dto.setSignosVitales(historialPacienteService.signosDeCita(citaId));
 
         consultaMedicaRepository.findByCita_Id(citaId).ifPresent(consulta -> {
             ConsultaResumenDTO c = new ConsultaResumenDTO();

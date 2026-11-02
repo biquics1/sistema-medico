@@ -53,6 +53,13 @@ public class MedicoController {
         return consultaMedicaService.obtenerPanel(usuario);
     }
 
+    // Historial de citas del paciente (con signos vitales y diagnósticos previos)
+    @GetMapping("/citas/{idCita}/historial-paciente")
+    public List<com.example.demo.dto.EnfermeriaDTOs.HistorialCitaDTO> historialPaciente(
+            @PathVariable Integer idCita, @AuthenticationPrincipal AuthUsuario usuario) {
+        return consultaMedicaService.historialPaciente(idCita, usuario);
+    }
+
     // >>> INICIO FB - PASO 2: 'Iniciar Consulta' (En Espera -> Consulta Médica + texto del anuncio TTS)
     @PostMapping("/citas/{idCita}/iniciar-consulta")
     public IniciarConsultaResponseDTO iniciarConsulta(@PathVariable Integer idCita,

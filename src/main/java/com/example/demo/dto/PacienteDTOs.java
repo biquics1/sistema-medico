@@ -37,6 +37,9 @@ public class PacienteDTOs {
         private BigDecimal monto;
         private boolean esSeguimiento;
 
+        // null si aún no se tomaron los signos vitales
+        private EnfermeriaDTOs.SignosVitalesDetalleDTO signosVitales;
+
         // null si el médico aún no ha iniciado/registrado la consulta
         private ConsultaResumenDTO consulta;
 

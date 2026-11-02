@@ -25,6 +25,8 @@ public class PagoService {
     private final CitaRepository citaRepository;
     private final EstadoCitaRepository estadoCitaRepository;
     private final EmailService emailService;
+    private final TarjetaMarcaService tarjetaMarcaService;
+    private final TarjetaRegistradaService tarjetaRegistradaService;
 
     private static final Pattern VENC_PATTERN = Pattern.compile("^(0[1-9]|1[0-2])/\\d{2}$");
 
@@ -65,6 +67,10 @@ public class PagoService {
 
         validarTarjeta(dto);
 
+        // Se acepta cualquier tarjeta válida (Luhn); la marca solo sirve para el catálogo/contador
+        String numeroLimpio = dto.getNumeroTarjeta().replaceAll("\\s", "");
+        TarjetaMarca marca = tarjetaMarcaService.detectarMarca(numeroLimpio);
+
         if ("4000000000000002".equals(dto.getNumeroTarjeta())) {
             throw new ValidationException(
                     "La transacción con tarjeta fue rechazada por el banco. " +
@@ -83,7 +89,12 @@ public class PagoService {
         pago.setNombreTitular(dto.getNombreTitular().toUpperCase());
         pago.setEstado("APROBADO");
         pago.setIdempotencyKey(dto.getIdempotencyKey());
+        pago.setTarjetaMarca(marca);
+        // Historial: si la tarjeta ya se usó suma un uso, si no la registra (sin guardar el número completo)
+        pago.setTarjetaRegistrada(tarjetaRegistradaService.registrarUso(
+                numeroLimpio, dto.getNombreTitular().toUpperCase(), marca));
         pagoRepository.save(pago);
+        if (marca != null) tarjetaMarcaService.registrarUso(marca); // contador, misma transacción
 
         EstadoCita confirmada = estadoCitaRepository.findByNombre(ESTADO_CONFIRMADA)
                 .orElseThrow(() -> new ResourceNotFoundException(

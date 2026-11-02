@@ -69,6 +69,39 @@ public class EnfermeriaDTOs {
         private PacienteColaDTO cita;
     }
 
+    // Historial de citas del paciente (CU-07): una fila por cita anterior, con sus detalles.
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class HistorialCitaDTO {
+        private Integer id;
+        private LocalDateTime fechaHora;
+        private String especialidad;
+        private String medico;
+        private String sucursal;
+        private String estado;
+        private String motivoConsulta;
+        private boolean esEmergencia;
+        private boolean esSeguimiento;
+        private String diagnostico;                  // null si no hubo consulta o no tiene diagnóstico
+        private SignosVitalesDetalleDTO signosVitales; // null si no se tomaron en esa cita
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class SignosVitalesDetalleDTO {
+        private Integer presionSistolica;
+        private Integer presionDiastolica;
+        private BigDecimal temperatura;
+        private BigDecimal peso;
+        private BigDecimal talla;
+        private Integer frecuenciaCardiaca;
+        private boolean esEmergencia;
+        private String registradoPor;
+        private LocalDateTime registradoEn;
+    }
+
     // Respuesta genérica para acciones sobre la cita en enfermería
     // ("No Asistió" -> cancela la cita)
     @Data

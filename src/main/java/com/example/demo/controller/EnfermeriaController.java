@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 // Módulo de Enfermería (CU-07 Toma de Signos Vitales): cola de pacientes,
 // llamado por altavoz (TTS) y registro de signos vitales con alertas clínicas.
 @RestController
@@ -20,6 +22,13 @@ public class EnfermeriaController {
     @GetMapping("/cola")
     public ColaEnfermeriaDTO cola(@AuthenticationPrincipal AuthUsuario usuario) {
         return enfermeriaService.obtenerCola(usuario.sucursalScopeOrNull());
+    }
+
+    // Historial de citas del paciente de esa cita: GET /api/enfermeria/citas/{idCita}/historial-paciente
+    @GetMapping("/citas/{idCita}/historial-paciente")
+    public List<HistorialCitaDTO> historialPaciente(@PathVariable Integer idCita,
+                                                    @AuthenticationPrincipal AuthUsuario usuario) {
+        return enfermeriaService.obtenerHistorialPaciente(idCita, usuario.sucursalScopeOrNull());
     }
 
     // Paso 1 FB: POST /api/enfermeria/citas/{idCita}/llamar

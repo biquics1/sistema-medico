@@ -93,6 +93,9 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     // ------------------------------------------------------------------
     List<Cita> findByPaciente_IdOrderByFechaHoraDesc(Integer pacienteId);
 
+    // CU-07: historial del paciente = sus citas anteriores a una fecha, las más recientes primero.
+    List<Cita> findTop20ByPaciente_IdAndFechaHoraBeforeOrderByFechaHoraDesc(Integer pacienteId, LocalDateTime antesDe);
+
     // Valida que la cita consultada pertenezca al paciente autenticado (evita ver citas ajenas).
     Optional<Cita> findByIdAndPaciente_Id(Integer id, Integer pacienteId);
 }

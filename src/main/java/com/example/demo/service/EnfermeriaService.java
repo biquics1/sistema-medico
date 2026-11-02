@@ -36,6 +36,7 @@ public class EnfermeriaService {
     private final UsuarioRepository usuarioRepository;
     private final EstadoCitaRepository estadoCitaRepository;
     private final SignosVitalesRepository signosVitalesRepository;
+    private final HistorialPacienteService historialPacienteService;
 
     // ---------------------------------------------------------------
     // Paso 1 FB: cola de enfermería (Paciente Presente / en proceso)
@@ -60,6 +61,18 @@ public class EnfermeriaService {
 
     private boolean perteneceASede(Cita c, Integer sucursalScope) {
         return sucursalScope == null || sucursalScope.equals(c.getSucursal().getId());
+    }
+
+    // ---------------------------------------------------------------
+    // Historial de citas del paciente de la cita indicada (para enfermería).
+    // El alcance por sede se valida sobre la cita actual.
+    // ---------------------------------------------------------------
+    @Transactional(readOnly = true)
+    public List<HistorialCitaDTO> obtenerHistorialPaciente(Integer idCita, Integer sucursalScope) {
+        Cita actual = citaRepository.findById(idCita)
+                .filter(c -> perteneceASede(c, sucursalScope))
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la cita indicada."));
+        return historialPacienteService.historialAnteriorA(actual);
     }
 
     // ---------------------------------------------------------------

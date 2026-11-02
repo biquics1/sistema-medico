@@ -69,6 +69,16 @@ public class Pago {
     @Column(name = "estado", length = 20)
     private String estado;
 
+    // Marca de tarjeta usada (VISA, MASTERCARD...). Null en EFECTIVO/DEBITO.
+    @ManyToOne
+    @JoinColumn(name = "tarjeta_marca_id")
+    private TarjetaMarca tarjetaMarca;
+
+    // Tarjeta (hash + últimos 4) del historial, solo en pagos en línea CU-04.
+    @ManyToOne
+    @JoinColumn(name = "tarjeta_registrada_id")
+    private TarjetaRegistrada tarjetaRegistrada;
+
     @Column(name = "uuid_idempotencia", unique = true, length = 100)
     private String idempotencyKey; // Evita cobros duplicados por doble clic/reintento [RNF-016]
 

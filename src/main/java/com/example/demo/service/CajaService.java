@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 public class CajaService {
     private final AuditoriaContexto auditoriaContexto;
     private final EmailService emailService;
+    private final TarjetaMarcaService tarjetaMarcaService;
 
     private static final Pattern DPI_PATTERN = Pattern.compile("^\\d{13}$");
     private static final Pattern CUATRO_DIGITOS = Pattern.compile("^\\d{4}$");
@@ -130,6 +131,9 @@ public class CajaService {
         BigDecimal montoRecibido = null;
         BigDecimal cambio = BigDecimal.ZERO;
         String ultimosCuatro = null;
+        // VISA/MASTERCARD deben existir y estar activas en el catálogo de marcas
+        TarjetaMarca marca = ("VISA".equals(metodo) || "MASTERCARD".equals(metodo))
+                ? tarjetaMarcaService.obtenerActivaPorNombre(metodo) : null;
 
         if ("EFECTIVO".equals(metodo)) {
             montoRecibido = request.getMontoRecibido();
@@ -179,7 +183,9 @@ public class CajaService {
         pago.setUltimos4Tarjeta(ultimosCuatro);
         pago.setEstado("APROBADO");
         pago.setIdempotencyKey(request.getUuidIdempotencia());
+        pago.setTarjetaMarca(marca);
         pagoRepository.save(pago);
+        if (marca != null) tarjetaMarcaService.registrarUso(marca);
 
         EstadoCita confirmada = estadoCitaRepository.findByNombre(EstadoCita.CONFIRMADA)
                 .orElseThrow(() -> new ResourceNotFoundException("Catálogo estado_cita incompleto: falta 'Confirmada'."));
@@ -270,6 +276,9 @@ public class CajaService {
         BigDecimal montoRecibido;
         BigDecimal cambio = BigDecimal.ZERO;
         String ultimosCuatro = null;
+        // VISA/MASTERCARD deben existir y estar activas en el catálogo de marcas
+        TarjetaMarca marca = ("VISA".equals(metodo) || "MASTERCARD".equals(metodo))
+                ? tarjetaMarcaService.obtenerActivaPorNombre(metodo) : null;
 
         if ("EFECTIVO".equals(metodo)) {
 
@@ -315,7 +324,9 @@ public class CajaService {
         pago.setUltimos4Tarjeta(ultimosCuatro);
         pago.setEstado("APROBADO");
         pago.setIdempotencyKey(request.getUuidIdempotencia());
+        pago.setTarjetaMarca(marca);
         Pago pagoGuardado = pagoRepository.save(pago);
+        if (marca != null) tarjetaMarcaService.registrarUso(marca);
 
         orden.setEstado(OrdenLaboratorio.EN_PROCESO);
         orden.setPago(pagoGuardado);

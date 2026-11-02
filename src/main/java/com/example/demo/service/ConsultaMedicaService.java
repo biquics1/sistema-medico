@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ConsultaMedicaDTOs.*;
+import com.example.demo.dto.EnfermeriaDTOs;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.ValidationException;
 import com.example.demo.modelo.*;
@@ -39,6 +40,7 @@ import java.util.List;
 public class ConsultaMedicaService {
     private final AuditoriaContexto auditoriaContexto;
     private final EmailService emailService;
+    private final HistorialPacienteService historialPacienteService;
 
     private final CitaRepository citaRepository;
     private final EstadoCitaRepository estadoCitaRepository;
@@ -497,6 +499,13 @@ public class ConsultaMedicaService {
     // Administrador General puede operar sobre la cita de cualquier
     // médico (supervisión/soporte); el resto solo sobre las propias.
     // ---------------------------------------------------------------
+    // Historial de citas del paciente de una cita propia (el médico ve el historial
+    // de los pacientes que atiende; Administrador General, el de cualquiera).
+    @Transactional(readOnly = true)
+    public List<EnfermeriaDTOs.HistorialCitaDTO> historialPaciente(Integer idCita, AuthUsuario usuario) {
+        return historialPacienteService.historialAnteriorA(obtenerCitaComoMedico(idCita, usuario));
+    }
+
     private Cita obtenerCitaComoMedico(Integer idCita, AuthUsuario usuario) {
         if (usuario.esAdminGeneral()) {
             return citaRepository.findById(idCita)
