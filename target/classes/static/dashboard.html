@@ -24,6 +24,17 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        @media print {
+            aside, header, #barraFiltros { display: none !important; }
+            body { overflow: visible !important; height: auto !important; display: block !important; }
+            main { overflow: visible !important; }
+        }
+    </style>
 </head>
 <body class="bg-brand-lightgray font-sans antialiased flex h-screen overflow-hidden"
       data-tab="dashboard" data-roles="*">
@@ -36,10 +47,6 @@
             <span class="font-bold text-lg tracking-wide text-white">HOSPITAL <span class="text-brand-yellow">ASBI</span></span>
         </div>
 
-        <!-- data-roles: lista separada por comas de los roles que pueden ver cada pestaña.
-             "*" significa: todos los roles internos autenticados.
-             "Administrador" = Admin de Sede (acotado a su sucursal).
-             "Administrador General" = ve todo, sin importar sede. -->
         <nav class="mt-6 px-4 space-y-2 overflow-y-auto flex-1" id="navMenu">
             <a href="dashboard.html" data-tab="dashboard" data-roles="*"
                class="nav-item flex items-center px-4 py-3 rounded-lg font-semibold shadow transition">
@@ -103,9 +110,7 @@
         <h1 id="page-title" class="text-xl font-bold text-brand-black">Dashboard General</h1>
         <div class="flex items-center gap-4">
             <div class="flex items-center gap-3">
-                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">
-                    --
-                </div>
+                <div id="avatarIniciales" class="w-9 h-9 rounded-full bg-brand-yellow text-brand-black font-bold flex items-center justify-center text-sm">--</div>
                 <div class="text-right leading-tight">
                     <p id="nombreUsuario" class="text-sm font-semibold text-brand-black">Cargando...</p>
                     <p id="rolUsuario" class="text-xs text-gray-500"></p>
@@ -122,40 +127,423 @@
 
     <div class="p-8" id="main-content">
         <section id="section-dashboard" class="space-y-6">
+
             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                <p class="text-gray-700">
-                    Bienvenido(a), <span id="dashboardNombre" class="font-semibold"></span>.
-                </p>
-                <p class="text-sm text-gray-500 mt-2">
-                    Este panel de indicadores se conectará cuando exista un endpoint de estadísticas.
-                    Usa el menú de la izquierda según tu rol para trabajar con datos reales.
+                <p class="text-gray-700">Bienvenido(a), <span id="dashboardNombre" class="font-semibold"></span>.</p>
+                <p id="textoNoAdmin" class="hidden text-sm text-gray-500 mt-2">
+                    Usa el menú de la izquierda según tu rol para trabajar.
                 </p>
             </div>
+
+            <!-- ===== REPORTERÍA ===== -->
+            <div id="seccionReportes" class="hidden space-y-6">
+
+                <div id="barraFiltros" class="bg-white rounded-xl border border-gray-200 shadow-sm p-4 space-y-3">
+                    <div class="flex flex-wrap items-end gap-3">
+                        <div class="min-w-[320px] flex-1">
+                            <label class="block text-xs font-medium text-gray-500">Reporte a graficar</label>
+                            <select id="repClave" onchange="cargarReporte()"
+                                    class="w-full p-2 border border-gray-300 rounded-md text-sm font-semibold"></select>
+                        </div>
+                        <div id="bloqueSede">
+                            <label class="block text-xs font-medium text-gray-500">Sede</label>
+                            <select id="repSede" onchange="cargarReporte()" class="p-2 border border-gray-300 rounded-md text-sm min-w-[170px]"></select>
+                            <p id="repSedeFija" class="hidden p-2 text-sm font-semibold text-brand-black"></p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500">Desde</label>
+                            <input id="repDesde" type="datetime-local" class="p-2 border border-gray-300 rounded-md text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-500">Hasta</label>
+                            <input id="repHasta" type="datetime-local" class="p-2 border border-gray-300 rounded-md text-sm">
+                        </div>
+                        <button onclick="cargarReporte()"
+                                class="bg-brand-yellow hover:bg-brand-yellowhover text-brand-black font-bold px-4 py-2 rounded-lg text-sm">
+                            <i class="fa-solid fa-chart-column mr-1"></i> Generar
+                        </button>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
+                        <span class="text-xs text-gray-500">Rápido:</span>
+                        <button onclick="rangoRapido('hoy')" class="px-3 py-1 rounded-md text-xs font-semibold bg-gray-100 hover:bg-gray-200">Hoy</button>
+                        <button onclick="rangoRapido('hora')" class="px-3 py-1 rounded-md text-xs font-semibold bg-gray-100 hover:bg-gray-200">Última hora</button>
+                        <button onclick="rangoRapido('semana')" class="px-3 py-1 rounded-md text-xs font-semibold bg-gray-100 hover:bg-gray-200">Esta semana</button>
+                        <button onclick="rangoRapido('mes')" class="px-3 py-1 rounded-md text-xs font-semibold bg-gray-100 hover:bg-gray-200">Este mes</button>
+                        <button onclick="rangoRapido('anio')" class="px-3 py-1 rounded-md text-xs font-semibold bg-gray-100 hover:bg-gray-200">Este año</button>
+                        <div class="flex gap-2 ml-auto">
+                            <button onclick="exportarPDF()" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-2 rounded-lg text-sm">
+                                <i class="fa-solid fa-file-pdf mr-1"></i> PDF
+                            </button>
+                            <button onclick="exportarExcel()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-2 rounded-lg text-sm">
+                                <i class="fa-solid fa-file-excel mr-1"></i> Excel
+                            </button>
+                            <button onclick="exportarExcelTodo()" class="bg-green-800 hover:bg-green-900 text-white font-semibold px-3 py-2 rounded-lg text-sm">
+                                <i class="fa-solid fa-file-excel mr-1"></i> Excel (todos los reportes)
+                            </button>
+                            <button onclick="window.print()" class="bg-gray-100 hover:bg-gray-200 text-brand-black font-semibold px-3 py-2 rounded-lg text-sm">
+                                <i class="fa-solid fa-print mr-1"></i> Imprimir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mensajesReportes"></div>
+
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div>
+                            <h3 id="repTitulo" class="font-bold text-brand-black text-lg"></h3>
+                            <p id="repSubtitulo" class="text-xs text-gray-400"></p>
+                        </div>
+                        <div id="bloqueMetrica" class="hidden">
+                            <label class="text-xs text-gray-500 mr-1">Medir por:</label>
+                            <select id="repMetrica" onchange="cambiarMetrica()" class="p-1 border border-gray-300 rounded-md text-sm"></select>
+                        </div>
+                    </div>
+                    <div id="chartBox" style="height:320px"><canvas id="chReporte"></canvas></div>
+                    <p id="repVacio" class="hidden text-sm text-gray-400 text-center py-12">Sin datos para el rango y sede seleccionados.</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                    <h3 class="font-bold text-brand-black mb-3">Detalle</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead id="repThead" class="bg-gray-50 text-gray-600 uppercase text-xs"></thead>
+                            <tbody id="repTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </section>
-
-        <!-- 2. CONTROL DE CITAS (CU-05) -->
-
     </div>
 </main>
 
 <script src="common.js"></script>
 <script>
-    // ============================================================
-    // Página: dashboard
-    // IMPORTANTE: protegerPagina() ya corrió en common.js. Si el rol
-    // actual no tiene acceso, detenemos aquí para no ejecutar
-    // llamadas a la API sobre un contenido que ya fue reemplazado.
-    // ============================================================
-    if (!protegerPagina()) {
-        // El bloque de abajo no se ejecuta: throw controlado evitaría
-        // seguir leyendo el archivo, pero como es un <script> normal
-        // basta con que las funciones no se auto-invoquen.
-    } else {
-        // El dashboard no tiene lógica propia adicional: el nombre
-        // del usuario ya lo llena mostrarUsuario() en common.js.
+    const accesoDashboard = protegerPagina();
+    const esAdminGeneral = rolActual === 'Administrador General';
+    const esAdminSede = rolActual === 'Administrador';
+    const PALETA = ['#FACC15', '#121212', '#3B82F6', '#10B981', '#EF4444', '#8B5CF6', '#F97316', '#14B8A6', '#EC4899', '#6B7280'];
+    let catalogo = [];
+    let actual = null;   // reporte cargado + contexto (sede, rango)
+    let chart = null;
+    let metrica = 'total';
 
+    const pad = n => String(n).padStart(2, '0');
+    const aInput = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const esDinero = etq => /\(Q\)/.test(etq || '');
+    const fmt = (v, dinero) => dinero
+        ? 'Q' + Number(v || 0).toLocaleString('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        : Number(v || 0).toLocaleString('es-GT');
+
+    // ---------- Rangos ----------
+    function rangoRapido(tipo) {
+        const ahora = new Date();
+        let desde = new Date(ahora), hasta = new Date(ahora);
+        if (tipo === 'hoy') {
+            desde.setHours(0, 0, 0, 0); hasta.setHours(23, 59, 0, 0);
+        } else if (tipo === 'hora') {
+            desde = new Date(ahora.getTime() - 60 * 60 * 1000);
+        } else if (tipo === 'semana') {
+            const dow = (ahora.getDay() + 6) % 7;
+            desde = new Date(ahora); desde.setDate(ahora.getDate() - dow); desde.setHours(0, 0, 0, 0);
+            hasta = new Date(desde); hasta.setDate(desde.getDate() + 6); hasta.setHours(23, 59, 0, 0);
+        } else if (tipo === 'mes') {
+            desde = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 0, 0);
+            hasta = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59);
+        } else if (tipo === 'anio') {
+            desde = new Date(ahora.getFullYear(), 0, 1, 0, 0);
+            hasta = new Date(ahora.getFullYear(), 11, 31, 23, 59);
+        }
+        document.getElementById('repDesde').value = aInput(desde);
+        document.getElementById('repHasta').value = aInput(hasta);
+        cargarReporte();
     }
 
+    // ---------- Sede ----------
+    async function inicializarSede() {
+        const sel = document.getElementById('repSede');
+        if (esAdminSede) {
+            sel.classList.add('hidden');
+            const fija = document.getElementById('repSedeFija');
+            fija.textContent = sessionStorage.getItem('sucursalNombre') || 'Mi sede';
+            fija.classList.remove('hidden');
+            return;
+        }
+        const sedes = await apiFetchCached('/api/sucursales');
+        sel.innerHTML = '<option value="">Todas las sedes</option>' +
+            sedes.map(s => `<option value="${s.id}">${esc(s.nombre)}</option>`).join('');
+    }
+
+    function nombreSede() {
+        if (esAdminSede) return sessionStorage.getItem('sucursalNombre') || 'Mi sede';
+        const sel = document.getElementById('repSede');
+        return sel.options[sel.selectedIndex]?.text || 'Todas las sedes';
+    }
+
+    // ---------- Catálogo (desplegable por categoría) ----------
+    async function cargarCatalogo() {
+        catalogo = await apiFetch('/api/reportes/catalogo');
+        const cats = [...new Set(catalogo.map(c => c.categoria))];
+        document.getElementById('repClave').innerHTML = cats.map(cat =>
+            `<optgroup label="${esc(cat)}">` +
+            catalogo.filter(c => c.categoria === cat)
+                .map(c => `<option value="${c.clave}">${esc(c.titulo)}</option>`).join('') +
+            '</optgroup>').join('');
+    }
+
+    function parametros() {
+        const desde = document.getElementById('repDesde').value;
+        const hasta = document.getElementById('repHasta').value;
+        const p = new URLSearchParams({ desde: desde + ':00', hasta: hasta + ':59' });
+        if (esAdminGeneral && document.getElementById('repSede').value) {
+            p.set('sucursalId', document.getElementById('repSede').value);
+        }
+        return p;
+    }
+
+    function rangoValido() {
+        const msg = document.getElementById('mensajesReportes');
+        msg.innerHTML = '';
+        const desde = document.getElementById('repDesde').value;
+        const hasta = document.getElementById('repHasta').value;
+        let error = null;
+        if (!desde || !hasta) error = 'Seleccione fecha inicial y final.';
+        else if (new Date(hasta) < new Date(desde)) error = 'La fecha final debe ser posterior a la inicial.';
+        if (error) msg.innerHTML = `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200">${error}</div>`;
+        return !error;
+    }
+
+    // ---------- Cargar y pintar ----------
+    async function cargarReporte() {
+        if (!rangoValido()) return;
+        const clave = document.getElementById('repClave').value;
+        if (!clave) return;
+        try {
+            const r = await apiFetch(`/api/reportes/${clave}?` + parametros().toString());
+            actual = {
+                ...r,
+                sedeNombre: nombreSede(),
+                desde: document.getElementById('repDesde').value.replace('T', ' '),
+                hasta: document.getElementById('repHasta').value.replace('T', ' ')
+            };
+            metrica = 'total';
+            render();
+        } catch (e) {
+            document.getElementById('mensajesReportes').innerHTML =
+                `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200">${esc(e.message)}</div>`;
+        }
+    }
+
+    function cambiarMetrica() {
+        metrica = document.getElementById('repMetrica').value;
+        render();
+    }
+
+    function render() {
+        const r = actual;
+        const datos = r.datos || [];
+        const unidades = { hour: 'por hora', day: 'por día', month: 'por mes' };
+
+        document.getElementById('repTitulo').textContent = r.titulo;
+        document.getElementById('repSubtitulo').textContent =
+            `${r.categoria} · ${r.sedeNombre} · ` +
+            (r.usaFecha ? `${r.desde} a ${r.hasta}` : 'Estado actual (no depende del rango de fechas)') +
+            (r.unidad ? ` · agrupado ${unidades[r.unidad]}` : '');
+
+        // selector "Medir por" (solo si hay segunda métrica y no es comparativo)
+        const bloque = document.getElementById('bloqueMetrica');
+        if (r.ejeExtra && !r.comparar) {
+            document.getElementById('repMetrica').innerHTML =
+                `<option value="total">${esc(r.ejeY)}</option><option value="monto">${esc(r.ejeExtra)}</option>`;
+            document.getElementById('repMetrica').value = metrica;
+            bloque.classList.remove('hidden');
+        } else {
+            bloque.classList.add('hidden');
+            metrica = 'total';
+        }
+
+        // gráfica de barras
+        if (chart) { chart.destroy(); chart = null; }
+        const vacio = datos.length === 0;
+        document.getElementById('chartBox').classList.toggle('hidden', vacio);
+        document.getElementById('repVacio').classList.toggle('hidden', !vacio);
+
+        if (!vacio) {
+            const tiempo = !!r.unidad;
+            const horizontal = !tiempo && datos.length > 7;
+            document.getElementById('chartBox').style.height =
+                (horizontal ? Math.max(300, datos.length * 30 + 70) : 340) + 'px';
+
+            const usaMonto = metrica === 'monto';
+            const valor = d => Number(usaMonto ? d.monto : d.total);
+            const dinero = usaMonto && esDinero(r.ejeExtra);
+
+            const datasets = [{
+                label: usaMonto ? r.ejeExtra : r.ejeY,
+                data: datos.map(valor),
+                backgroundColor: tiempo || r.comparar ? '#FACC15' : datos.map((_, i) => PALETA[i % PALETA.length]),
+                borderWidth: 0
+            }];
+            if (r.comparar) {
+                datasets.push({ label: r.ejeExtra, data: datos.map(d => Number(d.monto)), backgroundColor: '#EF4444', borderWidth: 0 });
+            }
+
+            chart = new Chart(document.getElementById('chReporte'), {
+                type: 'bar',
+                data: { labels: datos.map(d => d.label), datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    indexAxis: horizontal ? 'y' : 'x',
+                    plugins: {
+                        legend: { display: !!r.comparar },
+                        tooltip: { callbacks: { label: c => `${c.dataset.label}: ${fmt(c.parsed[horizontal ? 'x' : 'y'], dinero)}` } }
+                    },
+                    scales: { [horizontal ? 'x' : 'y']: { beginAtZero: true, ticks: { precision: 0 } } }
+                }
+            });
+        }
+
+        // tabla
+        const hayExtra = !!r.ejeExtra;
+        document.getElementById('repThead').innerHTML =
+            `<tr><th class="px-3 py-2">${esc(r.ejeX)}</th><th class="px-3 py-2">${esc(r.ejeY)}</th>` +
+            (hayExtra ? `<th class="px-3 py-2">${esc(r.ejeExtra)}</th>` : '') + '</tr>';
+        const sumaTotal = datos.reduce((a, d) => a + Number(d.total || 0), 0);
+        const sumaExtra = datos.reduce((a, d) => a + Number(d.monto || 0), 0);
+        document.getElementById('repTbody').innerHTML = vacio
+            ? `<tr><td colspan="3" class="text-center text-gray-400 py-4">Sin datos.</td></tr>`
+            : datos.map(d => `<tr class="border-t border-gray-100">
+                <td class="px-3 py-2">${esc(d.label)}</td>
+                <td class="px-3 py-2">${fmt(d.total, false)}</td>
+                ${hayExtra ? `<td class="px-3 py-2">${fmt(d.monto, esDinero(r.ejeExtra))}</td>` : ''}</tr>`).join('') +
+            (r.comparar ? '' : `<tr class="border-t-2 border-gray-300 font-bold bg-gray-50">
+                <td class="px-3 py-2">Total</td><td class="px-3 py-2">${fmt(sumaTotal, false)}</td>
+                ${hayExtra ? `<td class="px-3 py-2">${fmt(sumaExtra, esDinero(r.ejeExtra))}</td>` : ''}</tr>`);
+    }
+
+    // ---------- Exportar ----------
+    function nombreArchivo(base, ext) {
+        const d = new Date();
+        return `${base}_${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.${ext}`;
+    }
+
+    function filasReporte(r) {
+        const cab = [r.ejeX, r.ejeY].concat(r.ejeExtra ? [r.ejeExtra] : []);
+        const filas = (r.datos || []).map(d =>
+            [d.label, Number(d.total)].concat(r.ejeExtra ? [Number(d.monto)] : []));
+        return { cab, filas };
+    }
+
+    function requerirReporte() {
+        if (actual) return true;
+        document.getElementById('mensajesReportes').innerHTML =
+            '<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200">Primero genere un reporte.</div>';
+        return false;
+    }
+
+    function exportarExcel() {
+        if (!requerirReporte()) return;
+        const { cab, filas } = filasReporte(actual);
+        const aoa = [
+            [actual.titulo], ['Categoría', actual.categoria], ['Sede', actual.sedeNombre],
+            ['Desde', actual.usaFecha ? actual.desde : 'N/A'], ['Hasta', actual.usaFecha ? actual.hasta : 'N/A'],
+            ['Generado por', sessionStorage.getItem('nombreCompleto') || ''], [],
+            cab, ...filas
+        ];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), 'Reporte');
+        XLSX.writeFile(wb, nombreArchivo('reporte_' + actual.clave, 'xlsx'));
+    }
+
+    async function exportarExcelTodo() {
+        if (!rangoValido()) return;
+        try {
+            const todos = await apiFetch('/api/reportes/todos?' + parametros().toString());
+            const wb = XLSX.utils.book_new();
+            const indice = [
+                ['Reportes - Hospital ASBI'], ['Sede', nombreSede()],
+                ['Desde', document.getElementById('repDesde').value.replace('T', ' ')],
+                ['Hasta', document.getElementById('repHasta').value.replace('T', ' ')],
+                ['Generado por', sessionStorage.getItem('nombreCompleto') || ''], [],
+                ['No.', 'Categoría', 'Reporte']
+            ];
+            todos.forEach((r, i) => indice.push([i + 1, r.categoria, r.titulo]));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(indice), 'Indice');
+
+            todos.forEach((r, i) => {
+                const { cab, filas } = filasReporte(r);
+                const aoa = [[r.titulo], [r.categoria], [], cab, ...filas];
+                const nombre = `${i + 1}. ${r.titulo}`.replace(/[\[\]:*?\/\\]/g, '').substring(0, 31);
+                XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), nombre);
+            });
+            XLSX.writeFile(wb, nombreArchivo('reportes_completos', 'xlsx'));
+        } catch (e) {
+            document.getElementById('mensajesReportes').innerHTML =
+                `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200">${esc(e.message)}</div>`;
+        }
+    }
+
+    function exportarPDF() {
+        if (!requerirReporte()) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        const ancho = doc.internal.pageSize.getWidth();
+        let y = 15;
+
+        doc.setFontSize(16);
+        doc.text('Hospital ASBI - ' + actual.titulo, 14, y); y += 7;
+        doc.setFontSize(10);
+        doc.text(`Categoría: ${actual.categoria}   |   Sede: ${actual.sedeNombre}`, 14, y); y += 5;
+        doc.text(actual.usaFecha ? `Rango: ${actual.desde}  a  ${actual.hasta}` : 'Estado actual del inventario', 14, y); y += 5;
+        doc.text(`Generado: ${new Date().toLocaleString('es-GT')}  |  Por: ${sessionStorage.getItem('nombreCompleto') || ''}`, 14, y); y += 6;
+
+        const canvas = document.getElementById('chReporte');
+        if (chart && actual.datos.length) {
+            const imgW = ancho - 28;
+            const imgH = Math.min(110, imgW * canvas.height / canvas.width);
+            const tmp = document.createElement('canvas');
+            tmp.width = canvas.width; tmp.height = canvas.height;
+            const ctx = tmp.getContext('2d');
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, tmp.width, tmp.height);
+            ctx.drawImage(canvas, 0, 0);
+            doc.addImage(tmp.toDataURL('image/png'), 'PNG', 14, y, imgW, imgH);
+            y += imgH + 5;
+        }
+
+        const { cab, filas } = filasReporte(actual);
+        doc.autoTable({
+            startY: y, head: [cab], body: filas.map(f => f.map(String)),
+            theme: 'grid', styles: { fontSize: 8 }, headStyles: { fillColor: [250, 204, 21], textColor: [18, 18, 18] }
+        });
+
+        const total = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= total; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.text(`Página ${i} de ${total}`, ancho - 30, 290);
+        }
+        doc.save(nombreArchivo('reporte_' + actual.clave, 'pdf'));
+    }
+
+    // ---------- Inicio ----------
+    if (accesoDashboard) {
+        if (esAdminGeneral || esAdminSede) {
+            document.getElementById('seccionReportes').classList.remove('hidden');
+            inicializarSede()
+                .then(cargarCatalogo)
+                .then(() => rangoRapido('mes'))
+                .catch(e => {
+                    document.getElementById('mensajesReportes').innerHTML =
+                        `<div class="p-3 rounded-md bg-red-50 text-red-700 border border-red-200">${esc(e.message)}</div>`;
+                });
+        } else {
+            document.getElementById('textoNoAdmin').classList.remove('hidden');
+        }
+    }
 </script>
 </body>
 </html>

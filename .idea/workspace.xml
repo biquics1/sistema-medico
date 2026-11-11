@@ -4,120 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="249c1ad7-bfb7-4328-b3ad-121c49eafb99" name="Changes" comment="comentarios nuevos">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/31dd17f9-0cc0-436a-9ada-8bfc60621aa1/storage_v2/_src_/database/sistema_medico.BvZqdg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/31dd17f9-0cc0-436a-9ada-8bfc60621aa1/storage_v2/_src_/database/sistema_medico.BvZqdg/schema/public.abK9xQ.meta" afterDir="false" />
+    <list default="true" id="249c1ad7-bfb7-4328-b3ad-121c49eafb99" name="Changes" comment="historial listo, contador de tarjetas listo(creo)">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/ReporteController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/ReporteService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EnfermeriaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/EnfermeriaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/controller/MedicoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/EnfermeriaDTOs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/EnfermeriaDTOs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/PacienteDTOs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dto/PacienteDTOs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Pago.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/modelo/Pago.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/repository/CitaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/CajaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/ConsultaMedicaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/ConsultaMedicaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EnfermeriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/EnfermeriaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PacienteAgendaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PagoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/service/PagoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/catalogos.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/catalogos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/consulta.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/consulta.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard-paciente.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/signos.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/signos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/BranchSpecialtyController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/BranchSpecialtyController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/EnfermeriaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/EnfermeriaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/FarmaciaController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/FarmaciaController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/LaboratorioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/LaboratorioController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/MedicoController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/MedicoController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/controller/MovimientoInventarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/controller/MovimientoInventarioController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/BranchSpecialtyResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/BranchSpecialtyResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$AccionCitaResponseDTO$AccionCitaResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$AccionCitaResponseDTO$AccionCitaResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$AccionCitaResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$AccionCitaResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$Cie10DTO$Cie10DTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$Cie10DTO$Cie10DTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$Cie10DTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$Cie10DTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$CitaPanelDTO$CitaPanelDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$CitaPanelDTO$CitaPanelDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$CitaPanelDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$CitaPanelDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ConsultaContextoDTO$ConsultaContextoDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ConsultaContextoDTO$ConsultaContextoDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ConsultaContextoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ConsultaContextoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$DetalleRecetaRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$DetalleRecetaRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ExamenCatalogoDTO$ExamenCatalogoDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ExamenCatalogoDTO$ExamenCatalogoDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ExamenCatalogoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$ExamenCatalogoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$GuardarConsultaRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$GuardarConsultaRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$GuardarConsultaResponseDTO$GuardarConsultaResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$GuardarConsultaResponseDTO$GuardarConsultaResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$GuardarConsultaResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$GuardarConsultaResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$IniciarConsultaResponseDTO$IniciarConsultaResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$IniciarConsultaResponseDTO$IniciarConsultaResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$IniciarConsultaResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$IniciarConsultaResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$MedicamentoCatalogoDTO$MedicamentoCatalogoDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$MedicamentoCatalogoDTO$MedicamentoCatalogoDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$MedicamentoCatalogoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$MedicamentoCatalogoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$OrdenLaboratorioRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$OrdenLaboratorioRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$OrdenLaboratorioResponseDTO$OrdenLaboratorioResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$OrdenLaboratorioResponseDTO$OrdenLaboratorioResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$OrdenLaboratorioResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$OrdenLaboratorioResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$PanelMedicoDTO$PanelMedicoDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$PanelMedicoDTO$PanelMedicoDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$PanelMedicoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$PanelMedicoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$RecetaRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$RecetaRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$RecetaResponseDTO$RecetaResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$RecetaResponseDTO$RecetaResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$RecetaResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs$RecetaResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/ConsultaMedicaDTOs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/EnfermeriaDTOs$AccionCitaEnfermeriaResponseDTO$AccionCitaEnfermeriaResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/EnfermeriaDTOs$AccionCitaEnfermeriaResponseDTO$AccionCitaEnfermeriaResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/EnfermeriaDTOs$AccionCitaEnfermeriaResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/EnfermeriaDTOs$AccionCitaEnfermeriaResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/EnfermeriaDTOs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/EnfermeriaDTOs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$AjustarStockRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$AjustarStockRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$AjustarStockResponseDTO$AjustarStockResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$AjustarStockResponseDTO$AjustarStockResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$AjustarStockResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$AjustarStockResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$CancelarDespachoResponseDTO$CancelarDespachoResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$CancelarDespachoResponseDTO$CancelarDespachoResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$CancelarDespachoResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$CancelarDespachoResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ConfirmarDespachoRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ConfirmarDespachoRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ConfirmarDespachoResponseDTO$ConfirmarDespachoResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ConfirmarDespachoResponseDTO$ConfirmarDespachoResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ConfirmarDespachoResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ConfirmarDespachoResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$CrearMedicamentoRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$CrearMedicamentoRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$DespachoItemDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$DespachoItemDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemDespachadoDTO$ItemDespachadoDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemDespachadoDTO$ItemDespachadoDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemDespachadoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemDespachadoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemRecetaDTO$ItemRecetaDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemRecetaDTO$ItemRecetaDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemRecetaDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$ItemRecetaDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$MedicamentoCatalogoDTO$MedicamentoCatalogoDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$MedicamentoCatalogoDTO$MedicamentoCatalogoDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$MedicamentoCatalogoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$MedicamentoCatalogoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaBusquedaDTO$RecetaBusquedaDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaBusquedaDTO$RecetaBusquedaDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaBusquedaDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaBusquedaDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaDetalleDTO$RecetaDetalleDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaDetalleDTO$RecetaDetalleDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaDetalleDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs$RecetaDetalleDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/FarmaciaDTOs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ExamenOrdenDTO$ExamenOrdenDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ExamenOrdenDTO$ExamenOrdenDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ExamenOrdenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ExamenOrdenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenDetalleDTO$OrdenDetalleDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenDetalleDTO$OrdenDetalleDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenDetalleDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenDetalleDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenListaDTO$OrdenListaDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenListaDTO$OrdenListaDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenListaDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$OrdenListaDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$PublicarResponseDTO$PublicarResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$PublicarResponseDTO$PublicarResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$PublicarResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$PublicarResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ResultadoRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ResultadoRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ResultadoResponseDTO$ResultadoResponseDTOBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ResultadoResponseDTO$ResultadoResponseDTOBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ResultadoResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs$ResultadoResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/LaboratorioDTOs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/MovimientoInventarioDTO$CreateDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/MovimientoInventarioDTO$CreateDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/MovimientoInventarioDTO$ResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/MovimientoInventarioDTO$ResponseDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/MovimientoInventarioDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/MovimientoInventarioDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ConsultaResumenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ConsultaResumenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ExamenResultadoDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ExamenResultadoDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MedicamentoRecetaDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MedicamentoRecetaDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MiCitaDetalleDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$MiCitaDetalleDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$OrdenLaboratorioResumenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$OrdenLaboratorioResumenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ReagendarCitaRequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$ReagendarCitaRequestDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$RecetaResumenDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/dto/PacienteDTOs$RecetaResumenDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/modelo/Pago.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/modelo/Pago.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CitaRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/repository/CitaRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/CajaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/ConsultaMedicaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/EnfermeriaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/FarmaciaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/LaboratorioService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/MovimientoInventarioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/MovimientoInventarioService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PacienteAgendaService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/demo/service/PagoService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/catalogos.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/catalogos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/consulta.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/consulta.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/dashboard-paciente.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/signos.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/signos.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/dashboard.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +17,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="220" />
+    <option name="cachedIndexableFilesCount" value="221" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -151,23 +50,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0168148989321524" />
-      <entry key="MS500" value="3.2003194067422798" />
-      <entry key="S2" value="10.528518885817496" />
-      <entry key="S5" value="15.057115017412968" />
-      <entry key="S10" value="18.476955333462634" />
-      <entry key="S30" value="23.947477646753484" />
-      <entry key="S60" value="26.74473524555987" />
-      <entry key="M2" value="28.634499830225653" />
-      <entry key="M5" value="29.987393208538663" />
-      <entry key="M10" value="30.481736261350715" />
-      <entry key="M15" value="30.651762210927114" />
-      <entry key="M30" value="30.824498620431573" />
-      <entry key="H1" value="30.911900236361745" />
-      <entry key="H2" value="30.95586241409462" />
-      <entry key="H4" value="30.977909226317795" />
-      <entry key="D1" value="30.99631514685186" />
-      <entry key="W1" value="30.999473517468232" />
+      <entry key="MS100" value="1.000000000264661" />
+      <entry key="MS500" value="1.01606413450845" />
+      <entry key="S2" value="1.8667849090409208" />
+      <entry key="S5" value="4.478981962893115" />
+      <entry key="S10" value="7.399919803332533" />
+      <entry key="S30" value="11.17247452562898" />
+      <entry key="S60" value="13.41832919855578" />
+      <entry key="M2" value="18.611012338654135" />
+      <entry key="M5" value="29.069371436684026" />
+      <entry key="M10" value="35.67639519067162" />
+      <entry key="M15" value="38.43387777830417" />
+      <entry key="M30" value="41.52774322463957" />
+      <entry key="H1" value="43.21374838502586" />
+      <entry key="H2" value="44.09397179145766" />
+      <entry key="H4" value="44.54371263407615" />
+      <entry key="D1" value="44.92349338300993" />
+      <entry key="W1" value="44.9890591953672" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -189,23 +88,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.027785498176478483" />
-      <entry key="MS500" value="2.5745899851324454" />
-      <entry key="S2" value="10.282826863729598" />
-      <entry key="S5" value="14.919700140184357" />
-      <entry key="S10" value="18.377814873388267" />
-      <entry key="S30" value="23.896125164995418" />
-      <entry key="S60" value="26.714561849650245" />
-      <entry key="M2" value="28.617926644085735" />
-      <entry key="M5" value="29.980342876994737" />
-      <entry key="M10" value="30.478134551995236" />
-      <entry key="M15" value="30.64934354810849" />
-      <entry key="M30" value="30.82328039465397" />
-      <entry key="H1" value="30.91128887457046" />
-      <entry key="H2" value="30.955556167772134" />
-      <entry key="H4" value="30.977755961397346" />
-      <entry key="D1" value="30.996289582975404" />
-      <entry key="W1" value="30.999469865002425" />
+      <entry key="MS100" value="0.9395227494592724" />
+      <entry key="MS500" value="1.0034485428407602" />
+      <entry key="S2" value="1.8603553412658218" />
+      <entry key="S5" value="4.467421821337" />
+      <entry key="S10" value="7.386179414654193" />
+      <entry key="S30" value="11.16358530086357" />
+      <entry key="S60" value="13.412014064564639" />
+      <entry key="M2" value="18.605024962825365" />
+      <entry key="M5" value="29.064547248744887" />
+      <entry key="M10" value="35.673201550571605" />
+      <entry key="M15" value="38.431530052604515" />
+      <entry key="M30" value="41.5264463880492" />
+      <entry key="H1" value="43.213066396055986" />
+      <entry key="H2" value="44.09362202559762" />
+      <entry key="H4" value="44.543535509292035" />
+      <entry key="D1" value="44.92346354660407" />
+      <entry key="W1" value="44.98905492523849" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -275,7 +174,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="correccion de errores de mi parte" />
     <MESSAGE value="comentarios nuevos" />
-    <option name="LAST_COMMIT_MESSAGE" value="comentarios nuevos" />
+    <MESSAGE value="historial listo, contador de tarjetas listo(creo)" />
+    <option name="LAST_COMMIT_MESSAGE" value="historial listo, contador de tarjetas listo(creo)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
